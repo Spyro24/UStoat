@@ -1,4 +1,39 @@
 import requests
+import websocket
+import threading
+
+class WSSClient:
+    def __init__(self, url):
+        self.url = url
+        self.messages = []
+        self.lock = threading.Lock()
+        self.thread = None
+        self.start()
+    
+    def start(self):
+        def worker():
+            def on_message(ws, msg):
+                with self.lock:
+                    self.messages.append(msg)
+            
+            ws = websocket.WebSocketApp(self.url, on_message=on_message)
+            ws.run_forever()
+        
+        self.thread = threading.Thread(target=worker, daemon=True)
+        self.thread.start()
+    
+    def get_messages(self):
+        """Non-blocking: Gibt aktuelle Nachrichten"""
+        with self.lock:
+            msgs = self.messages.copy()
+            self.messages.clear()
+            return msgs
+    
+    def has_new_data(self):
+        """Schnell checken"""
+        with self.lock:
+            return len(self.messages) > 0
+
 
 class Account:
     def __init__(self):
@@ -9,6 +44,8 @@ class Account:
         self.mfa_ticket = ""
         self._id = ""
         self.user_id = ""
+        self.apiSuscription = None
+        self.socketHandler = None
         
     def login(self, email: str, password: str):
         answer = requests.post("https://stoat.chat/api/auth/session/login?", json={"email":f"{email}","password":f"{password}","friendly_name": f"{self.clientName}"}).json()
@@ -22,4 +59,21 @@ class Account:
         self._id = answer["_id"]
         self.user_id = answer["user_id"]
         self.sessionToken = answer["token"]
+        
+    def subToAPI(self):
+        self.apiSuscription = WSSClient(f"wss://stoat.chat/events?version=1&format=json&token={self.sessionToken}")
+
+class users:
+    def __init__(self):
+        self.userInfo = {}
+    
+    def addUser(self, json):
+        userid = json["_id"]
+        self.userInfo[userid] = {}
+        self.userInfo[userid]["name"] = json["username"]
+        try:
+            self.userInfo[userid]["display_name"] = json["display_name"]
+        except KeyError:
+            self.userInfo[userid]["display_name"] = json["username"]
+        self.userInfo[userid]["discriminator"] = json["discriminator"]
         
