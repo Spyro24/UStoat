@@ -76,4 +76,8 @@ class users:
         except KeyError:
             self.userInfo[userid]["display_name"] = json["username"]
         self.userInfo[userid]["discriminator"] = json["discriminator"]
+        try:
+            self.userInfo[userid]["avatarId"] = json["avatar"]["_id"]
+        except KeyError:
+            self.userInfo[userid]["avatarId"] = ""
         
