@@ -4,3 +4,4 @@
 - [ ] server channel selector (with the abily ty to copy channels and the permision of that channel)
 - [ ] message send box 
 - [ ] Saving session to device
+- [x] add cache system

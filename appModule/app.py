@@ -7,11 +7,13 @@ import appModule
 class App:
     def __init__(self):
         p.init()
+        self.tileSize = 64
         self.modules = {"font": p.font.SysFont(None, size=24),
                         "account": stoat.user.Account(),
                         "userManager": stoat.user.users(),
                         "APISubscrption": None}
         self.modules["userCard"] = appModule.userCard.userCard(self)
+        self.modules["cache"] = appModule.cacheSystem.cache(self)
         self.window = p.display.set_mode((1080, 720), flags=p.RESIZABLE)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
         self.renderQuee = []
