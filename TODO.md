@@ -5,3 +5,4 @@
 - [ ] message send box 
 - [ ] Saving session to device
 - [x] add cache system
+- [ ] add server folders (client side, it will be stored on device)
