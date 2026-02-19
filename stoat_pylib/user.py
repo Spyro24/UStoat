@@ -23,14 +23,12 @@ class WSSClient:
         self.thread.start()
     
     def get_messages(self):
-        """Non-blocking: Gibt aktuelle Nachrichten"""
         with self.lock:
             msgs = self.messages.copy()
             self.messages.clear()
             return msgs
     
     def has_new_data(self):
-        """Schnell checken"""
         with self.lock:
             return len(self.messages) > 0
 
@@ -62,6 +60,9 @@ class Account:
         
     def subToAPI(self):
         self.apiSuscription = WSSClient(f"wss://stoat.chat/events?version=1&format=json&token={self.sessionToken}")
+        
+    def sendMessage(self, msg: str, channel: str):
+        answer = requests.post(f"https://stoat.chat/api/channels/{channel}/messages?", headers={"": self.sessionToken}, json={"content": msg})
 
 class users:
     def __init__(self):

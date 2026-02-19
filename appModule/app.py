@@ -7,16 +7,18 @@ import appModule
 class App:
     def __init__(self):
         p.init()
+        self.renderQuee = []
         self.tileSize = 64
-        self.modules = {"font": p.font.SysFont(None, size=24),
+        self.modules = {"font": p.font.SysFont(p.font.match_font(p.font.get_default_font()), size=24, ),
                         "account": stoat.user.Account(),
                         "userManager": stoat.user.users(),
-                        "APISubscrption": None}
+                        "APISubscrption": None,
+                        "serverManager": stoat.serverManager.serverManager()}
         self.modules["userCard"] = appModule.userCard.userCard(self)
         self.modules["cache"] = appModule.cacheSystem.cache(self)
+        self.modules["messageInput"] = appModule.messageBox.inputTextBox(self)
         self.window = p.display.set_mode((1080, 720), flags=p.RESIZABLE)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
-        self.renderQuee = []
         self.VERSION = "0.0.2"
         self.setup()
     
@@ -39,10 +41,11 @@ class App:
                         print(packet)
                         for user in packet["users"]:
                             self.modules['userManager'].addUser(user)
+                        self.modules["serverManager"].loadServers(packet["servers"])
                         getInit = False
         userInfo = self.modules['userManager'].userInfo[self.modules['account'].user_id]
         self.modules["userCard"].createCard(userInfo)
-        print(userInfo)
+        print(self.modules["serverManager"].structure)
 
         self.appLoop()
     
