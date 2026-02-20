@@ -63,6 +63,19 @@ class Account:
         
     def sendMessage(self, msg: str, channel: str):
         answer = requests.post(f"https://stoat.chat/api/channels/{channel}/messages?", headers={"": self.sessionToken}, json={"content": msg})
+    
+    def saveAccount(self) -> dict:
+        return {"_id": self._id, "userId": self.user_id, "session": self.sessionToken}
+    
+    def loadAccount(self, data: dict):
+        try:
+            self._id = data["_id"]
+            self.user_id = data["userId"]
+            self.sessionToken = data["session"]
+            self.curentLoginStatus = "sucess"
+            return False
+        except:
+            return True
 
 class users:
     def __init__(self):

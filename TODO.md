@@ -3,6 +3,16 @@
 - [ ] Account Info card (will popup on click on the the user card)
 - [ ] server channel selector (with the abily ty to copy channels and the permision of that channel)
 - [ ] message send box 
-- [ ] Saving session to device
-- [x] add cache system
 - [ ] add server folders (client side, it will be stored on device)
+- [ ] Embeds in to the chat system
+- [ ] GIF embeding
+- [ ] Role coloring
+- [ ] Reconectng the client after conecton loss
+- [ ] corect message handling
+- [ ] support for remebering bot command (client side only)
+- [ ] emoji upload (validate the name on client and change the name to lowercase  if it contains uppercase)
+- [ ] code refactor to make it future proof
+- [ ] Custom theme support
+- [x] Saving session to device
+- [x] Notififycation with sound
+- [x] add cache system

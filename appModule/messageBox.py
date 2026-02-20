@@ -5,9 +5,12 @@ import appModule
 class inputTextBox:
     def __init__(self, app: appModule.app.App):
         self.app = app
-        self.curentMessage = "Dies ist ein Teststring der automatisch umgebrochen werden soll wenn er eine bestimmte Breite überschreitet. Hier kommt eine neue Zeile die bereits manuell eingefügt wurde.\nDiese Zeile soll ebenfalls korrekt behandelt werden und weiterhin automatisch umbrechen falls sie zu lang ist. Zum Schluss noch ein sehrsehrsehrlangeswortohneleerzeichen um zu sehen wie sich die Funktion verhält."
+        self.curentMessage = "" #"Dies ist ein Teststring der automatisch umgebrochen werden soll wenn er eine bestimmte Breite überschreitet. Hier kommt eine neue Zeile die bereits manuell eingefügt wurde.\nDiese Zeile soll ebenfalls korrekt behandelt werden und weiterhin automatisch umbrechen falls sie zu lang ist. Zum Schluss noch ein sehrsehrsehrlangeswortohneleerzeichen um zu sehen wie sich die Funktion verhält."
         self.app.renderQuee.append(self)
         self.font = self.app.modules["font"]
+        self.renderedRect = p.rect.Rect()
+        self.isActive = False
+        self.tileSize = self.app.tileSize
     
     def sendMessage(self):
         self.curentMessage = ""
@@ -28,5 +31,21 @@ class inputTextBox:
             lines.append(current_line)
         return "\n".join(lines)
     
+    def text_input(self):
+        pass
+    
     def render(self, displaySize):
-        self.app.window.blit(self.font.render(self.wrap_text_to_width(self.curentMessage, self.font, 400), antialias=False, color=(255,255,255)))
+        textBox = None
+        borderSize = self.tileSize // 8
+        textBoxLenght = displaySize[0] - (self.app.modules["userCard"].renderRect.width + self.tileSize * 5)
+        if self.curentMessage != "":
+            pass
+        else:
+            textBox = p.surface.Surface((textBoxLenght, self.tileSize))
+            textBox.fill((35, 35, 75))
+            textBox.blit(self.font.render("Message...", antialias=False, color=(0, 0, 0)), (borderSize, borderSize))
+        if self.isActive:
+            pass
+        else:
+            p.draw.rect(textBox, (20, 20, 65), textBox.get_rect(), width=borderSize // 2)
+        self.renderedRect = self.app.window.blit(textBox, (self.app.modules["userCard"].renderRect[2], displaySize[1] - textBox.height))
