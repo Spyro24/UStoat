@@ -13,7 +13,7 @@ class cache:
         try:
             return(self.store['avatars'][userId])
         except KeyError:
-            userData = self.modules['userManager'].userInfo[userId]
+            userData = self.modules['userManager'].getUser(userId)
             avatarId = userData['avatarId']
             if avatarId != "": 
                 avatar = io.BytesIO(requests.get(f"https://cdn.stoatusercontent.com/avatars/{avatarId}").content)

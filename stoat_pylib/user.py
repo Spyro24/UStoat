@@ -80,6 +80,15 @@ class Account:
 class users:
     def __init__(self):
         self.userInfo = {}
+        self.userToken = ""
+    
+    def getUser(self, userId: str):
+        try:
+            return self.userInfo[userId]
+        except KeyError:
+            answer = requests.get(f"https://stoat.chat/api/users/{userId}", headers={"X-Session-Token": self.userToken}).json()
+            self.addUser(answer)
+        return self.userInfo[userId]
     
     def addUser(self, json):
         userid = json["_id"]

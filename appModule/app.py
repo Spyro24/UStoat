@@ -55,6 +55,7 @@ class App:
         userInfo = self.modules['userManager'].userInfo[self.modules['account'].user_id]
         self.modules["userCard"].createCard(userInfo)
         print(self.modules["serverManager"].structure)
+        self.modules['userManager'].userToken = self.modules['account'].sessionToken
 
         self.appLoop()
     
@@ -84,7 +85,7 @@ class App:
                 eventJson = json.loads(event)
                 if eventJson["type"] == "Message":
                     try:
-                        self.modules["notify"].notifyUser(eventJson["content"])
+                        self.modules["notify"].notifyUser(eventJson["content"], icon=self.modules["cache"].getUserAvatar(eventJson["author"]))
                     except KeyError:
                         print(eventJson)
             

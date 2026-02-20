@@ -13,7 +13,7 @@ class notificatonSystem:
             tmp.close()
             notifycation = Notify()
             if icon != None:
-                pygame.image.save(icon, tmp.name)
+                p.image.save(icon, tmp.name)
                 notifycation.icon = tmp.name
             if channel != None:
                 notifycation.title = channel

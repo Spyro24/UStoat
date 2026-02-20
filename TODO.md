@@ -7,7 +7,7 @@
 - [ ] Embeds in to the chat system
 - [ ] GIF embeding
 - [ ] Role coloring
-- [ ] Reconectng the client after conecton loss
+- [ ] Reconectng the client after conection loss
 - [ ] corect message handling
 - [ ] support for remebering bot command (client side only)
 - [ ] emoji upload (validate the name on client and change the name to lowercase  if it contains uppercase)
