@@ -21,7 +21,8 @@ class App:
                         "userManager": stoat.user.users(),
                         "APISubscrption": None,
                         "serverManager": stoat.serverManager.serverManager(),
-                        "notify": appModule.notficationHandler.notificatonSystem()}
+                        "notify": appModule.notficationHandler.notificatonSystem(),
+                        "messageManager": appModule.messageHandler.messageManager()}
         self.modules["userCard"] = appModule.userCard.userCard(self)
         self.modules["cache"] = appModule.cacheSystem.cache(self)
         self.modules["messageInput"] = appModule.messageBox.inputTextBox(self)

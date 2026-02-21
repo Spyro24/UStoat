@@ -3,3 +3,4 @@ import appModule.userCard
 import appModule.cacheSystem
 import appModule.messageBox
 import appModule.notficationHandler
+import appModule.messageHandler
