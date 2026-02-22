@@ -11,8 +11,13 @@
 - [ ] corect message handling
 - [ ] support for remebering bot command (client side only)
 - [ ] emoji upload (validate the name on client and change the name to lowercase  if it contains uppercase)
+- [ ] custom emoji support for text (its harder than you think)
 - [ ] code refactor to make it future proof
 - [ ] Custom theme support
+- [ ] Message history in channels ans DMs
+- [ ] Corect webhook embeding
+- [ ] scroling
+- [ ] reaction support
 - [x] Saving session to device
 - [x] Notififycation with sound
 - [x] add cache system

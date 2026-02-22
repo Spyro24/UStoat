@@ -7,6 +7,7 @@ import appModule
 class App:
     def __init__(self):
         p.init()
+        self.window = p.display.set_mode((1080, 720), flags=p.RESIZABLE)
         self.configFilePath = p.system.get_pref_path("spyro24", "ustoat") + "config.json"
         try:
             confgFile = open(self.configFilePath, "r")
@@ -26,7 +27,7 @@ class App:
         self.modules["userCard"] = appModule.userCard.userCard(self)
         self.modules["cache"] = appModule.cacheSystem.cache(self)
         self.modules["messageInput"] = appModule.messageBox.inputTextBox(self)
-        self.window = p.display.set_mode((1080, 720), flags=p.RESIZABLE)
+        self.modules["messageRender"] = appModule.messageHandler.messageRender(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
         self.VERSION = "0.0.2"
         self.isFocused = False
@@ -86,8 +87,8 @@ class App:
                 eventJson = json.loads(event)
                 if eventJson["type"] == "Message":
                     try:
-                        self.modules["notify"].notifyUser(eventJson["content"], icon=self.modules["cache"].getUserAvatar(eventJson["author"]))
-                    except KeyError:
+                        self.modules["messageManager"].insertMessage(eventJson)
+                    except:
                         print(eventJson)
             
             if lastRender + FPS < time.time():
