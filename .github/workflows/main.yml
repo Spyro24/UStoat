@@ -103,35 +103,29 @@ jobs:
           pip install --upgrade "nuitka[onefile]"
         shell: powershell
 
-      - name: Ensure Dependency Walker in Nuitka cache
+      - name: Ensure Dependency Walker in Nuitka cache (download fallback)
         shell: pwsh
         run: |
           $cacheDir = Join-Path $env:LOCALAPPDATA "Nuitka\depends\x86_64"
           New-Item -ItemType Directory -Path $cacheDir -Force | Out-Null
           $dest = Join-Path $cacheDir "depends.exe"
-          if (Test-Path $dest) {
-            Write-Host "depends.exe already present in cache."
-            exit 0
-          }
-          Write-Host "Attempting manual download of Dependency Walker..."
+          if (Test-Path $dest) { Write-Host "depends.exe already present."; exit 0 }
+          Write-Host "Downloading Dependency Walker..."
           $zip = Join-Path $env:RUNNER_TEMP "depends.zip"
           $url = "http://dependencywalker.com/depends22_x64.zip"
           try {
             Invoke-WebRequest -Uri $url -OutFile $zip -UseBasicParsing -ErrorAction Stop
             Expand-Archive -Path $zip -DestinationPath $env:RUNNER_TEMP -Force
             $found = Get-ChildItem -Path $env:RUNNER_TEMP -Filter "depends.exe" -Recurse | Select-Object -First 1
-            if ($null -eq $found) {
-              Write-Host "depends.exe not found in archive — aborting."
-              Exit 1
-            }
+            if ($null -eq $found) { Write-Host "depends.exe not found in archive."; Exit 1 }
             Copy-Item -Path $found.FullName -Destination $dest -Force
-            Write-Host "depends.exe copied to Nuitka cache: $dest"
+            Write-Host "depends.exe copied to cache: $dest"
           } catch {
-            Write-Host "Download or extraction failed: $_"
-            Exit 1
+            Write-Host "Download/extract failed: $_"; Exit 1
           } finally {
             Remove-Item $zip -ErrorAction SilentlyContinue
           }
+
 
       - name: Build with Nuitka
         shell: pwsh
