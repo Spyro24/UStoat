@@ -58,7 +58,7 @@ jobs:
           $out = "$env:RUNNER_TEMP\dependencywalker.zip"
           # Official site does not provide a stable direct download; GitHub mirror used here.
           # Replace URL below with your trusted mirror if needed.
-          Invoke-WebRequest -Uri "https://github.com/lucasg/Dependencies/releases/download/v1.13.0/Dependencies.zip" -OutFile $out
+          Invoke-WebRequest -Uri "https://dependencywalker.com/depends22_x86.zip" -OutFile $out
           Expand-Archive -Path $out -DestinationPath "$env:RUNNER_TEMP\dependencywalker"
           $dwPath = Get-ChildItem "$env:RUNNER_TEMP\dependencywalker" -Recurse -Filter "depends.exe" | Select-Object -First 1
           if (-not $dwPath) { Write-Error "Dependency walker (depends.exe) not found in archive"; exit 1 }
