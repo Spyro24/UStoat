@@ -15,6 +15,11 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Enable Nuitka downloads
+        run: |
+          echo "NUITKA_ALLOW_DOWNLOADS=1" >> $GITHUB_ENV
+        shell: bash
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -26,6 +31,7 @@ jobs:
 
       - name: Build Linux Executable
         run: |
+          export NUITKA_ALLOW_DOWNLOADS=1
           nuitka --standalone --onefile --output-dir=build --include-data-dir=res=res main.pyw
         shell: bash
 
@@ -46,6 +52,11 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Enable Nuitka downloads
+        run: |
+          Write-Output "NUITKA_ALLOW_DOWNLOADS=1" >> $env:GITHUB_ENV
+        shell: powershell
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -53,30 +64,41 @@ jobs:
           pip install --upgrade "nuitka[onefile]"
         shell: powershell
 
-      - name: Download Dependency Walker
+      - name: Download or verify Dependency Walker (fallback)
         run: |
-          $out = "$env:RUNNER_TEMP\dependencywalker.zip"
-          # Official site does not provide a stable direct download; GitHub mirror used here.
-          # Replace URL below with your trusted mirror if needed.
-          Invoke-WebRequest -Uri "https://dependencywalker.com/depends22_x86.zip" -OutFile $out
-          Expand-Archive -Path $out -DestinationPath "$env:RUNNER_TEMP\dependencywalker"
-          $dwPath = Get-ChildItem "$env:RUNNER_TEMP\dependencywalker" -Recurse -Filter "depends.exe" | Select-Object -First 1
-          if (-not $dwPath) { Write-Error "Dependency walker (depends.exe) not found in archive"; exit 1 }
-          $binDir = Split-Path $dwPath -Parent
-          Write-Output "Found depends.exe in $binDir"
-          # Add to PATH for this job
-          $env:PATH = "$binDir;$env:PATH"
-          Write-Output "Dependency Walker added to PATH"
+          # Try to let Nuitka download tools itself (NUITKA_ALLOW_DOWNLOADS=1).
+          # If Nuitka can't download, fall back to downloading a dependency tool archive.
+          $env:NUITKA_ALLOW_DOWNLOADS = "1"
+          # Quick check: try to invoke Nuitka to trigger any internal download logic (non-fatal)
+          python -c "import shutil, sys; print('nuitka' if shutil.which('nuitka') else 'nuitka-not-found')"
+          # Fallback: download a Dependencies/depends-like binary zip if depends.exe not present later.
+          $out = "$env:RUNNER_TEMP\dependency_fallback.zip"
+          Invoke-WebRequest -Uri "https://github.com/lucasg/Dependencies/releases/download/v1.13.0/Dependencies.zip" -OutFile $out -UseBasicParsing
+          Expand-Archive -Path $out -DestinationPath "$env:RUNNER_TEMP\dependency_fallback"
+          $dwPath = Get-ChildItem "$env:RUNNER_TEMP\dependency_fallback" -Recurse -Filter "depends.exe" | Select-Object -First 1
+          if ($dwPath) {
+            $binDir = Split-Path $dwPath -Parent
+            Write-Output "Found depends.exe in $binDir"
+            echo "##[add-path]$binDir"  # Note: add-path deprecated but runner still sees $env:GITHUB_ENV below
+            Write-Output "$binDir" >> $env:GITHUB_PATH
+          } else {
+            Write-Output "No depends.exe found in fallback archive — relying on Nuitka internal download."
+          }
         shell: powershell
 
-      - name: Verify Dependency Walker
+      - name: Verify Dependency Tool
         run: |
-          # should print version or usage
-          depends.exe || Write-Output "depends invocation returned non-zero exit code"
+          # If depends.exe is available, print version/usage; otherwise print notice.
+          if (Get-Command depends.exe -ErrorAction SilentlyContinue) {
+            depends.exe
+          } else {
+            Write-Output "depends.exe not on PATH; relying on Nuitka to download required tools."
+          }
         shell: powershell
 
       - name: Build Windows Executable (no console)
         run: |
+          $env:NUITKA_ALLOW_DOWNLOADS = "1"
           nuitka --standalone --onefile --output-dir=build `
                  --windows-console-mode=disable `
                  --include-data-dir=res=res `
