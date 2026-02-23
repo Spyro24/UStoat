@@ -46,6 +46,11 @@ jobs:
     env:
       NUITKA_ALLOW_DOWNLOADS: "1"
     steps:
+      - name: Verify NUITKA_ALLOW_DOWNLOADS and local cache
+        shell: pwsh
+        run: |
+          Write-Host "NUITKA_ALLOW_DOWNLOADS=$env:NUITKA_ALLOW_DOWNLOADS"
+          
       - name: Checkout Repository
         uses: actions/checkout@v4
 
