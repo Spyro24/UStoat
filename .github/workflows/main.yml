@@ -1,7 +1,7 @@
 name: Build with Nuitka
 
 on:
-  workflow_dispatch:   # Nur manueller Trigger, kein Push
+  workflow_dispatch:
 
 jobs:
   build-linux:
@@ -10,7 +10,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Python (latest)
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -19,58 +19,55 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          pip install nuitka
+          pip install --upgrade nuitka
           sudo apt-get update
           sudo apt-get install -y patchelf
         shell: bash
 
       - name: Build Linux Executable
         run: |
-          nuitka --standalone --onefile \
-                 --include-data-dir=res=res \
-                 main.pyw
+          nuitka --standalone --onefile --output-dir=build --include-data-dir=res=res main.pyw
         shell: bash
 
       - name: Upload Linux Artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-linux
-          path: main.bin
+          path: build/*
 
   build-windows:
     runs-on: windows-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-  
-      - name: Setup Python (latest stable)
+
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-  
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           if (Test-Path requirements.txt) { pip install -r requirements.txt }
-          pip install "nuitka[onefile]"
+          pip install --upgrade "nuitka[onefile]"
         shell: powershell
-  
-      - name: Ensure Dependency Walker
+
+      - name: Ensure Dependency Walker (download via Nuitka module)
         run: |
-          # Automatisch Dependency Walker für Nuitka herunterladen
-          python -m nuitka --enable-dependency-walker-download
+          python -m nuitka.toolchain.Windows.dependency_walker_download
         shell: powershell
-  
+
       - name: Build Windows Executable (no console)
         run: |
-          nuitka --standalone --onefile `
+          nuitka --standalone --onefile --output-dir=build `
                  --windows-console-mode=disable `
                  --include-data-dir=res=res `
                  main.pyw
         shell: powershell
-  
+
       - name: Upload Windows Artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-windows
-          path: main.pyw.dist\*.exe
+          path: build\*.exe
