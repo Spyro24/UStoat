@@ -13,5 +13,6 @@ if getattr(sys, "frozen", False):
 else:
     os.chdir(Path(__file__).parent)
 #---
+
 if __name__ == "__main__":
     app = appModule.app.App()

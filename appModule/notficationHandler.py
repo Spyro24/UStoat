@@ -1,4 +1,5 @@
 from notifypy import Notify
+import appModule
 import pygame as p
 import tempfile
 import os
@@ -23,6 +24,17 @@ class notificatonSystem:
         finally:
             if os.path.exists(tmp.name):
                 os.remove(tmp.name)
-        
-        
+
+class notificationManager:
+    def __init__(self, app: appModule.app.App):
+        self.notify = notificatonSystem()
+        self.userId = app.modules['account'].user_id
+        self.cache = app.modules["cache"]
+        self.userInMsg = "<@" + self.userId + ">"
+        print(self.userInMsg)
     
+    def scanMessage(self, msg: dict):
+        if "content" in msg:
+            content = msg["content"]
+            if self.userInMsg in content:
+                self.notify.notifyUser(content, channel=None, icon=self.cache.getUserAvatar(msg["user"]["_id"]))

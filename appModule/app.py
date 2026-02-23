@@ -33,6 +33,9 @@ class App:
         self.isFocused = False
         self.modules['account'].clientName = f"UStoat (v {self.VERSION})"
         p.display.set_caption(self.modules['account'].clientName)
+        self.textInput = None
+        self.mousePos = p.mouse.get_pos()
+        self.mouseButtons = p.mouse.get_pressed()
         self.setup()
     
     def setup(self):
@@ -58,6 +61,7 @@ class App:
         self.modules["userCard"].createCard(userInfo)
         print(self.modules["serverManager"].structure)
         self.modules['userManager'].userToken = self.modules['account'].sessionToken
+        self.modules["notificatonSystem"] = appModule.notficationHandler.notificationManager(self)
 
         self.appLoop()
     
@@ -83,16 +87,23 @@ class App:
                 elif event.type == p.WINDOWFOCUSLOST:
                     print("Focus lost")
                     self.isFocused = False
+                elif event.type == p.KEYDOWN:
+                    if self.textInput != None:
+                        self.textInput.text_input(event)
             for event in self.modules['APISubscrption'].get_messages():
                 eventJson = json.loads(event)
                 if eventJson["type"] == "Message":
                     try:
                         self.modules["messageManager"].insertMessage(eventJson)
-                    except:
+                        self.modules["notificatonSystem"].scanMessage(eventJson)
+                    except BaseException as e:
                         print(eventJson)
+                        print(e)
             
             if lastRender + FPS < time.time():
                 lastRender = time.time()
+                self.mousePos = p.mouse.get_pos()
+                self.mouseButtons = p.mouse.get_pressed()
                 displaySize = self.window.get_size()
                 self.window.fill((0,0,0))
                 for obj in self.renderQuee:

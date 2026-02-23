@@ -11,9 +11,12 @@ class inputTextBox:
         self.renderedRect = p.rect.Rect()
         self.isActive = False
         self.tileSize = self.app.tileSize
+        self.sendInChannel = "01F92C5ZXBQWQ8KY7J8KY917NM"
     
     def sendMessage(self):
-        self.curentMessage = ""
+        if self.curentMessage != "":
+            self.app.modules["account"].sendMessage(self.curentMessage, self.sendInChannel)
+            self.curentMessage = ""
         
     def wrap_text_to_width(self, text: str, font: p.font.Font, max_width: int) -> str:
         lines: list[str] = []
@@ -31,21 +34,41 @@ class inputTextBox:
             lines.append(current_line)
         return "\n".join(lines)
     
-    def text_input(self):
-        pass
-    
+    def text_input(self, event: p.Event):
+        if event.key == p.K_RETURN:
+            self.sendMessage()
+        elif event.key == p.K_BACKSPACE:
+            self.curentMessage = self.curentMessage[:-1]
+        else:
+            self.curentMessage += event.unicode
+        
     def render(self, displaySize):
         textBox = None
         borderSize = self.tileSize // 8
         textBoxLenght = displaySize[0] - (self.app.modules["userCard"].renderRect.width + self.tileSize * 5)
         if self.curentMessage != "":
-            pass
+            showText = self.wrap_text_to_width(self.curentMessage, self.font, textBoxLenght - (2 * borderSize))
+            renderedText = self.font.render(showText, antialias=True, color=(255,255,255))
+            if renderedText.height > self.tileSize - borderSize / 2:
+                textBox = p.surface.Surface((textBoxLenght, renderedText.height + 2 * borderSize))
+            else:
+                textBox = p.surface.Surface((textBoxLenght, self.tileSize))
+            textBox.fill((35, 35, 75))
+            textBox.blit(renderedText, (borderSize, borderSize))
+            
         else:
             textBox = p.surface.Surface((textBoxLenght, self.tileSize))
             textBox.fill((35, 35, 75))
             textBox.blit(self.font.render("Message...", antialias=False, color=(0, 0, 0)), (borderSize, borderSize))
         if self.isActive:
-            pass
+            p.draw.rect(textBox, (120, 120, 165), textBox.get_rect(), width=borderSize // 2)
         else:
             p.draw.rect(textBox, (20, 20, 65), textBox.get_rect(), width=borderSize // 2)
         self.renderedRect = self.app.window.blit(textBox, (self.app.modules["userCard"].renderRect[2], displaySize[1] - textBox.height))
+        #Handle mouse input
+        if self.renderedRect.collidepoint(self.app.mousePos):
+            if self.app.mouseButtons[0]:
+                if self.app.textInput != None:
+                    self.app.textInput.isActive = False
+                self.app.textInput = self
+                self.isActive = True

@@ -62,7 +62,7 @@ class Account:
         self.apiSuscription = WSSClient(f"wss://stoat.chat/events?version=1&format=json&token={self.sessionToken}")
         
     def sendMessage(self, msg: str, channel: str):
-        answer = requests.post(f"https://stoat.chat/api/channels/{channel}/messages?", headers={"": self.sessionToken}, json={"content": msg})
+        answer = requests.post(f"https://stoat.chat/api/channels/{channel}/messages?", headers={"X-Session-Token": self.sessionToken}, json={"content": msg})
     
     def saveAccount(self) -> dict:
         return {"_id": self._id, "userId": self.user_id, "session": self.sessionToken}
