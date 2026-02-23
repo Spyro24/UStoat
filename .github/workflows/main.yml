@@ -43,6 +43,8 @@ jobs:
 
   build-windows:
     runs-on: windows-latest
+    env:
+      NUITKA_ALLOW_DOWNLOADS: "1"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
