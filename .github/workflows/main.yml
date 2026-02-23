@@ -43,98 +43,40 @@ jobs:
 
   build-windows:
     runs-on: windows-latest
-    env:
-      NUITKA_ALLOW_DOWNLOADS: "1"
     steps:
-      - name: Cache Dependency Walker (Windows)
-        uses: actions/cache@v4
-        with:
-          path: ${{ runner.temp }}/depwalker-cache
-          key: depwalker-${{ runner.os }}-v1
-          restore-keys: |
-            depwalker-${{ runner.os }}-
-
-      - name: Ensure Cache Directory (Windows)
-        run: |
-          $cacheDir = "$env:RUNNER_TEMP\depwalker-cache"
-          if (-not (Test-Path $cacheDir)) { New-Item -ItemType Directory -Path $cacheDir | Out-Null }
-          $zipPath = Join-Path $cacheDir "depends22_x64.zip"
-          if (-not (Test-Path $zipPath)) {
-            Write-Output "Downloading Dependency Walker..."
-            Invoke-WebRequest -Uri "https://dependencywalker.com/depends22_x64.zip" -OutFile $zipPath -UseBasicParsing
-            Expand-Archive -Path $zipPath -DestinationPath (Join-Path $cacheDir "extracted")
-          } else {
-            Write-Output "Using cached Dependency Walker archive."
-          }
-          # Add extracted bin dir to PATH if exists
-          $extracted = Join-Path $cacheDir "extracted"
-          $dependsExe = Get-ChildItem $extracted -Recurse -Filter "depends.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
-          if ($dependsExe) {
-            $binDir = Split-Path $dependsExe.FullName -Parent
-            Write-Output "Adding $binDir to PATH"
-            echo "$binDir" >> $env:GITHUB_PATH
-          } else {
-            Write-Output "depends.exe not found after extraction."
-          }
-        shell: powershell
-
-      - name: Verify NUITKA_ALLOW_DOWNLOADS and local cache
-        shell: pwsh
-        run: |
-          Write-Host "NUITKA_ALLOW_DOWNLOADS=$env:NUITKA_ALLOW_DOWNLOADS"
-          
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Setup Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Enable Nuitka downloads
+      - name: Enable Nuitka automatic downloads
         run: |
           Write-Output "NUITKA_ALLOW_DOWNLOADS=1" >> $env:GITHUB_ENV
         shell: powershell
 
-      - name: Install dependencies
+      - name: Upgrade pip and install project dependencies
         run: |
           python -m pip install --upgrade pip
           if (Test-Path requirements.txt) { pip install -r requirements.txt }
-          pip install --upgrade "nuitka[onefile]"
         shell: powershell
 
-      - name: Ensure Dependency Walker in Nuitka cache (download fallback)
-        shell: pwsh
+      - name: Install latest Nuitka with onefile support
         run: |
-          $cacheDir = Join-Path $env:LOCALAPPDATA "Nuitka\depends\x86_64"
-          New-Item -ItemType Directory -Path $cacheDir -Force | Out-Null
-          $dest = Join-Path $cacheDir "depends.exe"
-          if (Test-Path $dest) { Write-Host "depends.exe already present."; exit 0 }
-          Write-Host "Downloading Dependency Walker..."
-          $zip = Join-Path $env:RUNNER_TEMP "depends.zip"
-          $url = "http://dependencywalker.com/depends22_x64.zip"
-          try {
-            Invoke-WebRequest -Uri $url -OutFile $zip -UseBasicParsing -ErrorAction Stop
-            Expand-Archive -Path $zip -DestinationPath $env:RUNNER_TEMP -Force
-            $found = Get-ChildItem -Path $env:RUNNER_TEMP -Filter "depends.exe" -Recurse | Select-Object -First 1
-            if ($null -eq $found) { Write-Host "depends.exe not found in archive."; Exit 1 }
-            Copy-Item -Path $found.FullName -Destination $dest -Force
-            Write-Host "depends.exe copied to cache: $dest"
-          } catch {
-            Write-Host "Download/extract failed: $_"; Exit 1
-          } finally {
-            Remove-Item $zip -ErrorAction SilentlyContinue
-          }
+          python -m pip install --upgrade "nuitka[onefile]"
+        shell: powershell
 
+      - uses: Nuitka/Nuitka-Action@main
+        with:
+          nuitka-version: main
+          script-name: main.pyw
+          include-data-dir: |
+            res=res
 
-      - name: Build with Nuitka
-        shell: pwsh
-        run: |
-          python -m nuitka --standalone --onefile --output-dir=build `
-            --windows-console-mode=disable --include-data-dir=res=res main.pyw
-
-      - name: Upload Windows Artifact
+      - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-windows
-          path: build\*.exe
+          name: nuitka-windows-exe
+          path: build\**\*.exe
