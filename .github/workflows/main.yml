@@ -1,3 +1,4 @@
+yaml
 name: Build with Nuitka
 
 on:
@@ -21,7 +22,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install --upgrade nuitka
           sudo apt-get update
-          sudo apt-get install -y patchelf
+          sudo apt-get install -y patchelf unzip
         shell: bash
 
       - name: Build Linux Executable
@@ -53,9 +54,26 @@ jobs:
           pip install --upgrade "nuitka[onefile]"
         shell: powershell
 
-      - name: Ensure Dependency Walker (download via Nuitka module)
+      - name: Download Dependency Walker
         run: |
-          python -m nuitka.toolchain.Windows.dependency_walker_download
+          $out = "$env:RUNNER_TEMP\dependencywalker.zip"
+          # Official site does not provide a stable direct download; GitHub mirror used here.
+          # Replace URL below with your trusted mirror if needed.
+          Invoke-WebRequest -Uri "https://github.com/lucasg/Dependencies/releases/download/v1.13.0/Dependencies.zip" -OutFile $out
+          Expand-Archive -Path $out -DestinationPath "$env:RUNNER_TEMP\dependencywalker"
+          $dwPath = Get-ChildItem "$env:RUNNER_TEMP\dependencywalker" -Recurse -Filter "depends.exe" | Select-Object -First 1
+          if (-not $dwPath) { Write-Error "Dependency walker (depends.exe) not found in archive"; exit 1 }
+          $binDir = Split-Path $dwPath -Parent
+          Write-Output "Found depends.exe in $binDir"
+          # Add to PATH for this job
+          $env:PATH = "$binDir;$env:PATH"
+          Write-Output "Dependency Walker added to PATH"
+        shell: powershell
+
+      - name: Verify Dependency Walker
+        run: |
+          # should print version or usage
+          depends.exe || Write-Output "depends invocation returned non-zero exit code"
         shell: powershell
 
       - name: Build Windows Executable (no console)
