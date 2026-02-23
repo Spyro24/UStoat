@@ -46,6 +46,38 @@ jobs:
     env:
       NUITKA_ALLOW_DOWNLOADS: "1"
     steps:
+      - name: Cache Dependency Walker (Windows)
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/depwalker-cache
+          key: depwalker-${{ runner.os }}-v1
+          restore-keys: |
+            depwalker-${{ runner.os }}-
+
+      - name: Ensure Cache Directory (Windows)
+        run: |
+          $cacheDir = "$env:RUNNER_TEMP\depwalker-cache"
+          if (-not (Test-Path $cacheDir)) { New-Item -ItemType Directory -Path $cacheDir | Out-Null }
+          $zipPath = Join-Path $cacheDir "depends22_x64.zip"
+          if (-not (Test-Path $zipPath)) {
+            Write-Output "Downloading Dependency Walker..."
+            Invoke-WebRequest -Uri "https://dependencywalker.com/depends22_x64.zip" -OutFile $zipPath -UseBasicParsing
+            Expand-Archive -Path $zipPath -DestinationPath (Join-Path $cacheDir "extracted")
+          } else {
+            Write-Output "Using cached Dependency Walker archive."
+          }
+          # Add extracted bin dir to PATH if exists
+          $extracted = Join-Path $cacheDir "extracted"
+          $dependsExe = Get-ChildItem $extracted -Recurse -Filter "depends.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($dependsExe) {
+            $binDir = Split-Path $dependsExe.FullName -Parent
+            Write-Output "Adding $binDir to PATH"
+            echo "$binDir" >> $env:GITHUB_PATH
+          } else {
+            Write-Output "depends.exe not found after extraction."
+          }
+        shell: powershell
+
       - name: Verify NUITKA_ALLOW_DOWNLOADS and local cache
         shell: pwsh
         run: |
