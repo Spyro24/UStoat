@@ -64,6 +64,52 @@ jobs:
           }
         shell: powershell
 
+      - name: Ensure Dependency Walker and DLLs in Nuitka cache (download fallback)
+        shell: pwsh
+        run: |
+          $cacheDir = Join-Path $env:LOCALAPPDATA "Nuitka\depends\x86_64"
+          New-Item -ItemType Directory -Path $cacheDir -Force | Out-Null
+          $destExe = Join-Path $cacheDir "depends.exe"
+          if (Test-Path $destExe) {
+            Write-Host "depends.exe already present: $destExe"
+            exit 0
+          }
+          Write-Host "depends.exe not found in cache — attempting manual download..."
+          $zip = Join-Path $env:RUNNER_TEMP "depends.zip"
+          $extractDir = Join-Path $env:RUNNER_TEMP "depends_extracted"
+          $url = "http://dependencywalker.com/depends22_x64.zip"
+          try {
+            Invoke-WebRequest -Uri $url -OutFile $zip -UseBasicParsing -ErrorAction Stop
+            Remove-Item -Recurse -Force $extractDir -ErrorAction SilentlyContinue
+            Expand-Archive -Path $zip -DestinationPath $extractDir -Force
+            $foundExe = Get-ChildItem -Path $extractDir -Filter "depends.exe" -Recurse | Select-Object -First 1
+            if ($null -eq $foundExe) {
+              Write-Host "depends.exe not found inside downloaded archive."
+              Exit 1
+            }
+            # copy depends.exe
+            Copy-Item -Path $foundExe.FullName -Destination $destExe -Force
+            Write-Host "depends.exe copied to Nuitka cache: $destExe"
+            # copy any DLLs found in the extracted archive to the cache
+            $dlls = Get-ChildItem -Path $extractDir -Filter "*.dll" -Recurse -ErrorAction SilentlyContinue
+            if ($dlls) {
+              foreach ($d in $dlls) {
+                $target = Join-Path $cacheDir $d.Name
+                Copy-Item -Path $d.FullName -Destination $target -Force
+                Write-Host "Copied DLL: $($d.Name) -> $target"
+              }
+            } else {
+              Write-Host "No DLLs found in archive to copy."
+            }
+          } catch {
+            Write-Host "Manual download or extraction failed: $_"
+            Exit 1
+          } finally {
+            Remove-Item $zip -ErrorAction SilentlyContinue
+            Remove-Item -Recurse -Force $extractDir -ErrorAction SilentlyContinue
+          }
+
+
       - name: Build with Nuitka (standalone onefile, no console)
         run: |
           $env:NUITKA_ALLOW_DOWNLOADS = "1"
