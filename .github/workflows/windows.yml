@@ -109,6 +109,66 @@ jobs:
             Remove-Item -Recurse -Force $extractDir -ErrorAction SilentlyContinue
           }
 
+      - name: Force-install Dependency Walker into Nuitka cache (final)
+        shell: pwsh
+        run: |
+          $cacheRoot = Join-Path $env:LOCALAPPDATA "Nuitka"
+          $cacheDir = Join-Path $cacheRoot "depends\x86_64"
+          Write-Host "Nuitka cache root: $cacheRoot"
+          New-Item -ItemType Directory -Path $cacheDir -Force | Out-Null
+
+          $destExe = Join-Path $cacheDir "depends.exe"
+          $present = Test-Path $destExe
+          Write-Host "depends.exe present before action: $present"
+
+          if (-Not $present) {
+            Write-Host "Attempting download and extraction of Dependency Walker..."
+            $zip = Join-Path $env:RUNNER_TEMP "depends.zip"
+            $extractDir = Join-Path $env:RUNNER_TEMP "depends_extracted"
+            $url = "http://dependencywalker.com/depends22_x64.zip"
+            try {
+              Invoke-WebRequest -Uri $url -OutFile $zip -UseBasicParsing -ErrorAction Stop
+              Remove-Item -Recurse -Force $extractDir -ErrorAction SilentlyContinue
+              Expand-Archive -Path $zip -DestinationPath $extractDir -Force
+
+              # find and copy executable
+              $foundExe = Get-ChildItem -Path $extractDir -Filter "depends.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+              if ($null -eq $foundExe) { Write-Host "ERROR: depends.exe not found in downloaded archive."; Exit 1 }
+              Copy-Item -Path $foundExe.FullName -Destination $destExe -Force
+              Write-Host "Copied depends.exe -> $destExe"
+
+              # copy any DLLs from the extracted archive into cacheDir
+              $dlls = Get-ChildItem -Path $extractDir -Filter "*.dll" -Recurse -ErrorAction SilentlyContinue
+              if ($dlls.Count -gt 0) {
+                foreach ($d in $dlls) {
+                  $target = Join-Path $cacheDir $d.Name
+                  Copy-Item -Path $d.FullName -Destination $target -Force
+                  Write-Host "Copied DLL: $($d.Name) -> $target"
+                }
+              } else {
+                Write-Host "No DLLs found in archive to copy."
+              }
+            } catch {
+              Write-Host "Download/extract failed: $_"
+              Exit 1
+            } finally {
+              Remove-Item $zip -ErrorAction SilentlyContinue
+              Remove-Item -Recurse -Force $extractDir -ErrorAction SilentlyContinue
+            }
+          } else {
+            Write-Host "depends.exe already present; ensuring DLLs exist."
+            # still verify at least one DLL presence or warn
+            $anyDll = Get-ChildItem -Path $cacheDir -Filter "*.dll" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($null -eq $anyDll) { Write-Host "Warning: no DLLs found in cache; Nuitka may still ask." }
+          }
+
+          # final verification
+          Write-Host "Final check:"
+          Write-Host "depends.exe exists: " (Test-Path $destExe)
+          $dllCount = (Get-ChildItem -Path $cacheDir -Filter "*.dll" -Recurse -ErrorAction SilentlyContinue | Measure-Object).Count
+          Write-Host "Number of DLLs in cache: $dllCount"
+          if (-Not (Test-Path $destExe)) { Exit 1 }
+
 
       - name: Build with Nuitka (standalone onefile, no console)
         run: |
