@@ -1,0 +1,4 @@
+pygame-ce
+json
+requests
+websocket-client
