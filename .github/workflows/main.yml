@@ -1,0 +1,68 @@
+name: Build with Nuitka
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # ---------- Linux ----------
+      - name: Install Dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install nuitka
+          sudo apt-get update
+          sudo apt-get install -y patchelf
+        shell: bash
+
+      - name: Build Executable (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          nuitka --standalone --onefile \
+                 --include-data-dir=res=res \
+                 main.pyw
+        shell: bash
+
+      # ---------- Windows ----------
+      - name: Install Dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          python -m pip install --upgrade pip
+          if (Test-Path requirements.txt) { pip install -r requirements.txt }
+          pip install nuitka
+        shell: powershell
+
+      - name: Build Executable (Windows, no console)
+        if: runner.os == 'Windows'
+        run: |
+          nuitka --standalone --onefile `
+                 --windows-disable-console `
+                 --include-data-dir=res=res `
+                 main.pyw
+        shell: powershell
+
+      # ---------- Upload ----------
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ runner.os }}
+          path: |
+            *.exe
+            *.bin
