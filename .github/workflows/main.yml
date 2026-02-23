@@ -64,38 +64,6 @@ jobs:
           pip install --upgrade "nuitka[onefile]"
         shell: powershell
 
-      - name: Download or verify Dependency Walker (fallback)
-        run: |
-          # Try to let Nuitka download tools itself (NUITKA_ALLOW_DOWNLOADS=1).
-          # If Nuitka can't download, fall back to downloading a dependency tool archive.
-          $env:NUITKA_ALLOW_DOWNLOADS = "1"
-          # Quick check: try to invoke Nuitka to trigger any internal download logic (non-fatal)
-          python -c "import shutil, sys; print('nuitka' if shutil.which('nuitka') else 'nuitka-not-found')"
-          # Fallback: download a Dependencies/depends-like binary zip if depends.exe not present later.
-          $out = "$env:RUNNER_TEMP\dependency_fallback.zip"
-          Invoke-WebRequest -Uri "https://github.com/lucasg/Dependencies/releases/download/v1.13.0/Dependencies.zip" -OutFile $out -UseBasicParsing
-          Expand-Archive -Path $out -DestinationPath "$env:RUNNER_TEMP\dependency_fallback"
-          $dwPath = Get-ChildItem "$env:RUNNER_TEMP\dependency_fallback" -Recurse -Filter "depends.exe" | Select-Object -First 1
-          if ($dwPath) {
-            $binDir = Split-Path $dwPath -Parent
-            Write-Output "Found depends.exe in $binDir"
-            echo "##[add-path]$binDir"  # Note: add-path deprecated but runner still sees $env:GITHUB_ENV below
-            Write-Output "$binDir" >> $env:GITHUB_PATH
-          } else {
-            Write-Output "No depends.exe found in fallback archive — relying on Nuitka internal download."
-          }
-        shell: powershell
-
-      - name: Verify Dependency Tool
-        run: |
-          # If depends.exe is available, print version/usage; otherwise print notice.
-          if (Get-Command depends.exe -ErrorAction SilentlyContinue) {
-            depends.exe
-          } else {
-            Write-Output "depends.exe not on PATH; relying on Nuitka to download required tools."
-          }
-        shell: powershell
-
       - name: Build Windows Executable (no console)
         run: |
           $env:NUITKA_ALLOW_DOWNLOADS = "1"
