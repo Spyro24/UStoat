@@ -32,6 +32,8 @@ jobs:
         shell: powershell
 
       - uses: Nuitka/Nuitka-Action@main
+        include-data-dir: |
+          res=res
         with:
           nuitka-version: main
           script-name: main.pyw
