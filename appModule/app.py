@@ -29,7 +29,7 @@ class App:
         self.modules["messageInput"] = appModule.messageBox.inputTextBox(self)
         self.modules["messageRender"] = appModule.messageHandler.messageRender(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
-        self.VERSION = "0.0.2"
+        self.VERSION = "0.0.3"
         self.isFocused = False
         self.modules['account'].clientName = f"UStoat (v {self.VERSION})"
         p.display.set_caption(self.modules['account'].clientName)
@@ -39,11 +39,7 @@ class App:
         self.setup()
     
     def setup(self):
-        try:
-            if self.modules['account'].loadAccount(self.config["loginData"]):
-                self.loginToStoat()
-        except:
-            self.loginToStoat()
+        appModule.loginHelper.loginHelper(self)
         self.modules['account'].subToAPI()
         self.modules['APISubscrption'] = self.modules['account'].apiSuscription
         getInit = True
