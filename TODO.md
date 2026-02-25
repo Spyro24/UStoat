@@ -2,7 +2,6 @@
 - [ ] server selector
 - [ ] Account Info card (will popup on click on the the user card)
 - [ ] server channel selector (with the abily ty to copy channels and the permision of that channel)
-- [ ] message send box 
 - [ ] add server folders (client side, it will be stored on device)
 - [ ] Embeds in to the chat system
 - [ ] GIF embeding
@@ -18,6 +17,7 @@
 - [ ] Corect webhook embeding
 - [ ] scroling
 - [ ] reaction support
+- [x] message send box 
 - [x] Saving session to device
 - [x] Notififycation with sound
 - [x] add cache system
