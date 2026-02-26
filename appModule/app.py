@@ -21,13 +21,14 @@ class App:
                         "account": stoat.user.Account(),
                         "userManager": stoat.user.users(),
                         "APISubscrption": None,
-                        "serverManager": stoat.serverManager.serverManager(),
+                        "serverManager": appModule.serverManager.serverManager(),
                         "notify": appModule.notficationHandler.notificatonSystem(),
                         "messageManager": appModule.messageHandler.messageManager()}
         self.modules["userCard"] = appModule.userCard.userCard(self)
         self.modules["cache"] = appModule.cacheSystem.cache(self)
         self.modules["messageInput"] = appModule.messageBox.inputTextBox(self)
         self.modules["messageRender"] = appModule.messageHandler.messageRender(self)
+        self.modules["serverSelector"] = appModule.serverManager.serverSelector(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
         self.VERSION = "0.0.3"
         self.isFocused = False
@@ -51,11 +52,11 @@ class App:
                         print(packet)
                         for user in packet["users"]:
                             self.modules['userManager'].addUser(user)
-                        self.modules["serverManager"].loadServers(packet["servers"])
+                        self.modules["serverManager"].insertReadyPackage(packet)
                         getInit = False
         userInfo = self.modules['userManager'].userInfo[self.modules['account'].user_id]
         self.modules["userCard"].createCard(userInfo)
-        print(self.modules["serverManager"].structure)
+        print(self.modules["serverManager"].serverStructure)
         self.modules['userManager'].userToken = self.modules['account'].sessionToken
         self.modules["notificatonSystem"] = appModule.notficationHandler.notificationManager(self)
 

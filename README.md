@@ -1,9 +1,10 @@
 # UStoat - A client for [stoat.chat](https://stoat.chat) writen in python
-UStoat is a stoat client completly writen in python and with the use of the great [pygame-ce](https://pyga.me/) libary.
+UStoat is a minimalistic stoat client completly writen in python and with the use of the great [pygame-ce](https://pyga.me/) libary.
 
 # Features
 
 * caching system (only runtime, this makes sure that we never hit API limits or stress the API)
+* Minimalistic interface
 
 # Info
 
