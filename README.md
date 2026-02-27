@@ -4,7 +4,7 @@ UStoat is a minimalistic stoat client completly writen in python and with the us
 # Features
 
 * caching system (only runtime, this makes sure that we never hit API limits or stress the API)
-* Minimalistic interface
+* Commpact minimalistic interface
 
 # Info
 

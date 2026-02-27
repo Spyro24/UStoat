@@ -7,7 +7,8 @@ class cache:
     def __init__(self, app: appModule.app.App):
         self.app = app
         self.modules = self.app.modules
-        self.store = {"avatars":{}}
+        self.store = {"avatars":{},
+                      "icons": {}}
     
     def getUserAvatar(self, userId: str):
         try:
@@ -23,6 +24,16 @@ class cache:
             avatar = self.make_square_and_scale(avatar)
             self.store['avatars'][userId] = avatar
             return avatar
+    
+    def getIcon(self, iconPath: str):
+        try:
+            return(self.store['icons'][iconPath])
+        except KeyError:
+            icon = io.BytesIO(requests.get(f"https://cdn.stoatusercontent.com/icons/{iconPath}").content)
+            icon = p.image.load(icon)
+            icon = self.make_square_and_scale(icon)
+            self.store['icons'][iconPath] = icon
+            return icon
     
     def make_square_and_scale(self, surface: p.Surface):
         orig_width, orig_height = surface.get_size()
