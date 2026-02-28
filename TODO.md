@@ -17,6 +17,10 @@
 - [ ] Corect webhook embeding
 - [ ] scroling
 - [ ] reaction support
+- [ ] Plugin support (source version only)
+- [ ] Inbox forr important messages (replies, mentions etc)
+- [ ] i18n support
+- [ ] performance issue fixing
 - [x] message send box 
 - [x] Saving session to device
 - [x] Notififycation with sound

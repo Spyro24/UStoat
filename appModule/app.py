@@ -29,6 +29,7 @@ class App:
         self.modules["messageInput"] = appModule.messageBox.inputTextBox(self)
         self.modules["messageRender"] = appModule.messageHandler.messageRender(self)
         self.modules["serverSelector"] = appModule.serverManager.serverSelector(self)
+        self.modules["channelSelector"] = appModule.serverManager.channelSelector(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
         self.VERSION = "0.0.3"
         self.isFocused = False
@@ -60,6 +61,10 @@ class App:
         self.modules['userManager'].userToken = self.modules['account'].sessionToken
         self.modules["notificatonSystem"] = appModule.notficationHandler.notificationManager(self)
 
+        self.ready()
+    
+    def ready(self):
+        self.modules["serverSelector"].update()
         self.appLoop()
     
     def loginToStoat(self):
