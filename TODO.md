@@ -1,7 +1,6 @@
 - [ ] e2ee (client side only)
-- [ ] server selector
 - [ ] Account Info card (will popup on click on the the user card)
-- [ ] server channel selector (with the abily ty to copy channels and the permision of that channel)
+- [ ] better server channel selector (with the abily ty to copy channels and the permision of that channel)
 - [ ] add server folders (client side, it will be stored on device)
 - [ ] Embeds in to the chat system
 - [ ] GIF embeding
@@ -18,9 +17,11 @@
 - [ ] scroling
 - [ ] reaction support
 - [ ] Plugin support (source version only)
-- [ ] Inbox forr important messages (replies, mentions etc)
+- [ ] Inbox for important messages (replies, mentions etc)
 - [ ] i18n support
 - [ ] performance issue fixing
+- [x] server channel selector
+- [x] server selector- [ ] server selector
 - [x] message send box 
 - [x] Saving session to device
 - [x] Notififycation with sound

@@ -26,12 +26,12 @@ class App:
                         "messageManager": appModule.messageHandler.messageManager()}
         self.modules["userCard"] = appModule.userCard.userCard(self)
         self.modules["cache"] = appModule.cacheSystem.cache(self)
-        self.modules["messageInput"] = appModule.messageBox.inputTextBox(self)
-        self.modules["messageRender"] = appModule.messageHandler.messageRender(self)
         self.modules["serverSelector"] = appModule.serverManager.serverSelector(self)
         self.modules["channelSelector"] = appModule.serverManager.channelSelector(self)
+        self.modules["messageInput"] = appModule.messageBox.inputTextBox(self)
+        self.modules["messageRender"] = appModule.messageHandler.messageRender(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
-        self.VERSION = "0.0.3"
+        self.VERSION = "0.1.0"
         self.isFocused = False
         self.modules['account'].clientName = f"UStoat (v {self.VERSION})"
         p.display.set_caption(self.modules['account'].clientName)

@@ -8,7 +8,7 @@ UStoat is a minimalistic stoat client completly writen in python and with the us
 
 ## Info
 
-I use Nuitka for compilation.(you can find the client download in the releases page)
+* I use Nuitka for compilation.(you can find the client download in the releases page)
 
 ## Other
 We have a stoat server for help, suggestions and the other UStoat stuff like themes etc https://stt.gg/MeM1tWFB

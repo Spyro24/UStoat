@@ -34,6 +34,7 @@ class messageRender:
                        "text": (255, 255, 255),
                        "userName": (150, 150, 150)}
         self.selectedChannel = "01F92C5ZXBQWQ8KY7J8KY917NM"
+        self.channelSelector = app.modules["channelSelector"]
         self.tileSize = self.app.tileSize
         self.app.renderQuee.append(self)
         self.font = self.app.modules["font"]
@@ -80,7 +81,7 @@ class messageRender:
         try:
             msgIndex = -1
             while renderYPos > 0:
-                text = self.renderMessage(self.app.modules["messageManager"].getMessage(self.selectedChannel, msgIndex), messageWith, borderWidth)
+                text = self.renderMessage(self.app.modules["messageManager"].getMessage(self.channelSelector.selectedChannel, msgIndex), messageWith, borderWidth)
                 renderYPos -= text.height
                 self.window.blit(text, (renderXPos, renderYPos))[3]
                 msgIndex -= 1

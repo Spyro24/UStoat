@@ -12,10 +12,11 @@ class inputTextBox:
         self.isActive = False
         self.tileSize = self.app.tileSize
         self.sendInChannel = "01F92C5ZXBQWQ8KY7J8KY917NM"
+        self.channelSelector = app.modules["channelSelector"]
     
     def sendMessage(self):
         if self.curentMessage != "":
-            self.app.modules["account"].sendMessage(self.curentMessage, self.sendInChannel)
+            self.app.modules["account"].sendMessage(self.curentMessage, self.channelSelector.selectedChannel)
             self.curentMessage = ""
         
     def wrap_text_to_width(self, text: str, font: p.font.Font, max_width: int) -> str:
