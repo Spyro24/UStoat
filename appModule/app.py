@@ -31,7 +31,7 @@ class App:
         self.modules["messageInput"] = appModule.messageBox.inputTextBox(self)
         self.modules["messageRender"] = appModule.messageHandler.messageRender(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
-        self.VERSION = "0.1.0"
+        self.VERSION = "0.1.1"
         self.isFocused = False
         self.modules['account'].clientName = f"UStoat (v {self.VERSION})"
         p.display.set_caption(self.modules['account'].clientName)
