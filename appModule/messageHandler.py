@@ -5,6 +5,8 @@ import pygame as p
 class messageManager:
     def __init__(self):
         self.messages = {}
+        self.userMessages = []
+        self.userId = ""
     
     def insertMessage(self, message: dict):
         if "content" in message:
@@ -12,6 +14,8 @@ class messageManager:
             if not message['channel'] in self.messages:
                 self.messages[message['channel']] = []
             self.messages[message['channel']].append(msg)
+            if msg["author"] == self.userId:
+                self.userMessages.append(msg["id"])
     
     def populateChannl(self, channel: str):
         pass

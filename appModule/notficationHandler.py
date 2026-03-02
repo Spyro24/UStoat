@@ -31,10 +31,18 @@ class notificationManager:
         self.userId = app.modules['account'].user_id
         self.cache = app.modules["cache"]
         self.userInMsg = "<@" + self.userId + ">"
-        print(self.userInMsg)
+        self.messageManager = app.modules['messageManager']
+        self.messageManager.userId = self.userId
     
     def scanMessage(self, msg: dict):
-        if "content" in msg:
+        notified = False
+        if "content" in msg and not notified:
             content = msg["content"]
             if self.userInMsg in content:
                 self.notify.notifyUser(content, channel=None, icon=self.cache.getUserAvatar(msg["user"]["_id"]))
+                notified = True
+        if "replies" in msg and not notified:
+            for replyId in msg["replies"]:
+                if replyId in self.messageManager.userMessages:
+                    self.notify.notifyUser(content, channel="[reply]", icon=self.cache.getUserAvatar(msg["user"]["_id"]))
+                    notified = True
