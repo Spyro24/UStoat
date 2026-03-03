@@ -32,6 +32,7 @@ class cache:
             icon = io.BytesIO(requests.get(f"https://cdn.stoatusercontent.com/icons/{iconPath}").content)
             icon = p.image.load(icon)
             icon = self.make_square_and_scale(icon)
+            icon = self.create_circular_surface(icon)
             self.store['icons'][iconPath] = icon
             return icon
     
@@ -43,3 +44,11 @@ class cache:
         y = (square_size - orig_height) // 2
         square_surface.blit(surface, (x, y))
         return square_surface
+
+    def create_circular_surface(self, surface):
+        circleSurface = p.Surface(surface.get_size(), flags=p.SRCALPHA)
+        circleSurface.fill((255,255,255,255))
+        p.draw.ellipse(circleSurface, (0,0,0,0), circleSurface.get_rect())
+        surface = surface
+        circleSurface.blit(surface, (0,0), special_flags=p.BLEND_RGBA_ADD)
+        return circleSurface
