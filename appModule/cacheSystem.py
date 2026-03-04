@@ -2,7 +2,6 @@ import appModule
 import requests
 import pygame as p
 import io
-import numpy as np
 
 class cache:
     def __init__(self, app: appModule.app.App):
