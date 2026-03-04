@@ -34,6 +34,37 @@ jobs:
         with:
           name: build-linux
           path: build/*
+  
+  build-linux-old:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        run: |
+          sudo apt install python3 python-is-python3
+        shell: bash
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install --upgrade nuitka
+          sudo apt-get update
+          sudo apt-get install -y patchelf unzip
+        shell: bash
+
+      - name: Build Linux Executable
+        run: |
+          nuitka --standalone --onefile --output-dir=build --include-data-dir=res=res main.pyw
+        shell: bash
+
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-linux-old
+          path: build/*
 
   build-windows:
     runs-on: windows-latest

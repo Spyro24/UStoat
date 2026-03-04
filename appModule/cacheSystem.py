@@ -2,6 +2,7 @@ import appModule
 import requests
 import pygame as p
 import io
+import numpy as np
 
 class cache:
     def __init__(self, app: appModule.app.App):
@@ -47,8 +48,8 @@ class cache:
 
     def create_circular_surface(self, surface):
         circleSurface = p.Surface(surface.get_size(), flags=p.SRCALPHA)
-        circleSurface.fill((255,255,255,255))
+        circleSurface.fill((0,0,0,255))
         p.draw.ellipse(circleSurface, (0,0,0,0), circleSurface.get_rect())
-        surface = surface
-        circleSurface.blit(surface, (0,0), special_flags=p.BLEND_RGBA_ADD)
-        return circleSurface
+        surface.blit(circleSurface, (0,0), special_flags=p.BLEND_RGBA_SUB)
+        return surface
+    
