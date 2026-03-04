@@ -36,7 +36,7 @@ jobs:
           path: build/*
   
   build-linux-old:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
