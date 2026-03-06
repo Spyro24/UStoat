@@ -20,6 +20,7 @@
 - [ ] Inbox for important messages (replies, mentions etc)
 - [ ] i18n support
 - [ ] performance issue fixing
+- [ ] clientside embeding perm fixe (you chose if users can embed or not, only visible for you)
 - [x] server channel selector
 - [x] server selector- [ ] server selector
 - [x] message send box 
