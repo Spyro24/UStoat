@@ -7,6 +7,7 @@ class serverManager:
         self.channelToServer = {}
         self.channelNameLookup = {}
         self.servers = []
+        self.createDefaultEntrys()
     
     def insertReadyPackage(self, package: dict):
         for server in package["servers"]:
@@ -23,6 +24,20 @@ class serverManager:
         for channel in package["channels"]:
             if channel["channel_type"] == "TextChannel":
                 self.channelNameLookup[channel["_id"]] = channel["name"]
+            elif channel["channel_type"] == "DirectMessage":
+                self.channelNameLookup[channel["_id"]] = channel["_id"]
+                self.serverStructure["0"]["channels"].append(channel["_id"])
+    
+    def createDefaultEntrys(self):
+        self.servers.append("0")
+        self.serverStructure["0"] = {}
+        self.serverStructure["0"]["name"] = "Direct Messages"
+        self.serverStructure["0"]["ownerId"] = "None"
+        self.serverStructure["0"]["channels"] = []
+        self.serverStructure["0"]["iconPath"] = ""
+    
+    def formatPackage(self, packageSegment: dict):
+        pass
 
 class serverSelector:
     def __init__(self, app: appModule.app.App):
