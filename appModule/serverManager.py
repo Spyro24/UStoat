@@ -7,6 +7,10 @@ class serverManager:
         self.channelToServer = {}
         self.channelNameLookup = {}
         self.servers = []
+        self.userManager = None
+        self.userID = None
+    
+    def init(self):
         self.createDefaultEntrys()
     
     def insertReadyPackage(self, package: dict):
@@ -26,6 +30,12 @@ class serverManager:
                 self.channelNameLookup[channel["_id"]] = channel["name"]
             elif channel["channel_type"] == "DirectMessage":
                 self.channelNameLookup[channel["_id"]] = channel["_id"]
+                #user = self.userManager.getUser(channel["_id"])
+                if len(channel["recipients"]) == 2:
+                    for user in channel["recipients"]:
+                        if user != self.userID:
+                            self.channelNameLookup[channel["_id"]] = self.userManager.getUser(user)["name"]
+                print(user)
                 self.serverStructure["0"]["channels"].append(channel["_id"])
     
     def createDefaultEntrys(self):

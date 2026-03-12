@@ -103,4 +103,3 @@ class users:
             self.userInfo[userid]["avatarId"] = json["avatar"]["_id"]
         except KeyError:
             self.userInfo[userid]["avatarId"] = ""
-        

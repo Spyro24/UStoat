@@ -90,4 +90,12 @@ class messageRender:
                 self.window.blit(text, (renderXPos, renderYPos))[3]
                 msgIndex -= 1
         except:
-            pass
+            try:
+                print(len(self.app.modules["messageManager"].messages[self.channelSelector.selectedChannel]))
+                if len(self.app.modules["messageManager"].messages[self.channelSelector.selectedChannel]) == 0:
+                   raise BaseException
+            except:
+                messages = requests.get(f"https://stoat.chat/api/channels/{self.channelSelector.selectedChannel}/messages", headers={"X-Session-Token": self.app.modules['account'].sessionToken}).json()
+                messages.reverse()
+                for message in messages:
+                    self.app.modules["messageManager"].insertMessage(message)

@@ -1,3 +1,5 @@
+#! /bin/python3
+
 import pygame as p
 import stoat_pylib as stoat
 import appModule

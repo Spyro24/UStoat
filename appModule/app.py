@@ -44,6 +44,9 @@ class App:
         appModule.loginHelper.loginHelper(self)
         self.modules['account'].subToAPI()
         self.modules['APISubscrption'] = self.modules['account'].apiSuscription
+        self.modules["serverManager"].userManager = self.modules["userManager"]
+        self.modules["serverManager"].userID = self.modules["account"].user_id
+        self.modules["serverManager"].init()
         getInit = True
         while getInit:
             if self.modules['APISubscrption'].has_new_data():
