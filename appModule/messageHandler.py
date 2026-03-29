@@ -96,6 +96,8 @@ class messageRender:
                    raise BaseException
             except:
                 messages = requests.get(f"https://stoat.chat/api/channels/{self.channelSelector.selectedChannel}/messages", headers={"X-Session-Token": self.app.modules['account'].sessionToken}).json()
-                messages.reverse()
-                for message in messages:
-                    self.app.modules["messageManager"].insertMessage(message)
+                try:
+                    messages.reverse()
+                    for message in messages:
+                        self.app.modules["messageManager"].insertMessage(message)
+                except: pass

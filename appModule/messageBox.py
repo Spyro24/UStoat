@@ -13,6 +13,7 @@ class inputTextBox:
         self.tileSize = self.app.tileSize
         self.sendInChannel = "01F92C5ZXBQWQ8KY7J8KY917NM"
         self.channelSelector = app.modules["channelSelector"]
+        self.cursorPos = 0
     
     def sendMessage(self):
         if self.curentMessage != "":
@@ -39,16 +40,26 @@ class inputTextBox:
         if event.key == p.K_RETURN:
             self.sendMessage()
         elif event.key == p.K_BACKSPACE:
-            self.curentMessage = self.curentMessage[:-1]
+            if self.cursorPos > 0:
+                self.curentMessage = self.curentMessage[:self.cursorPos - 1] + self.curentMessage[self.cursorPos:]
+                self.cursorPos -= 1
+        elif event.key == p.K_RIGHT:
+            if self.cursorPos < len(self.curentMessage):
+                self.cursorPos += 1
+        elif event.key == p.K_LEFT:
+            if self.cursorPos > 0:
+                self.cursorPos -= 1
         else:
-            self.curentMessage += event.unicode
+            if event.unicode != "":
+                self.curentMessage = self.curentMessage[:self.cursorPos] + event.unicode + self.curentMessage[self.cursorPos:]
+                self.cursorPos += 1
         
     def render(self, displaySize):
         textBox = None
         borderSize = self.tileSize // 8
         textBoxLenght = displaySize[0] - (self.app.modules["userCard"].renderRect.width + self.tileSize * 5)
         if self.curentMessage != "":
-            showText = self.wrap_text_to_width(self.curentMessage, self.font, textBoxLenght - (2 * borderSize))
+            showText = self.wrap_text_to_width(self.curentMessage[:self.cursorPos] + "|" + self.curentMessage[self.cursorPos:], self.font, textBoxLenght - (2 * borderSize))
             renderedText = self.font.render(showText, antialias=True, color=(255,255,255))
             if renderedText.height > self.tileSize - borderSize / 2:
                 textBox = p.surface.Surface((textBoxLenght, renderedText.height + 2 * borderSize))

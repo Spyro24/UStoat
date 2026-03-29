@@ -7,6 +7,7 @@ import appModule
 class App:
     def __init__(self):
         p.init()
+        self.VERSION = "0.2.0"
         self.window = p.display.set_mode((1080, 720), flags=p.RESIZABLE)
         self.configFilePath = p.system.get_pref_path("spyro24", "ustoat") + "config.json"
         try:
@@ -31,7 +32,6 @@ class App:
         self.modules["messageInput"] = appModule.messageBox.inputTextBox(self)
         self.modules["messageRender"] = appModule.messageHandler.messageRender(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
-        self.VERSION = "0.1.1"
         self.isFocused = False
         self.modules['account'].clientName = f"UStoat (v {self.VERSION})"
         p.display.set_caption(self.modules['account'].clientName)
