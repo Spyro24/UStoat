@@ -2,13 +2,12 @@
 - [ ] Account Info card (will popup on click on the the user card)
 - [ ] better server channel selector (with the abily ty to copy channels and the permision of that channel)
 - [ ] add server folders (client side, it will be stored on device)
-- [ ] Embeds in to the chat system
 - [ ] GIF embeding
 - [ ] Role coloring
 - [ ] Reconectng the client after conection loss
 - [ ] corect message handling
 - [ ] support for remebering bot command (client side only)
-- [ ] emoji upload (validate the name on client and change the name to lowercase  if it contains uppercase)
+- [ ] emoji upload (validate the name on client and change the name to lowercase if it contains uppercase)
 - [ ] custom emoji support for text (its harder than you think)
 - [ ] code refactor to make it future proof
 - [ ] Custom theme support
@@ -20,10 +19,11 @@
 - [ ] Inbox for important messages (replies, mentions etc)
 - [ ] i18n support
 - [ ] performance issue fixing
-- [ ] clientside embeding perm fixe (you chose if users can embed or not, only visible for you)
+- [ ] clientside embeding perm fix (you chose if users can embed or not, only visible for you)
 - [ ] Federation support (you only need one client and it will switch automatical)
+- [ ] Unbound the client fom the main Stoat instance
 - [x] server channel selector
-- [x] server selector- [ ] server selector
+- [x] server selector
 - [x] message send box 
 - [x] Saving session to device
 - [x] Notififycation with sound
