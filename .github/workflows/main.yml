@@ -103,7 +103,7 @@ jobs:
       - name: PyInstaller Windows
         run: |
           pip install pyinstaller
-          pyinstaller --onefile --name UStoat --distpath dist --workpath build --specpath build main.pyw
+          pyinstaller --onefile --name UStoat --add-data "res;res" --distpath dist --workpath build --specpath build main.pyw
           
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
