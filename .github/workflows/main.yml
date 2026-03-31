@@ -105,7 +105,7 @@ jobs:
           pip install pyinstaller
           mkdir "D:\a\UStoat\UStoat\build\res" 2>nul
           xcopy /E /I /Y "res" "D:\a\UStoat\UStoat\build\res\"
-          pyinstaller --onefile --name UStoat --add-data "%CD%\\res;res" --distpath dist --workpath build --specpath build main.pyw
+          pyinstaller --onefile --name UStoat --add-data "res;res" --distpath dist --workpath build --specpath build main.pyw
           
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
