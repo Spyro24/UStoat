@@ -12,6 +12,9 @@ from pathlib import Path
 
 if getattr(sys, "frozen", False):
     os.chdir(Path(sys.executable).parent)
+    meipass = getattr(sys, "_MEIPASS", None)
+    if meipass:
+        os.chdir(meipass)
 else:
     os.chdir(Path(__file__).parent)
 #---
