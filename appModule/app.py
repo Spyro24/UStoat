@@ -17,6 +17,7 @@ class App:
         except:
             self.config = {}
         self.renderQuee = []
+        self.themeable = []
         self.tileSize = 64
         self.modules = {"font": p.font.SysFont(p.font.match_font(p.font.get_default_font()), size=24, ),
                         "account": stoat.user.Account(),
@@ -31,6 +32,7 @@ class App:
         self.modules["channelSelector"] = appModule.serverManager.channelSelector(self)
         self.modules["messageInput"] = appModule.messageBox.inputTextBox(self)
         self.modules["messageRender"] = appModule.messageHandler.messageRender(self)
+        self.modules["themeManager"] = appModule.themeManager.themeManager(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
         self.isFocused = False
         self.modules['account'].clientName = f"UStoat (v {self.VERSION})"

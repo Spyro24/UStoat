@@ -14,7 +14,19 @@ class inputTextBox:
         self.sendInChannel = "01F92C5ZXBQWQ8KY7J8KY917NM"
         self.channelSelector = app.modules["channelSelector"]
         self.cursorPos = 0
+        self.app.themeable.append(self)
+        self.bgCol = (35, 35, 75)
+        self.textCol = (255,255,255)
+        self.textNoneCol = (0, 0, 0)
     
+    def reloadTheme(self):
+        theme = self.app.modules["themeManager"].theme["messageBox"]
+        try:
+            self.bgCol = theme["background"]
+            self.textCol = theme["text"]
+            self.textNoneCol = theme["textNone"]
+        except KeyError: pass
+            
     def sendMessage(self):
         if self.curentMessage != "":
             self.app.modules["account"].sendMessage(self.curentMessage, self.channelSelector.selectedChannel)
@@ -60,18 +72,18 @@ class inputTextBox:
         textBoxLenght = displaySize[0] - (self.app.modules["userCard"].renderRect.width + self.tileSize * 5)
         if self.curentMessage != "":
             showText = self.wrap_text_to_width(self.curentMessage[:self.cursorPos] + "|" + self.curentMessage[self.cursorPos:], self.font, textBoxLenght - (2 * borderSize))
-            renderedText = self.font.render(showText, antialias=True, color=(255,255,255))
+            renderedText = self.font.render(showText, antialias=True, color=self.textCol)
             if renderedText.height > self.tileSize - borderSize / 2:
                 textBox = p.surface.Surface((textBoxLenght, renderedText.height + 2 * borderSize))
             else:
                 textBox = p.surface.Surface((textBoxLenght, self.tileSize))
-            textBox.fill((35, 35, 75))
+            textBox.fill(self.bgCol)
             textBox.blit(renderedText, (borderSize, borderSize))
             
         else:
             textBox = p.surface.Surface((textBoxLenght, self.tileSize))
-            textBox.fill((35, 35, 75))
-            textBox.blit(self.font.render("Message...", antialias=False, color=(0, 0, 0)), (borderSize, borderSize))
+            textBox.fill(self.bgCol)
+            textBox.blit(self.font.render("Message...", antialias=False, color=self.textNoneCol), (borderSize, borderSize))
         if self.isActive:
             p.draw.rect(textBox, (120, 120, 165), textBox.get_rect(), width=borderSize // 2)
         else:

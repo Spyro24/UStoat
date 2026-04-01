@@ -43,6 +43,13 @@ class messageRender:
         self.app.renderQuee.append(self)
         self.font = self.app.modules["font"]
         self.cache = app.modules["cache"]
+        self.app.themeable.append(self)
+    
+    def reloadTheme(self):
+        theme = self.app.modules["themeManager"].theme["messageRender"]
+        try:
+            self.colors["bg"] = theme["background"]
+        except KeyError: pass
     
     def setChannel(self, channelId: str):
         pass
@@ -65,7 +72,7 @@ class messageRender:
     
     def renderMessage(self, message: dict, width: int, borderSize):
         surfaceSizeX = width + borderSize + self.tileSize
-        renderedMessage = self.app.modules["font"].render(self.wrap_text_to_width(message["content"], self.app.modules["font"], width), antialias=False, color=self.colors["text"])
+        renderedMessage = self.app.modules["font"].render(self.wrap_text_to_width(message["content"], self.app.modules["font"], width), antialias=True, color=self.colors["text"])
         renderedName = self.font.render(self.app.modules['userManager'].getUser(message["author"])["display_name"], antialias=False, color=self.colors["userName"])
         textBoxHeight = borderSize * 2 + renderedName.height + renderedMessage.height
         if textBoxHeight < self.tileSize:

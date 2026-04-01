@@ -6,3 +6,4 @@ import appModule.notficationHandler
 import appModule.messageHandler
 import appModule.loginHelper
 import appModule.serverManager
+import appModule.themeManager

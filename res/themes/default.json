@@ -1,0 +1,26 @@
+{
+  "creator": "Spyro24",
+  "name": "Default UStoat theme",
+  "fileName": "default",
+  "version": "0.2.0",
+  "descripton": "Its the default theme for UStoat (that one that the dev made)",
+  "theme": {
+    "messageBox": {
+      "background": [
+        35,
+        35,
+        75
+      ],
+      "text": [
+        255,
+        255,
+        255
+      ],
+      "textNone": [
+        0,
+        0,
+        0
+      ]
+    }
+  }
+}

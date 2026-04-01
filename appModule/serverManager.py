@@ -66,6 +66,14 @@ class serverSelector:
         self.selectorPos = 0
         self.serverListLen = 0
         self.channelSelector = None
+        self.app.themeable.append(self)
+        self.bgCol = (234,123,40)
+    
+    def reloadTheme(self):
+        theme = self.app.modules["themeManager"].theme["serverSelector"]
+        try:
+            self.bgCol = theme["background"]
+        except KeyError: pass
     
     def update(self):
         self.borderSize = self.tileSize // 8
@@ -83,7 +91,7 @@ class serverSelector:
         return self.serverManager.serverStructure[self.selectedServer]["channels"]
     
     def render(self, displaySize):
-        self.renderedRect = p.draw.rect(self.window, (234,123,40), (0, 0, self.tileSize, self.app.modules["userCard"].renderRect[1]))
+        self.renderedRect = p.draw.rect(self.window, self.bgCol, (0, 0, self.tileSize, self.app.modules["userCard"].renderRect[1]))
         renderPos = 0
         for icon in self.icons:
             if self.window.blit(icon, (self.borderSize, renderPos * self.tileSize + self.borderSize)).collidepoint(self.app.mousePos) and self.app.mouseButtons[0]:
@@ -111,6 +119,16 @@ class channelSelector:
         self.curentServerChannels = []
         self.halfTile = self.tileSize // 2
         self.selectedChannel = ""
+        self.bgCol = (211, 75, 100)
+        self.selCol = (200,150,100)
+        self.app.themeable.append(self)
+    
+    def reloadTheme(self):
+        theme = self.app.modules["themeManager"].theme["channelSelector"]
+        try:
+            self.bgCol = theme["background"]
+            self.selCol = theme["selected"]
+        except KeyError: pass
     
     def update(self):
         self.backedSurfaces = []
@@ -123,15 +141,16 @@ class channelSelector:
             except KeyError:
                 text = self.font.render("NO_NAME", True, (255,255,255))
             surface = p.Surface((self.tileSize * 4, self.halfTile))
+            surface.fill(self.bgCol)
             surface.blit(text, (surface.height, surface.height // 2 - text.height // 2))
             self.backedSurfaces.append(surface)
     
     def render(self, displaySize):
-        self.renderedRect = p.draw.rect(self.window, (211, 75, 100), (self.tileSize, 0, self.tileSize * 4, self.app.modules["userCard"].renderRect[1]))
+        self.renderedRect = p.draw.rect(self.window, self.bgCol, (self.tileSize, 0, self.tileSize * 4, self.app.modules["userCard"].renderRect[1]))
         renderPos = 0
         for surface in self.backedSurfaces:
             rect = self.window.blit(surface, (self.renderedRect[0], renderPos * self.halfTile))
-            if renderPos == self.selectedChannelIndex: p.draw.rect(self.window, (200,150,100), rect, width=4)
+            if renderPos == self.selectedChannelIndex: p.draw.rect(self.window, self.selCol, rect, width=4)
             if self.app.mouseButtons[0] and rect.collidepoint(self.app.mousePos):
                 self.selectedChannelIndex = renderPos
                 self.selectedChannel = self.curentServerChannels[self.selectedChannelIndex]
