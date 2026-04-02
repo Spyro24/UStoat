@@ -49,6 +49,7 @@ class messageRender:
         theme = self.app.modules["themeManager"].theme["messageRender"]
         try:
             self.colors["bg"] = theme["background"]
+            self.colors["text"] = theme["text"]
         except KeyError: pass
     
     def setChannel(self, channelId: str):

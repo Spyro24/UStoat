@@ -15,6 +15,7 @@ class userCard:
         self.app = app
         self.font = self.app.modules['font']
         self.renderRect = p.rect.Rect()
+        self.app.renderQuee.append(self)
         
     def createCard(self, userData: dict):
         canvas = p.Surface((self.sizeY * self.tilesX, self.sizeY))
@@ -28,7 +29,6 @@ class userCard:
         canvas.blit(name, (self.sizeY, spacing * 5))
         canvas.blit(number, (self.sizeY + name.size[0], spacing * 5))
         self.card = canvas.convert()
-        self.app.renderQuee.append(self)
     
     def render(self, screenSize: tuple[int, int]):
         self.renderRect = self.app.window.blit(self.card, (0, screenSize[1] - self.card.size[1]))

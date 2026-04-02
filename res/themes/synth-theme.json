@@ -1,0 +1,26 @@
+{
+  "creator": "Spyro24",
+  "name": "Default UStoat theme",
+  "fileName": "synth-theme",
+  "version": "0.2.0",
+  "descripton": "Its another theme for UStoat but this time based on my Fursona",
+  "theme": {
+    "messageBox": {
+      "background": [
+        77,
+        79,
+        78
+      ],
+      "text": [
+        150,
+        246,
+        245
+      ],
+      "textNone": [
+        45,
+        95,
+        95
+      ]
+    }
+  }
+}

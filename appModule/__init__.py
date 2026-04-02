@@ -7,3 +7,4 @@ import appModule.messageHandler
 import appModule.loginHelper
 import appModule.serverManager
 import appModule.themeManager
+import appModule.settingsManager

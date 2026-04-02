@@ -8,7 +8,8 @@ class themeManager:
                       "serverSelector":{"background":(234,123,40)},
                       "channelSelector":{"background":(211, 75, 100),
                                          "selected":(200,150,100)},
-                      "messageRender":{"background":(75, 35, 125)}
+                      "messageRender":{"background":(75, 35, 125),
+                                        "text":(255, 255, 255)}
                       }
         self.app = app
     

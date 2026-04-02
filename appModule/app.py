@@ -3,11 +3,13 @@ import stoat_pylib as stoat
 import time
 import json
 import appModule
+import tkinter as tk
+from tkinter import filedialog
 
 class App:
     def __init__(self):
         p.init()
-        self.VERSION = "0.2.0"
+        self.VERSION = "0.2.3"
         self.window = p.display.set_mode((1080, 720), flags=p.RESIZABLE)
         self.configFilePath = p.system.get_pref_path("spyro24", "ustoat") + "config.json"
         try:
@@ -33,6 +35,7 @@ class App:
         self.modules["messageInput"] = appModule.messageBox.inputTextBox(self)
         self.modules["messageRender"] = appModule.messageHandler.messageRender(self)
         self.modules["themeManager"] = appModule.themeManager.themeManager(self)
+        self.modules["settings"] = appModule.settingsManager.settingsManager(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
         self.isFocused = False
         self.modules['account'].clientName = f"UStoat (v {self.VERSION})"
@@ -114,7 +117,12 @@ class App:
                 displaySize = self.window.get_size()
                 self.window.fill((0,0,0))
                 for obj in self.renderQuee:
-                    obj.render(displaySize)
+                    try:
+                        obj.render(displaySize)
+                    except AttributeError as e:
+                        print(e)
+                        run = False
+                        break
                 p.display.flip()
         
         self.close()
@@ -128,3 +136,22 @@ class App:
         except:
             pass
         p.quit()
+    
+    #helper functions
+    def open_file_selector():
+        root = tk.Tk()
+        root.withdraw()
+        result = {'path': None}
+        root.after(0, lambda: result.update(path=filedialog.askopenfilename()))
+
+        while result.get('path') is None:
+            try:
+                root.update()
+            except tk.TclError:
+                break
+            p.event.get()
+            time.sleep(0.5)
+
+        path = result.get('path')
+        root.destroy()
+        return path
