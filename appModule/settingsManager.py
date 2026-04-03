@@ -20,10 +20,11 @@ class settingsManager:
             button = self.window.blit(self.icon,(pos[0] - self.tileSize + self.quarter, pos[1] + self.quarter))
             if self.app.mouseButtons[0]:
                 if button.collidepoint(self.app.mousePos):
-                    self.app.textInput.releaseTextInput()
                     self.savedRenderQuee = self.app.renderQuee
                     self.app.renderQuee = [self]
                     self.minimized = False
+                    if self.app.textInput != None:
+                        self.app.textInput.releaseTextInput()
         else:
             pos = (displaySize[0] - self.tileSize + self.quarter, self.quarter)
             button = self.window.blit(self.closeButton, pos)
