@@ -143,7 +143,6 @@ class App:
     def open_file_selector(self):
         def _worker(q):
             root = tk.Tk()
-            root.withdraw()
             try:
                 q.put(filedialog.askopenfilename(parent=root) or '')
             except Exception:

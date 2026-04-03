@@ -48,6 +48,10 @@ class inputTextBox:
             lines.append(current_line)
         return "\n".join(lines)
     
+    def releaseTextInput(self):
+        self.app.textInput = None
+        self.isActive = False
+    
     def text_input(self, event: p.Event):
         if event.key == p.K_RETURN:
             self.sendMessage()
