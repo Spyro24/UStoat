@@ -1,4 +1,5 @@
 import pygame as p
+import time
 
 class settingsManager:
     def __init__(self, app):
@@ -19,3 +20,4 @@ class settingsManager:
             if self.app.mouseButtons[0]:
                 if button.collidepoint(self.app.mousePos):
                     self.app.open_file_selector()
+                    p.event.pump()

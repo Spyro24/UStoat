@@ -5,6 +5,8 @@ import json
 import appModule
 import tkinter as tk
 from tkinter import filedialog
+import threading
+import queue
 
 class App:
     def __init__(self):
@@ -138,20 +140,29 @@ class App:
         p.quit()
     
     #helper functions
-    def open_file_selector():
-        root = tk.Tk()
-        root.withdraw()
-        result = {'path': None}
-        root.after(0, lambda: result.update(path=filedialog.askopenfilename()))
-
-        while result.get('path') is None:
+    def open_file_selector(self):
+        def _worker(q):
+            root = tk.Tk()
+            root.withdraw()
             try:
-                root.update()
-            except tk.TclError:
-                break
-            p.event.get()
-            time.sleep(0.5)
+                q.put(filedialog.askopenfilename(parent=root) or '')
+            except Exception:
+                q.put('')
+            try:
+                root.destroy()
+            except Exception:
+                pass
 
-        path = result.get('path')
-        root.destroy()
-        return path
+        q = queue.Queue()
+        threading.Thread(target=_worker, args=(q,), daemon=True).start()
+
+        selected = None
+        while selected is None:
+            p.event.pump()
+            try:
+                selected = q.get_nowait()
+            except queue.Empty:
+                selected = None
+            time.sleep(0.01)
+
+        return selected  # '' wenn abgebrochen oder nichts gewählt
