@@ -8,3 +8,5 @@ import appModule.loginHelper
 import appModule.serverManager
 import appModule.themeManager
 import appModule.settingsManager
+import appModule.httpRPCServer
+import appModule.RPCHandler

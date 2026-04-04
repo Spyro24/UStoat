@@ -7,10 +7,12 @@ import tkinter as tk
 from tkinter import filedialog
 import threading
 import queue
+import sys
 
 class App:
     def __init__(self):
         p.init()
+        self.FROZEN = getattr(sys, "frozen", False)
         self.VERSION = "0.2.3"
         self.window = p.display.set_mode((1080, 720), flags=p.RESIZABLE)
         self.configFilePath = p.system.get_pref_path("spyro24", "ustoat") + "config.json"
@@ -70,10 +72,10 @@ class App:
         print(self.modules["serverManager"].serverStructure)
         self.modules['userManager'].userToken = self.modules['account'].sessionToken
         self.modules["notificatonSystem"] = appModule.notficationHandler.notificationManager(self)
-
         self.ready()
     
     def ready(self):
+        self.RPC = appModule.RPCHandler.RPCHandler(self)
         self.modules["serverSelector"].update()
         self.appLoop()
     
@@ -112,6 +114,9 @@ class App:
                         print(eventJson)
                         print(e)
             
+            if not self.FROZEN: #RPC feature is deactivated in the EXECUTABLEs because its experimental
+                self.RPC.handleRequests()
+            
             if lastRender + FPS < time.time():
                 lastRender = time.time()
                 self.mousePos = p.mouse.get_pos()
@@ -135,6 +140,7 @@ class App:
             configFile = open(self.configFilePath, "w")
             json.dump(self.config, configFile, indent=4)
             configFile.close()
+            self.RPC.server.stop()
         except:
             pass
         p.quit()
@@ -164,4 +170,4 @@ class App:
                 selected = None
             time.sleep(0.01)
 
-        return selected  # '' wenn abgebrochen oder nichts gewählt
+        return selected 
