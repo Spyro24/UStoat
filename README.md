@@ -7,7 +7,7 @@ UStoat is a minimalistic stoat client completly writen in python and with the us
 * Compact minimalistic interface
 * Notification sound
 * Support for converted revite themes (the themes are wip)
-* Simple loggin
+* Simple login
 * UStoat RPC (port 19200, deactivated in release version)
 
 ## Info
