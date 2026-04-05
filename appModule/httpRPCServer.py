@@ -67,6 +67,9 @@ class HTTPServerWithQueue:
             def do_DELETE(self):
                 self.handle_request('DELETE')
             
+            def do_PATCH(self):
+                self.handle_request('PATCH')
+            
             def log_message(self, format, *args):
                 pass
         

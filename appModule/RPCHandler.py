@@ -1,12 +1,13 @@
 import appModule.httpRPCServer
 import secrets
+import json
 
 class RPCHandler:
     def __init__(self, app):
         self.app = app
         self.port = 19200
         self.server = appModule.httpRPCServer.HTTPServerWithQueue('localhost', self.port)
-        self.perms = dict()
+        self.perms = {}
         self.paths = {"auth": self.auth}
     
     def handleRequests(self):
@@ -32,8 +33,24 @@ class RPCHandler:
                 #http_server.response(request['rid'], {'message': 'Erfolgreich verarbeitet', 'received_path': request['path']}, status=404)
     
     def auth(self, path, header, content, method, rid):
+        print(header)
         if method == "GET":
-            token = secrets.token_hex(16)
-            self.server.response(rid, {'token': str(token)})
+            try:
+                content = json.loads(content)
+                print(content)
+                token = secrets.token_hex(16)
+                self.perms[token] = {}
+                self.perms[token]
+                self.server.response(rid, {'token': str(token)})
+                return
+            except: pass
+        elif method == "DELETE":
+            if "Authorization" in header and header["Authorization"] in self.perms:
+                self.perms.pop(header["Authorization"])
+                self.server.response(rid, {}, status=200)
+            else:
+                self.server.response(rid, {}, status=401)
             return
+        else:
+            self.server.response(rid, {}, status=405)
         self.server.response(rid, {}, status=400)
