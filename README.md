@@ -3,6 +3,7 @@
 <a href="https://github.com/Spyro24/UStoat" target="_blank" rel="noopener noreferrer">
   <img src="https://github.com/Spyro24/UStoat/blob/main/res/icons/app_icon_x384.png" height="128" />
 </a>
+</div>
 
 # UStoat - A client for [stoat.chat](https://stoat.chat) writen in python
 UStoat is a minimalistic stoat client completly writen in python and with the use of the great [pygame-ce](https://pyga.me/) libary.
