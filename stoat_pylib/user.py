@@ -103,3 +103,25 @@ class users:
             self.userInfo[userid]["avatarId"] = json["avatar"]["_id"]
         except KeyError:
             self.userInfo[userid]["avatarId"] = ""
+
+class user:
+    def __init__(self, app):
+        self.app = app
+        self.inbox = []
+        self.token = ""
+        self.me = {}
+        self.users = {}
+    
+    def makeReady(self):
+        userInfo = requests.get(f"https://stoat.chat/api/users/@me", headers={"X-Session-Token": self.token})
+        if userInfo.ok:
+            userInfo = userInfo.json()
+            self.me["id"] = userInfo["_id"]
+            self.me["name"] = userInfo["username"]
+            self.me["display_name"] = userInfo["displa_name"]
+            self.me["discriminator"] = userInfo["discriminator"]
+    
+    def getInbox(self):
+        inbox = requests.get(f"https://stoat.chat/api/users/@me/notifications", headers={"X-Session-Token": self.token})
+        if inbox.ok:
+            self.inbox = inbox.json()

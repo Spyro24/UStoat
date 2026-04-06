@@ -54,3 +54,9 @@ class RPCHandler:
         else:
             self.server.response(rid, {}, status=405)
         self.server.response(rid, {}, status=400)
+    
+    def users(self, path, header, content, method, rid):
+        if method == "GET":
+            self.server.response(rid, {}, status=401)
+        else:
+            self.server.response(rid, {}, status=405)
