@@ -125,3 +125,21 @@ class user:
         inbox = requests.get(f"https://stoat.chat/api/users/@me/notifications", headers={"X-Session-Token": self.token})
         if inbox.ok:
             self.inbox = inbox.json()
+    
+    def sendMessage(self, message: str, channel: str, masqData={}, mentions=[], reply=[], atachments=[]):
+        send = {"content": ""}
+        if message != "":
+            send["content"] = message
+        if len(atachments) > 0:
+            atachmentIDs = []
+            for file in atachments:
+                path = file.strip().split("/")
+                with open(file, "rb") as f:
+                    resp = requests.post("https://cdn.stoatusercontent.com/attachments", files={"file": (path[-1], f, "image/png")}, headers={"x-session-token": self.token})
+                    if resp.ok:
+                        atachmentIDs.append(resp.json()["id"])
+        if len(reply) > 0:
+            pass
+        if masqData != {}:
+            pass
+        answer = requests.post(f"https://stoat.chat/api/channels/{channel}/messages?", headers={"X-Session-Token": self.token}, json=send)

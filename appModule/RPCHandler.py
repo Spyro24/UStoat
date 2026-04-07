@@ -60,3 +60,6 @@ class RPCHandler:
             self.server.response(rid, {}, status=401)
         else:
             self.server.response(rid, {}, status=405)
+    
+    def showAuthScreen(self):
+        pass
