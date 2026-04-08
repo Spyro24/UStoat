@@ -12,8 +12,9 @@ import sys
 class App:
     def __init__(self):
         p.init()
+        self.mouseWheel = 0
         self.FROZEN = getattr(sys, "frozen", False)
-        self.VERSION = "0.2.3"
+        self.VERSION = "0.2.5"
         self.window = p.display.set_mode((1080, 720), flags=p.RESIZABLE)
         self.configFilePath = p.system.get_pref_path("spyro24", "ustoat") + "config.json"
         try:
@@ -104,6 +105,9 @@ class App:
                 elif event.type == p.KEYDOWN:
                     if self.textInput != None:
                         self.textInput.text_input(event)
+                elif event.type == p.MOUSEWHEEL:
+                    if self.mouseWheel == 0:
+                        self.mouseWheel = -event.y
             for event in self.modules['APISubscrption'].get_messages():
                 eventJson = json.loads(event)
                 if eventJson["type"] == "Message":

@@ -23,6 +23,9 @@ class messageManager:
     def getMessage(self, channel: str, index: int):
         return self.messages[channel][index]
     
+    def getLenMessages(self, channel: str):
+        return len(self.messages[channel])
+    
     def formatMessage(self, message: dict):
         msg = {}
         msg["author"] = message['author']
@@ -44,6 +47,7 @@ class messageRender:
         self.font = self.app.modules["font"]
         self.cache = app.modules["cache"]
         self.app.themeable.append(self)
+        self.curMessageIndex = -1
     
     def reloadTheme(self):
         theme = self.app.modules["themeManager"].theme["messageRender"]
@@ -90,14 +94,27 @@ class messageRender:
         renderXPos = self.app.modules["messageInput"].renderedRect[0]
         borderWidth = self.tileSize // 8
         messageWith = self.app.modules["messageInput"].renderedRect[2] - (self.tileSize + borderWidth)
+        if self.app.mouseWheel != 0:
+            messageCount = self.app.modules["messageManager"].getLenMessages(self.channelSelector.selectedChannel)
+            if self.app.mouseWheel == -1 and self.curMessageIndex == -1:
+                self.curMessageIndex = messageCount - 1
+            elif self.curMessageIndex != -1:
+                self.curMessageIndex += self.app.mouseWheel
+                if self.curMessageIndex >= messageCount:
+                    self.curMessageIndex = -1
+                elif self.curMessageIndex < 0:
+                    self.curMessageIndex = 0
         try:
-            msgIndex = -1
+            msgIndex = self.curMessageIndex
             while renderYPos > 0:
                 text = self.renderMessage(self.app.modules["messageManager"].getMessage(self.channelSelector.selectedChannel, msgIndex), messageWith, borderWidth)
                 renderYPos -= text.height
                 self.window.blit(text, (renderXPos, renderYPos))[3]
                 msgIndex -= 1
+                if msgIndex == -1:
+                    break
         except:
+            self.curMessageIndex = -1
             try:
                 print(len(self.app.modules["messageManager"].messages[self.channelSelector.selectedChannel]))
                 if len(self.app.modules["messageManager"].messages[self.channelSelector.selectedChannel]) == 0:

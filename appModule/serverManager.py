@@ -122,6 +122,8 @@ class channelSelector:
         self.bgCol = (211, 75, 100)
         self.selCol = (200,150,100)
         self.app.themeable.append(self)
+        self.renderOverflow = False
+        self.renderfromChannel = 0
     
     def reloadTheme(self):
         theme = self.app.modules["themeManager"].theme["channelSelector"]
@@ -135,6 +137,7 @@ class channelSelector:
         self.curentServerChannels = self.serverSelector.returnChannels()
         self.selectedChannelIndex = 0
         self.selectedChannel = self.curentServerChannels[self.selectedChannelIndex]
+        self.renderfromChannel = 0
         for channel in self.curentServerChannels:
             try:
                 text = self.font.render(self.serverManager.channelNameLookup[channel], True, (255,255,255))
@@ -147,11 +150,29 @@ class channelSelector:
     
     def render(self, displaySize):
         self.renderedRect = p.draw.rect(self.window, self.bgCol, (self.tileSize, 0, self.tileSize * 4, self.app.modules["userCard"].renderRect[1]))
+        if self.app.mouseWheel != 0:
+            if self.renderedRect.collidepoint(self.app.mousePos):
+                self.renderfromChannel += self.app.mouseWheel
+                if self.renderfromChannel < 0:
+                    self.renderfromChannel = 0
+                if not self.renderOverflow and self.app.mouseWheel == 1:
+                    self.renderfromChannel -= 1
+        #elif not self.renderOverflow and self.renderfromChannel > 0:
+        #    self.renderfromChannel -= 1
+        #if self.renderfromChannel < 0:
+        #    self.renderfromChannel = 0
         renderPos = 0
-        for surface in self.backedSurfaces:
+        renderfromChannel = self.renderfromChannel
+        self.renderOverflow = False
+        while (renderPos + renderfromChannel) < len(self.backedSurfaces):
+            surface = self.backedSurfaces[renderfromChannel + renderPos]
             rect = self.window.blit(surface, (self.renderedRect[0], renderPos * self.halfTile))
-            if renderPos == self.selectedChannelIndex: p.draw.rect(self.window, self.selCol, rect, width=4)
+            if (renderPos + renderfromChannel) == self.selectedChannelIndex: p.draw.rect(self.window, self.selCol, rect, width=4)
             if self.app.mouseButtons[0] and rect.collidepoint(self.app.mousePos):
-                self.selectedChannelIndex = renderPos
+                self.selectedChannelIndex = renderPos + renderfromChannel
                 self.selectedChannel = self.curentServerChannels[self.selectedChannelIndex]
+                self.app.modules["messageRender"].curMessageIndex = -1
+            if rect.bottom > self.renderedRect.bottom - self.halfTile:
+                self.renderOverflow = True
+                break
             renderPos += 1
