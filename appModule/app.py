@@ -135,6 +135,7 @@ class App:
                         run = False
                         break
                 p.display.flip()
+                self.mouseWheel = 0
         
         self.close()
     

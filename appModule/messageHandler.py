@@ -48,6 +48,7 @@ class messageRender:
         self.cache = app.modules["cache"]
         self.app.themeable.append(self)
         self.curMessageIndex = -1
+        self.renderedRect = p.rect.Rect()
     
     def reloadTheme(self):
         theme = self.app.modules["themeManager"].theme["messageRender"]
@@ -94,7 +95,8 @@ class messageRender:
         renderXPos = self.app.modules["messageInput"].renderedRect[0]
         borderWidth = self.tileSize // 8
         messageWith = self.app.modules["messageInput"].renderedRect[2] - (self.tileSize + borderWidth)
-        if self.app.mouseWheel != 0:
+        self.renderedRect = p.rect.Rect(self.app.modules["channelSelector"].renderedRect.topright, (self.app.modules["messageInput"].renderedRect.width, displaySize[1] - self.app.modules["messageInput"].renderedRect.height))
+        if self.app.mouseWheel != 0 and self.renderedRect.collidepoint(self.app.mousePos):
             messageCount = self.app.modules["messageManager"].getLenMessages(self.channelSelector.selectedChannel)
             if self.app.mouseWheel == -1 and self.curMessageIndex == -1:
                 self.curMessageIndex = messageCount - 1
