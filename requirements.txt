@@ -2,4 +2,3 @@ pygame-ce
 requests
 websocket-client
 notify-py
-tkinter
