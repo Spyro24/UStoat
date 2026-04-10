@@ -23,6 +23,7 @@
 - [ ] Federation support (you only need one client and it will switch automatical)
 - [ ] Unbound the client fom the main Stoat instance
 - [ ] RPC system
+- [ ] Message threads (using the reply chain)
 - [x] server channel selector
 - [x] server selector
 - [x] message send box 
