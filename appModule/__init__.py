@@ -10,3 +10,4 @@ import appModule.themeManager
 import appModule.settingsManager
 import appModule.httpRPCServer
 import appModule.RPCHandler
+import appModule.i18n

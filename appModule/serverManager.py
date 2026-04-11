@@ -3,10 +3,11 @@ import appModule
 
 class serverManager:
     def __init__(self):
-        self.serverStructure = {}
-        self.channelToServer = {}
+        self.serverStructure = {}  # contains the config for the servers
         self.channelNameLookup = {}
-        self.servers = []
+        self.channelServerLookup = {}
+        self.userServerConfig = {}
+        self.servers = [] # contains the ids of the servers
         self.userManager = None
         self.userID = None
     
@@ -24,6 +25,8 @@ class serverManager:
                 self.serverStructure[server["_id"]]["iconPath"] = server["icon"]["_id"]
             except KeyError:
                 self.serverStructure[server["_id"]]["iconPath"] = ""
+            for channel in self.serverStructure[server["_id"]]["channels"]:
+                self.channelServerLookup[channel] = server["_id"]
         
         for channel in package["channels"]:
             if channel["channel_type"] == "TextChannel":

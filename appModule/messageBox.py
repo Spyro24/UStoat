@@ -18,6 +18,7 @@ class inputTextBox:
         self.bgCol = (35, 35, 75)
         self.textCol = (255,255,255)
         self.textNoneCol = (0, 0, 0)
+        self.i18n = self.app.modules["i18n"].strings
     
     def reloadTheme(self):
         theme = self.app.modules["themeManager"].theme["messageBox"]
@@ -87,7 +88,7 @@ class inputTextBox:
         else:
             textBox = p.surface.Surface((textBoxLenght, self.tileSize))
             textBox.fill(self.bgCol)
-            textBox.blit(self.font.render("Message...", antialias=False, color=self.textNoneCol), (borderSize, borderSize))
+            textBox.blit(self.font.render(self.i18n['ui.name.message_empty'], antialias=True, color=self.textNoneCol), (borderSize, borderSize))
         if self.isActive:
             p.draw.rect(textBox, (120, 120, 165), textBox.get_rect(), width=borderSize // 2)
         else:

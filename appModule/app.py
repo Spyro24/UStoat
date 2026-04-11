@@ -32,7 +32,8 @@ class App:
                         "APISubscrption": None,
                         "serverManager": appModule.serverManager.serverManager(),
                         "notify": appModule.notficationHandler.notificatonSystem(),
-                        "messageManager": appModule.messageHandler.messageManager()}
+                        "messageManager": appModule.messageHandler.messageManager(),
+                        "i18n": appModule.i18n.i18n()}
         self.modules["userCard"] = appModule.userCard.userCard(self)
         self.modules["cache"] = appModule.cacheSystem.cache(self)
         self.modules["serverSelector"] = appModule.serverManager.serverSelector(self)

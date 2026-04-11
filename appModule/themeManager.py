@@ -2,7 +2,8 @@ import json
 
 class themeManager:
     def __init__(self, app):
-        self.theme = {"messageBox":{"background":(35, 35, 75),
+        self.theme = {"status":{"online":(0, 255, 0)},
+                      "messageBox":{"background":(35, 35, 75),
                                     "text":(255, 255, 255),
                                     "textNone":(0, 0, 0)},
                       "serverSelector":{"background":(234,123,40)},
