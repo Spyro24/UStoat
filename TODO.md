@@ -24,6 +24,7 @@
 - [ ] Unbound the client fom the main Stoat instance
 - [ ] RPC system
 - [ ] Message threads (using the reply chain)
+- [ ] Multiplatform support
 - [x] server channel selector
 - [x] server selector
 - [x] message send box 
