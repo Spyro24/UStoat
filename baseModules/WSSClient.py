@@ -10,6 +10,7 @@ class WSSClient:
         self.lock = threading.Lock()
         self.thread = None
         self.ws = None
+        self.connected = False
         self.start()
     
     def start(self):
@@ -18,7 +19,11 @@ class WSSClient:
                 with self.lock:
                     self.messages.append(msg)
             
-            self.ws = websocket.WebSocketApp(self.url, on_message=on_message)
+            def on_open(ws):
+                with self.lock:
+                    self.connected = True
+            
+            self.ws = websocket.WebSocketApp(self.url, on_message=on_message, on_open=on_open)
             self.ws.run_forever()
         
         self.thread = threading.Thread(target=worker, daemon=True)
@@ -39,3 +44,15 @@ class WSSClient:
             self.ws.send(data)
         else:
             raise RuntimeError("WebSocket connection not established")
+    
+    def is_ready(self):
+        with self.lock:
+            return self.connected and self.ws is not None
+    
+    def wait_until_ready(self, timeout=10):
+        start = time.time()
+        while time.time() - start < timeout:
+            if self.is_ready():
+                return True
+            time.sleep(0.1)
+        return False
