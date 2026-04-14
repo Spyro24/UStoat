@@ -5,7 +5,7 @@ import json
 class userAccount:
     def __init__(self):
         self.platformName = "nerimity"
-        self.token = "MTc1OTYwMzA4ODE2NTA4NTE4NS0w.E4cKXtc0blyc0k6vKpcDnzDngFOmdXG-4P33G1i57so"
+        self.token = ""
         self.websocket = None
         self.socketID = ""
     
@@ -28,12 +28,15 @@ class userAccount:
             while wait:
                 if self.websocket.has_new_data():
                     for data in self.websocket.get_messages():
+                        print(data)
                         sid = json.loads(data[1:])
                         self.socketID = sid["sid"]
                         wait = False
                         break
             self.websocket.send_data('42["user:authenticate",{"token":"' + self.token + '"}]')
             wait = True
+            while wait:
+                print(self.websocket.get_messages())
             while wait:
                 data = list(self.websocket.get_messages())
                 for test in data:
