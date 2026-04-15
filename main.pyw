@@ -21,4 +21,10 @@ else:
 #---
 
 if __name__ == "__main__":
-    app = appModule.app.App()
+    if getattr(sys, "frozen", False):
+        try:
+            app = appModule.app.App()
+        except:
+            exit()
+    else:
+        app = appModule.app.App()
