@@ -6,7 +6,7 @@
 </div>
 
 # UStoat - A client for [stoat.chat](https://stoat.chat) writen in python
-UStoat is a minimalistic stoat client completly writen in python and with the use of the great [pygame-ce](https://pyga.me/) libary.
+UStoat (UniversalStoat) is a minimalistic stoat client (with multi platform support) completly writen in python and with the use of the great [pygame-ce](https://pyga.me/) libary.
 
 ## Features
 
@@ -23,7 +23,8 @@ UStoat is a minimalistic stoat client completly writen in python and with the us
 
 ## Other
 
-We have a stoat server for help, suggestions and the other UStoat stuff like themes etc https://stt.gg/MeM1tWFB
+* We have a Stoat server for help, suggestions and the other UStoat stuff like themes etc https://stt.gg/MeM1tWFB
+* We have a Nerimity server for help, suggestions and the other UStoat stuff like themes etc https://nerimity.com/i/6rIJb (this is for the users that uses Nerimity with UStoat)
 
 ## Disclaimer
 
