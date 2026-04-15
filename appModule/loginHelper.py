@@ -13,9 +13,11 @@ class loginHelper:
         self.password = ""
         self.MFACode = ""
         self.MFATicket = ""
+        self.serviceName = ""
         self.font = self.app.modules["font"]
         self.currentRun = self.loginTry
         self.finished = False
+        self.encryptModule = app.modules["encryption"]
         self.execute()
     
     def execute(self):
@@ -24,11 +26,12 @@ class loginHelper:
         
     def loginTry(self):
         self.window.fill((0, 0, 0))
-        self.window.blit(self.font.render("Loging in to stoat...", antialias=True, color=(255,255,255)), (10,10))
+        self.window.blit(self.font.render(f"Loging in to {self.serviceName}...", antialias=True, color=(255,255,255)), (10,10))
         p.display.flip()
         print("loging in")
         try:
-            token = self.app.config["loginData"]["session"]
+            token = self.encryptModule.saveDecrypt(self.app.config["loginData"]["token"]).decode("UTF8")
+            self.serviceName = self.app.config["loginData"]["platform"]
             validSession = requests.get("https://stoat.chat/api/users/@me", headers={"X-Session-Token": token}).status_code
             if validSession == 200:
                 self.app.modules['account'].loadAccount(self.app.config["loginData"])
@@ -36,10 +39,23 @@ class loginHelper:
             else:
                 raise KeyError
         except KeyError:
-            self.currentRun = self.askForEmail
+            self.currentRun = self.askForServiceName
             self.email = ""
             self.password = ""
             self.MFACode = ""
+    
+    def askForServiceName(self):
+        for event in p.event.get():
+            if event.type == p.KEYDOWN:
+                if event.key == p.K_RETURN:
+                    self.currentRun = self.askForEmail
+                elif event.key == p.K_BACKSPACE:
+                    self.serviceName = self.serviceName[:-1]
+                else:
+                    self.serviceName+= event.unicode
+        self.window.fill((0, 0, 0))
+        self.window.blit(self.font.render("Enter the service name that you would to use\nService: " + self.serviceName + "|", antialias=True, color=(255,255,255)),(10,10))
+        p.display.flip()
     
     def askForEmail(self):
         for event in p.event.get():

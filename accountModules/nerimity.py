@@ -5,7 +5,7 @@ import json
 class userAccount:
     def __init__(self):
         self.platformName = "nerimity"
-        self.token = ""
+        self.token = "MTc2MjUzNjkyNzg0NTg1OTMyOC0x.5N7KBLyXk4Y0Akx-Ei3bHiYylV2j9bXTw1yhWGr62DI"
         self.websocket = None
         self.socketID = ""
     
@@ -41,7 +41,7 @@ class userAccount:
                 data = list(self.websocket.get_messages())
                 for test in data:
                     test2 = json.loads(test[2:])
-                    if test != None and test2.__contains__('user:authenticated'):
+                    if test != None: and test2.__contains__('user:authenticated'):
                         print(test2)
                         wait = False
                         break
@@ -50,6 +50,18 @@ class userAccount:
     
     def resumeSession(self, token: str):
         pass
+    
+    def logout(self):
+        answer = requests.delete("https://nerimity.com/api/users/logout", headers={})
+        if answer.ok:
+            return 0
+        return 1
+    
+    def sendMessage(self, message: str, channel: str, server: str, masqData: dict):
+        answer = requests.post(f"https://nerimity.com/api/channels/{channel}/messages", headers={"Authorization": self.token}, data={})
+    
+    def returnSaveInfo(self):
+        return {"token": self.token, "service": self.platformName}
 
 test = userAccount()
-test.startSession()
+print(test.startSession())

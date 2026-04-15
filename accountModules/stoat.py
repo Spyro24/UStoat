@@ -29,7 +29,7 @@ class userAccount:
     def sendAtachments(self, filePaths: list):
         pass
     
-    def sendMessage(self, message: str, channel: str, server: str, masqData: str):
+    def sendMessage(self, message: str, channel: str, server: str, masqData: dict):
         pass
     
     def setupForUsing(self):
