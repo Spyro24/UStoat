@@ -19,7 +19,7 @@ class userCard:
         
     def createCard(self, userData: dict):
         canvas = p.Surface((self.sizeY * self.tilesX, self.sizeY))
-        avatar = self.app.modules["cache"].getUserAvatar(self.app.modules["account"].user_id)
+        avatar = self.app.modules["cache"].getUserAvatar(self.app.modules["platform"].userID)
         spacing = self.sizeY // 8
         canvas.fill((50,50,50))
         canvas.blit(p.transform.scale(avatar, (spacing * 6, spacing * 6)), (spacing, spacing))

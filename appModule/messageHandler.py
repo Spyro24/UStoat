@@ -122,7 +122,7 @@ class messageRender:
                 if len(self.app.modules["messageManager"].messages[self.channelSelector.selectedChannel]) == 0:
                    raise BaseException
             except:
-                messages = requests.get(f"https://stoat.chat/api/channels/{self.channelSelector.selectedChannel}/messages", headers={"X-Session-Token": self.app.modules['account'].sessionToken}).json()
+                #messages = requests.get(f"https://stoat.chat/api/channels/{self.channelSelector.selectedChannel}/messages", headers={"X-Session-Token": self.app.modules['account'].sessionToken}).json()
                 try:
                     messages.reverse()
                     for message in messages:

@@ -1,16 +1,22 @@
 import requests
 import baseModules
 import json
+import time
 
 class userAccount:
     def __init__(self):
         self.platformName = "nerimity"
-        self.token = "MTc2MjUzNjkyNzg0NTg1OTMyOC0x.5N7KBLyXk4Y0Akx-Ei3bHiYylV2j9bXTw1yhWGr62DI"
+        self.token = ""
         self.websocket = None
         self.socketID = ""
+        self.userID = ""
+        self.readyPackage = {"type":"Ready",
+                             "users":[],
+                             "servers":[],
+                             "channels": []}
     
     def login(self, username: str, password: str, clientName: str):
-        answer = requests.post("https://nerimity.com/api/users/login", json={"email":username ,"password": password})
+        answer = requests.post("https://nerimity.com/api/users/login", headers={"User-Agent": "UStoat"}, json={"email":username ,"password": password})
         if answer.ok:
             answerJson = answer.json()
             self.token = answerJson["token"]
@@ -23,45 +29,77 @@ class userAccount:
     def startSession(self):
         self.websocket = baseModules.WSSClient.WSSClient("wss://nerimity.com/socket.io/?EIO=4&transport=websocket")
         if self.websocket.wait_until_ready():
+            print("Websocket is ready")
             self.websocket.send_data("40")
             wait = True
             while wait:
                 if self.websocket.has_new_data():
                     for data in self.websocket.get_messages():
-                        print(data)
                         sid = json.loads(data[1:])
                         self.socketID = sid["sid"]
+                        print("SID received")
                         wait = False
                         break
+            time.sleep(0.2)
             self.websocket.send_data('42["user:authenticate",{"token":"' + self.token + '"}]')
+            time.sleep(0.2)
             wait = True
             while wait:
-                print(self.websocket.get_messages())
-            while wait:
                 data = list(self.websocket.get_messages())
+                if data != []:
+                    print(str(data))
                 for test in data:
                     test2 = json.loads(test[2:])
-                    if test != None: and test2.__contains__('user:authenticated'):
-                        print(test2)
+                    if test != None and test2.__contains__('user:authenticated'):
+                        print("user authenticated")
+                        packet = test2[1]
+                        user = {}
+                        self.userID = packet["user"]["id"]
+                        user["_id"] = packet["user"]["id"]
+                        user["username"] = packet["user"]["username"]
+                        user["discriminator"] = packet["user"]["tag"]
+                        self.readyPackage['users'].append(user)
+                        for rawServer in packet["servers"]:
+                            server = {}
+                            server["_id"] = rawServer["id"]
+                            server["name"] = rawServer["name"]
+                            server["owner"] = "0"
+                            server["channels"] = []
+                            self.readyPackage['servers'].append(server)
                         wait = False
                         break
+                    elif test != None:
+                        print(test)
+                time.sleep(0.2)
+            print("login to websocket succesfull")
             return 0
         return 1
     
     def resumeSession(self, token: str):
-        pass
+        self.token = token
+        return self.startSession()
     
     def logout(self):
-        answer = requests.delete("https://nerimity.com/api/users/logout", headers={})
+        answer = requests.delete("https://nerimity.com/api/users/logout", headers={"Authorization": self.token})
         if answer.ok:
             return 0
         return 1
+    
+    def getReadyPackage(self):
+        return self.readyPackage
+    
+    def fetchUser(self, userID: str):
+        answer = requests.get(f"https://nerimity.com/api/users/{userID}", headers={"Authorization": self.token})
+        if answer.ok:
+            userData = answer.json()["user"]
+            user = {}
+            user["_id"] = userData["id"]
+            user["discriminator"] = userData["tag"]
+            user["username"] = userData["username"]
+            return user
     
     def sendMessage(self, message: str, channel: str, server: str, masqData: dict):
         answer = requests.post(f"https://nerimity.com/api/channels/{channel}/messages", headers={"Authorization": self.token}, data={})
     
     def returnSaveInfo(self):
         return {"token": self.token, "service": self.platformName}
-
-test = userAccount()
-print(test.startSession())

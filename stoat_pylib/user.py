@@ -81,12 +81,13 @@ class users:
     def __init__(self):
         self.userInfo = {}
         self.userToken = ""
+        self.platformHelper = None
     
     def getUser(self, userId: str):
         try:
             return self.userInfo[userId]
         except KeyError:
-            answer = requests.get(f"https://stoat.chat/api/users/{userId}", headers={"X-Session-Token": self.userToken}).json()
+            answer = self.platformHelper.fetchUser(userId)
             self.addUser(answer)
         return self.userInfo[userId]
     

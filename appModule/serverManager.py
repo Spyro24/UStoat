@@ -136,20 +136,22 @@ class channelSelector:
         except KeyError: pass
     
     def update(self):
-        self.backedSurfaces = []
-        self.curentServerChannels = self.serverSelector.returnChannels()
-        self.selectedChannelIndex = 0
-        self.selectedChannel = self.curentServerChannels[self.selectedChannelIndex]
-        self.renderfromChannel = 0
-        for channel in self.curentServerChannels:
-            try:
-                text = self.font.render(self.serverManager.channelNameLookup[channel], True, (255,255,255))
-            except KeyError:
-                text = self.font.render("NO_NAME", True, (255,255,255))
-            surface = p.Surface((self.tileSize * 4, self.halfTile))
-            surface.fill(self.bgCol)
-            surface.blit(text, (surface.height, surface.height // 2 - text.height // 2))
-            self.backedSurfaces.append(surface)
+        try:
+            self.backedSurfaces = []
+            self.curentServerChannels = self.serverSelector.returnChannels()
+            self.selectedChannelIndex = 0
+            self.selectedChannel = self.curentServerChannels[self.selectedChannelIndex]
+            self.renderfromChannel = 0
+            for channel in self.curentServerChannels:
+                try:
+                    text = self.font.render(self.serverManager.channelNameLookup[channel], True, (255,255,255))
+                except KeyError:
+                    text = self.font.render("NO_NAME", True, (255,255,255))
+                surface = p.Surface((self.tileSize * 4, self.halfTile))
+                surface.fill(self.bgCol)
+                surface.blit(text, (surface.height, surface.height // 2 - text.height // 2))
+                self.backedSurfaces.append(surface)
+        except IndexError: pass
     
     def render(self, displaySize):
         self.renderedRect = p.draw.rect(self.window, self.bgCol, (self.tileSize, 0, self.tileSize * 4, self.app.modules["userCard"].renderRect[1]))

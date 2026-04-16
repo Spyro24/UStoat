@@ -1,5 +1,6 @@
 import pygame as p
 import stoat_pylib as stoat
+import accountModules
 import time
 import json
 import appModule
@@ -34,7 +35,8 @@ class App:
                         "notify": appModule.notficationHandler.notificatonSystem(),
                         "messageManager": appModule.messageHandler.messageManager(),
                         "i18n": appModule.i18n.i18n(),
-                        "encryption": appModule.s24crypt.s24Encryption()}
+                        "encryption": appModule.s24crypt.s24Encryption(),
+                        "platform": accountModules.stoat.userAccount()}
         self.modules["userCard"] = appModule.userCard.userCard(self)
         self.modules["cache"] = appModule.cacheSystem.cache(self)
         self.modules["serverSelector"] = appModule.serverManager.serverSelector(self)
@@ -45,8 +47,8 @@ class App:
         self.modules["settings"] = appModule.settingsManager.settingsManager(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
         self.isFocused = False
-        self.modules['account'].clientName = f"UStoat (v {self.VERSION})"
-        p.display.set_caption(self.modules['account'].clientName)
+        #self.modules['account'].clientName = f"UStoat (v {self.VERSION})"
+        p.display.set_caption(f"UStoat (v {self.VERSION})")
         self.textInput = None
         self.mousePos = p.mouse.get_pos()
         self.mouseButtons = p.mouse.get_pressed()
@@ -54,23 +56,19 @@ class App:
     
     def setup(self):
         appModule.loginHelper.loginHelper(self)
-        self.modules['account'].subToAPI()
-        self.modules['APISubscrption'] = self.modules['account'].apiSuscription
+        #self.modules['account'].subToAPI()
+        #self.modules['APISubscrption'] = self.modules['account'].apiSuscription
+        self.modules["userManager"].platformHelper = self.modules["platform"]
         self.modules["serverManager"].userManager = self.modules["userManager"]
         self.modules["serverManager"].userID = self.modules["account"].user_id
         self.modules["serverManager"].init()
-        getInit = True
-        while getInit:
-            if self.modules['APISubscrption'].has_new_data():
-                for packet in self.modules['APISubscrption'].get_messages():
-                    packet = json.loads(packet)
-                    if packet["type"] == "Ready":
-                        print(packet)
-                        for user in packet["users"]:
-                            self.modules['userManager'].addUser(user)
-                        self.modules["serverManager"].insertReadyPackage(packet)
-                        getInit = False
-        userInfo = self.modules['userManager'].userInfo[self.modules['account'].user_id]
+        packet = self.modules["platform"].getReadyPackage()
+        if packet["type"] == "Ready":
+            print(packet)
+            for user in packet["users"]:
+                self.modules['userManager'].addUser(user)
+            self.modules["serverManager"].insertReadyPackage(packet)
+        userInfo = self.modules['userManager'].userInfo[self.modules['platform'].userID]
         self.modules["userCard"].createCard(userInfo)
         print(self.modules["serverManager"].serverStructure)
         self.modules['userManager'].userToken = self.modules['account'].sessionToken
@@ -110,6 +108,7 @@ class App:
                 elif event.type == p.MOUSEWHEEL:
                     if self.mouseWheel == 0:
                         self.mouseWheel = -event.y
+            '''
             for event in self.modules['APISubscrption'].get_messages():
                 eventJson = json.loads(event)
                 if eventJson["type"] == "Message":
@@ -119,6 +118,7 @@ class App:
                     except BaseException as e:
                         print(eventJson)
                         print(e)
+            '''
             
             if not self.FROZEN: #RPC feature is deactivated in the EXECUTABLEs because its experimental
                 self.RPC.handleRequests()
@@ -142,7 +142,6 @@ class App:
         self.close()
     
     def close(self):
-        self.config["loginData"] = self.modules['account'].saveAccount()
         try:
             configFile = open(self.configFilePath, "w")
             json.dump(self.config, configFile, indent=4)
@@ -151,6 +150,7 @@ class App:
         except:
             pass
         p.quit()
+        exit()
     
     #helper functions
     def open_file_selector(self):

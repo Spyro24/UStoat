@@ -11,3 +11,4 @@ import appModule.settingsManager
 import appModule.httpRPCServer
 import appModule.RPCHandler
 import appModule.i18n
+import appModule.s24crypt

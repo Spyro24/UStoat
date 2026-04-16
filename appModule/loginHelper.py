@@ -4,6 +4,7 @@
 import pygame as p
 import requests
 import appModule
+import accountModules
 
 class loginHelper:
     def __init__(self, app: appModule.app.App):
@@ -18,6 +19,7 @@ class loginHelper:
         self.currentRun = self.loginTry
         self.finished = False
         self.encryptModule = app.modules["encryption"]
+        self.platformHelper = accountModules.stoat.userAccount()
         self.execute()
     
     def execute(self):
@@ -26,15 +28,18 @@ class loginHelper:
         
     def loginTry(self):
         self.window.fill((0, 0, 0))
-        self.window.blit(self.font.render(f"Loging in to {self.serviceName}...", antialias=True, color=(255,255,255)), (10,10))
+        self.window.blit(self.font.render(f"Login in to {self.serviceName}...", antialias=True, color=(255,255,255)), (10,10))
         p.display.flip()
         print("loging in")
         try:
             token = self.encryptModule.saveDecrypt(self.app.config["loginData"]["token"]).decode("UTF8")
             self.serviceName = self.app.config["loginData"]["platform"]
-            validSession = requests.get("https://stoat.chat/api/users/@me", headers={"X-Session-Token": token}).status_code
-            if validSession == 200:
-                self.app.modules['account'].loadAccount(self.app.config["loginData"])
+            self.platformHelper = accountModules.platforms[self.serviceName]()
+            validSession = self.platformHelper.resumeSession(token)
+            print(self.platformHelper.returnSaveInfo())
+            print(validSession)
+            if validSession == 0:
+                self.app.modules['platform'] = self.platformHelper
                 self.finished = True
             else:
                 raise KeyError
@@ -84,15 +89,15 @@ class loginHelper:
         p.display.flip()
     
     def loginWithoutMFA(self):
-        answer = requests.post("https://stoat.chat/api/auth/session/login?", json={"email":f"{self.email}","password":f"{self.password}","friendly_name": self.app.modules['account'].clientName})
-        if answer.status_code == 200:
-            json = answer.json()
-            if json["result"] == "Success":
+        self.platformHelper = accountModules.platforms[self.serviceName]()
+        answer = self.platformHelper.login(self.email, self.password, f"UStoat (v {self.app.VERSION})")
+        if answer != 1:
+            if answer == 0:
+                export = self.platformHelper.returnSaveInfo()
                 self.app.config["loginData"] = {}
-                self.app.config["loginData"]["_id"] = json["_id"]
-                self.app.config["loginData"]["session"] = json["token"]
-                self.app.config["loginData"]["userId"] = json["user_id"]
-            elif json["result"] == "MFA":
+                self.app.config["loginData"]["token"] = self.encryptModule.saveEncrypt(export["token"].encode("UTF8")).decode("UTF8")
+                self.app.config["loginData"]["platform"] = export['service']
+            elif answer == 2:
                 self.MFATicket = json["ticket"]
                 self.currentRun = self.loginWithMFA
                 return

@@ -26,6 +26,9 @@ class userAccount:
     def resumeSession(self, token: str):
         pass
     
+    def getReadyPackage(self):
+        pass
+    
     def sendAtachments(self, filePaths: list):
         pass
     
