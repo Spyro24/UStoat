@@ -37,3 +37,6 @@ class userAccount:
     
     def setupForUsing(self):
         pass
+    
+    def fetchServerIcon(self, iconID: str):
+        pass

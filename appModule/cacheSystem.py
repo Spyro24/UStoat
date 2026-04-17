@@ -7,6 +7,7 @@ class cache:
     def __init__(self, app: appModule.app.App):
         self.app = app
         self.modules = self.app.modules
+        self.platform = self.modules["platform"]
         self.store = {"avatars":{},
                       "icons": {}}
     
@@ -29,7 +30,7 @@ class cache:
         try:
             return(self.store['icons'][iconPath])
         except KeyError:
-            icon = io.BytesIO(requests.get(f"https://cdn.stoatusercontent.com/icons/{iconPath}").content)
+            icon = io.BytesIO(self.platform.fetchServerIcon(iconPath))
             icon = p.image.load(icon)
             icon = self.make_square_and_scale(icon)
             icon = self.create_circular_surface(icon)

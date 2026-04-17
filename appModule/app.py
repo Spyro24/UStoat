@@ -59,6 +59,7 @@ class App:
         #self.modules['account'].subToAPI()
         #self.modules['APISubscrption'] = self.modules['account'].apiSuscription
         self.modules["userManager"].platformHelper = self.modules["platform"]
+        self.modules["cache"].platform = self.modules["platform"]
         self.modules["serverManager"].userManager = self.modules["userManager"]
         self.modules["serverManager"].userID = self.modules["account"].user_id
         self.modules["serverManager"].init()

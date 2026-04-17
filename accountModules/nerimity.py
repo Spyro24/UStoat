@@ -65,6 +65,8 @@ class userAccount:
                             server["name"] = rawServer["name"]
                             server["owner"] = "0"
                             server["channels"] = []
+                            server["icon"] = {}
+                            server["icon"]["_id"] = rawServer["avatar"]
                             self.readyPackage['servers'].append(server)
                         wait = False
                         break
@@ -97,6 +99,11 @@ class userAccount:
             user["discriminator"] = userData["tag"]
             user["username"] = userData["username"]
             return user
+    
+    def fetchServerIcon(self, iconID: str):
+        answer = requests.get(f"https://cdn.nerimity.com/{iconID}")
+        if answer.ok:
+            return answer.content
     
     def sendMessage(self, message: str, channel: str, server: str, masqData: dict):
         answer = requests.post(f"https://nerimity.com/api/channels/{channel}/messages", headers={"Authorization": self.token}, data={})

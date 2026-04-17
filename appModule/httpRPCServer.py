@@ -17,7 +17,7 @@ class HTTPServerWithQueue:
         # Server im Background starten
         self.server_thread = threading.Thread(target=self.server.serve_forever, daemon=True)
         self.server_thread.start()
-        print(f'Server läuft auf http://{self.host}:{self.port}')
+        print(f'Server runs on http://{self.host}:{self.port}')
     
     def _create_handler(self):
         """Erstellt eine Handler-Klasse mit Zugriff auf die Queue und Response-Dict"""
