@@ -68,6 +68,21 @@ class userAccount:
                             server["icon"] = {}
                             server["icon"]["_id"] = rawServer["avatar"]
                             self.readyPackage['servers'].append(server)
+                        serverPos = []
+                        for server in self.readyPackage["servers"]:
+                            serverPos.append(server["_id"])
+                        for rawChannel in packet["channels"]:
+                            channel = {}
+                            channel["channel_type"] = "TextChannel"
+                            channel["_id"] = rawChannel["id"]
+                            channel["name"] = rawChannel["name"]
+                            if rawChannel["type"] == 1:
+                                channel["server"] = rawChannel["serverId"]
+                                self.readyPackage["servers"][serverPos.index(channel["server"])]["channels"].append(channel["_id"])
+                            else:
+                                channel["channel_type"] = "DirectMessage"
+                                channel["recipients"] = []
+                            self.readyPackage["channels"].append(channel)
                         wait = False
                         break
                     elif test != None:
@@ -101,12 +116,24 @@ class userAccount:
             return user
     
     def fetchServerIcon(self, iconID: str):
-        answer = requests.get(f"https://cdn.nerimity.com/{iconID}")
-        if answer.ok:
-            return answer.content
+        return requests.get(f"https://cdn.nerimity.com/{iconID}")
     
     def sendMessage(self, message: str, channel: str, server: str, masqData: dict):
         answer = requests.post(f"https://nerimity.com/api/channels/{channel}/messages", headers={"Authorization": self.token}, data={})
+    
+    def fetchMessages(self, channel: str, server: str, count=50):
+        answer = requests.get(f"https://nerimity.com/api/channels/{channel}/messages?limit={count}", headers={"Authorization": self.token})
+        messages = {"messages":[],"users":[],"members":[]}
+        if answer.ok:
+            json = answer.json()
+            for rawMessage in json:
+                message = {"_id": rawMessage["id"],
+                           "channel": rawMessage["channelId"],
+                           "author": rawMessage["createdById"],
+                           "content": rawMessage["content"]}
+                messages["messages"].append(message)
+            messages["messages"].reverse()
+        return messages
     
     def returnSaveInfo(self):
         return {"token": self.token, "service": self.platformName}

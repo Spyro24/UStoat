@@ -42,7 +42,6 @@ class HTTPServerWithQueue:
                 
                 queue.put(request_dict)
                 
-                # Auf Response warten
                 while rid not in response_dict:
                     threading.Event().wait(0.01)
                 

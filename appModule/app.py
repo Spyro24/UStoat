@@ -15,7 +15,7 @@ class App:
         p.init()
         self.mouseWheel = 0
         self.FROZEN = getattr(sys, "frozen", False)
-        self.VERSION = "0.2.5"
+        self.VERSION = "0.3.0"
         self.window = p.display.set_mode((1080, 720), flags=p.RESIZABLE)
         self.configFilePath = p.system.get_pref_path("spyro24", "ustoat") + "config.json"
         try:
@@ -60,6 +60,7 @@ class App:
         #self.modules['APISubscrption'] = self.modules['account'].apiSuscription
         self.modules["userManager"].platformHelper = self.modules["platform"]
         self.modules["cache"].platform = self.modules["platform"]
+        self.modules["messageRender"].platform = self.modules["platform"]
         self.modules["serverManager"].userManager = self.modules["userManager"]
         self.modules["serverManager"].userID = self.modules["account"].user_id
         self.modules["serverManager"].init()

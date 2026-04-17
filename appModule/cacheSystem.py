@@ -30,8 +30,12 @@ class cache:
         try:
             return(self.store['icons'][iconPath])
         except KeyError:
-            icon = io.BytesIO(self.platform.fetchServerIcon(iconPath))
-            icon = p.image.load(icon)
+            answer = self.platform.fetchServerIcon(iconPath)
+            if answer.ok:
+                icon = io.BytesIO(answer.content)
+                icon = p.image.load(icon)
+            else:
+                icon = p.Surface((128,128))
             icon = self.make_square_and_scale(icon)
             icon = self.create_circular_surface(icon)
             self.store['icons'][iconPath] = icon

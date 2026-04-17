@@ -38,7 +38,6 @@ class serverManager:
                     for user in channel["recipients"]:
                         if user != self.userID:
                             self.channelNameLookup[channel["_id"]] = self.userManager.getUser(user)["name"]
-                print(user)
                 self.serverStructure["0"]["channels"].append(channel["_id"])
     
     def createDefaultEntrys(self):

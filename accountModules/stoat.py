@@ -40,3 +40,6 @@ class userAccount:
     
     def fetchServerIcon(self, iconID: str):
         pass
+    
+    def fetchMessages(self, channel: str, server: str, count=50):
+        pass

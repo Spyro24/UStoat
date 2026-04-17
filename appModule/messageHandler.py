@@ -40,7 +40,7 @@ class messageRender:
         self.colors = {"bg": (75, 35, 125),
                        "text": (255, 255, 255),
                        "userName": (150, 150, 150)}
-        self.selectedChannel = "01F92C5ZXBQWQ8KY7J8KY917NM"
+        self.selectedChannel = ""
         self.channelSelector = app.modules["channelSelector"]
         self.tileSize = self.app.tileSize
         self.app.renderQuee.append(self)
@@ -49,6 +49,7 @@ class messageRender:
         self.app.themeable.append(self)
         self.curMessageIndex = -1
         self.renderedRect = p.rect.Rect()
+        self.platform = self.app.modules["platform"]
     
     def reloadTheme(self):
         theme = self.app.modules["themeManager"].theme["messageRender"]
@@ -122,7 +123,7 @@ class messageRender:
                 if len(self.app.modules["messageManager"].messages[self.channelSelector.selectedChannel]) == 0:
                    raise BaseException
             except:
-                #messages = requests.get(f"https://stoat.chat/api/channels/{self.channelSelector.selectedChannel}/messages", headers={"X-Session-Token": self.app.modules['account'].sessionToken}).json()
+                messages = self.platform.fetchMessages(self.channelSelector.selectedChannel, "")["messages"]
                 try:
                     messages.reverse()
                     for message in messages:
