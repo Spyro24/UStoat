@@ -29,6 +29,12 @@ class userAccount:
     def getReadyPackage(self):
         pass
     
+    def pumpSocket(self):
+        pass
+    
+    def returnSocketData(self):
+        pass
+    
     def sendAtachments(self, filePaths: list):
         pass
     

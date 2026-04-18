@@ -81,14 +81,6 @@ class App:
         self.RPC = appModule.RPCHandler.RPCHandler(self)
         self.modules["serverSelector"].update()
         self.appLoop()
-    
-    def loginToStoat(self):
-        email = input("Email: ")
-        password = input("Password: ")
-        self.modules['account'].login(email, password)
-        if self.modules['account'].curentLoginStatus == "MFA":
-            mfaCode = input("MFA Code: ")
-            self.modules['account'].authMFA(mfaCode)
         
     def appLoop(self):
         lastRender = 0
@@ -110,17 +102,16 @@ class App:
                 elif event.type == p.MOUSEWHEEL:
                     if self.mouseWheel == 0:
                         self.mouseWheel = -event.y
-            '''
-            for event in self.modules['APISubscrption'].get_messages():
-                eventJson = json.loads(event)
-                if eventJson["type"] == "Message":
+            
+            self.modules["platform"].pumpSocket()
+            for package in self.modules["platform"].returnSocketData():
+                if package["type"] == "Message":
                     try:
-                        self.modules["messageManager"].insertMessage(eventJson)
-                        self.modules["notificatonSystem"].scanMessage(eventJson)
+                        self.modules["messageManager"].insertMessage(package)
+                        self.modules["notificatonSystem"].scanMessage(package)
                     except BaseException as e:
-                        print(eventJson)
+                        print(package)
                         print(e)
-            '''
             
             if not self.FROZEN: #RPC feature is deactivated in the EXECUTABLEs because its experimental
                 self.RPC.handleRequests()

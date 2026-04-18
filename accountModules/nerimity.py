@@ -14,6 +14,7 @@ class userAccount:
                              "users":[],
                              "servers":[],
                              "channels": []}
+        self.websocketPackage = []
     
     def login(self, username: str, password: str, clientName: str):
         answer = requests.post("https://nerimity.com/api/users/login", headers={"User-Agent": "UStoat"}, json={"email":username ,"password": password})
@@ -107,6 +108,29 @@ class userAccount:
     
     def getReadyPackage(self):
         return self.readyPackage
+    
+    def pumpSocket(self):
+        if self.websocket.has_new_data():
+            for package in self.websocket.get_messages():
+                if package == "2":
+                    self.websocket.send_data("3")
+                else:
+                    packetFormated = {"type": ""}
+                    data: list = json.loads(package[2:])
+                    if data.__contains__("message:created"):
+                        data = data[1]["message"]
+                        packetFormated["type"] = "Message"
+                        packetFormated["_id"] = data["id"]
+                        packetFormated["channel"] = data["channelId"]
+                        packetFormated["author"] = data["createdById"]
+                        packetFormated["content"] = data["content"]
+                    if packetFormated["type"] != "":
+                        self.websocketPackage.append(packetFormated)
+    
+    def returnSocketData(self):
+        socketData = self.websocketPackage
+        self.websocketPackage = []
+        return socketData
     
     def fetchUser(self, userID: str):
         answer = requests.get(f"https://nerimity.com/api/users/{userID}", headers={"Authorization": self.token})

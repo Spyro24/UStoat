@@ -21,7 +21,10 @@ class cache:
                 avatar = io.BytesIO(self.platform.fetchUserPicture(avatarId).content)
             else:
                 avatar = "./res/images/default_avatar.png"
-            avatar = p.image.load(avatar)
+            try:
+                avatar = p.image.load(avatar)
+            except:
+                avatar = p.image.load("./res/images/default_avatar.png")
             avatar = self.make_square_and_scale(avatar)
             self.store['avatars'][userId] = avatar
             return avatar
