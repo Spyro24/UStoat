@@ -28,7 +28,6 @@ jobs:
       - name: Build Linux Executable
         run: |
           nuitka --standalone --onefile --output-dir=build --include-data-dir=res=res main.pyw
-          mkdir ./build
           cp -r ./res ./build/res
           pyinstaller --onefile --name UStoat --add-data "res:res" --distpath dist --workpath build --specpath build main.pyw
         shell: bash
