@@ -18,7 +18,7 @@ class cache:
             userData = self.modules['userManager'].getUser(userId)
             avatarId = userData['avatarId']
             if avatarId != "": 
-                avatar = io.BytesIO(requests.get(f"https://cdn.stoatusercontent.com/avatars/{avatarId}").content)
+                avatar = io.BytesIO(self.platform.fetchUserPicture(avatarId).content)
             else:
                 avatar = "./res/images/default_avatar.png"
             avatar = p.image.load(avatar)

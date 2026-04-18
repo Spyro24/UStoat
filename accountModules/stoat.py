@@ -43,3 +43,6 @@ class userAccount:
     
     def fetchMessages(self, channel: str, server: str, count=50):
         pass
+    
+    def fetchUserPicture(self, userPictureID: str):
+        pass

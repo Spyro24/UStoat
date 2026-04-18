@@ -58,6 +58,9 @@ class userAccount:
                         user["_id"] = packet["user"]["id"]
                         user["username"] = packet["user"]["username"]
                         user["discriminator"] = packet["user"]["tag"]
+                        if packet["user"]["avatar"] != None:
+                            user["avatar"] = {}
+                            user["avatar"]["_id"] = packet["user"]["avatar"]
                         self.readyPackage['users'].append(user)
                         for rawServer in packet["servers"]:
                             server = {}
@@ -113,13 +116,16 @@ class userAccount:
             user["_id"] = userData["id"]
             user["discriminator"] = userData["tag"]
             user["username"] = userData["username"]
+            if userData["avatar"] != None:
+                user["avatar"] = {}
+                user["avatar"]["_id"] = userData["avatar"]
             return user
     
     def fetchServerIcon(self, iconID: str):
         return requests.get(f"https://cdn.nerimity.com/{iconID}")
     
-    def sendMessage(self, message: str, channel: str, server: str, masqData: dict):
-        answer = requests.post(f"https://nerimity.com/api/channels/{channel}/messages", headers={"Authorization": self.token}, data={})
+    def fetchUserPicture(self, userID: str):
+        return requests.get(f"https://cdn.nerimity.com/{userID}")
     
     def fetchMessages(self, channel: str, server: str, count=50):
         answer = requests.get(f"https://nerimity.com/api/channels/{channel}/messages?limit={count}", headers={"Authorization": self.token})
@@ -134,6 +140,9 @@ class userAccount:
                 messages["messages"].append(message)
             messages["messages"].reverse()
         return messages
+    
+    def sendMessage(self, message: str, channel: str, server: str, masqData: dict):
+        answer = requests.post(f"https://nerimity.com/api/channels/{channel}/messages", headers={"Authorization": self.token}, data={})
     
     def returnSaveInfo(self):
         return {"token": self.token, "service": self.platformName}

@@ -1,7 +1,6 @@
 import pygame as p
 import requests
 import appModule
-import io
 
 class userCard:
     def __init__(self, app: appModule.app.App):
