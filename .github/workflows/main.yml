@@ -20,6 +20,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install --upgrade nuitka
+          pip install pyinstaller
           sudo apt-get update
           sudo apt-get install -y patchelf unzip
         shell: bash
@@ -58,6 +59,7 @@ jobs:
       - name: Build Linux Executable
         run: |
           nuitka --standalone --onefile --output-dir=build --include-data-dir=res=res main.pyw
+          pyinstaller --onefile --name UStoat --add-data "res;res" --distpath dist --workpath build --specpath build main.pyw
         shell: bash
 
       - name: Upload Linux Artifact
