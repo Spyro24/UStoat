@@ -19,6 +19,8 @@ class inputTextBox:
         self.textCol = (255,255,255)
         self.textNoneCol = (0, 0, 0)
         self.i18n = self.app.modules["i18n"].strings
+        self.platform = self.app.modules["platform"]
+        self.serverSelector = self.app.modules["serverSelector"]
     
     def reloadTheme(self):
         theme = self.app.modules["themeManager"].theme["messageBox"]
@@ -30,7 +32,7 @@ class inputTextBox:
             
     def sendMessage(self):
         if self.curentMessage != "":
-            self.app.modules["account"].sendMessage(self.curentMessage, self.channelSelector.selectedChannel)
+            self.platform.sendMessage(self.curentMessage, self.channelSelector.selectedChannel, self.serverSelector.selectedServer, {})
             self.curentMessage = ""
         
     def wrap_text_to_width(self, text: str, font: p.font.Font, max_width: int) -> str:

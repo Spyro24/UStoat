@@ -60,6 +60,7 @@ class App:
         #self.modules['APISubscrption'] = self.modules['account'].apiSuscription
         self.modules["userManager"].platformHelper = self.modules["platform"]
         self.modules["cache"].platform = self.modules["platform"]
+        self.modules["messageInput"].platform = self.modules["platform"]
         self.modules["messageRender"].platform = self.modules["platform"]
         self.modules["serverManager"].userManager = self.modules["userManager"]
         self.modules["serverManager"].userID = self.modules["account"].user_id

@@ -166,7 +166,7 @@ class userAccount:
         return messages
     
     def sendMessage(self, message: str, channel: str, server: str, masqData: dict):
-        answer = requests.post(f"https://nerimity.com/api/channels/{channel}/messages", headers={"Authorization": self.token}, data={})
+        answer = requests.post(f"https://nerimity.com/api/channels/{channel}/messages", headers={"Authorization": self.token}, data={"content": message})
     
     def returnSaveInfo(self):
         return {"token": self.token, "service": self.platformName}
