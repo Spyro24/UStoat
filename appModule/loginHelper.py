@@ -98,7 +98,6 @@ class loginHelper:
                 self.app.config["loginData"]["token"] = self.encryptModule.saveEncrypt(export["token"].encode("UTF8")).decode("UTF8")
                 self.app.config["loginData"]["platform"] = export['service']
             elif answer == 2:
-                self.MFATicket = json["ticket"]
                 self.currentRun = self.loginWithMFA
                 return
         self.currentRun = self.loginTry
@@ -107,15 +106,12 @@ class loginHelper:
         for event in p.event.get():
             if event.type == p.KEYDOWN:
                 if event.key == p.K_RETURN:
-                    answer = requests.post("https://stoat.chat/api/auth/session/login?", json={"mfa_response":{"totp_code":self.MFACode},"mfa_ticket": self.MFATicket,"friendly_name": self.app.modules['account'].clientName})
-                    if answer.status_code == 200:
-                        json = answer.json()
-                        if json["result"] == "Success":
-                            self.app.config["loginData"] = {}
-                            self.app.config["loginData"]["_id"] = json["_id"]
-                            self.app.config["loginData"]["session"] = json["token"]
-                            self.app.config["loginData"]["userId"] = json["user_id"]
-                            self.currentRun = self.loginTry
+                    if self.platformHelper.loginMFA(self.MFACode) == 0:
+                        export = self.platformHelper.returnSaveInfo()
+                        self.app.config["loginData"] = {}
+                        self.app.config["loginData"]["token"] = self.encryptModule.saveEncrypt(export["token"].encode("UTF8")).decode("UTF8")
+                        self.app.config["loginData"]["platform"] = export['service']
+                        self.currentRun = self.loginTry
                     else:
                         self.MFACode = ""
                 elif event.key == p.K_BACKSPACE:
