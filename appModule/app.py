@@ -9,6 +9,7 @@ from tkinter import filedialog
 import threading
 import queue
 import sys
+import tools
 
 class App:
     def __init__(self):
@@ -46,6 +47,7 @@ class App:
         self.modules["themeManager"] = appModule.themeManager.themeManager(self)
         self.modules["settings"] = appModule.settingsManager.settingsManager(self)
         self.modules["toolbar"] = appModule.toolbar.toolbar(self)
+        self.modules["masqTool"] = tools.masqurade.masquradeTool(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
         self.isFocused = False
         #self.modules['account'].clientName = f"UStoat (v {self.VERSION})"
