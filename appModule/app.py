@@ -45,6 +45,7 @@ class App:
         self.modules["messageRender"] = appModule.messageHandler.messageRender(self)
         self.modules["themeManager"] = appModule.themeManager.themeManager(self)
         self.modules["settings"] = appModule.settingsManager.settingsManager(self)
+        self.modules["toolbar"] = appModule.toolbar.toolbar(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
         self.isFocused = False
         #self.modules['account'].clientName = f"UStoat (v {self.VERSION})"

@@ -10,7 +10,8 @@ class themeManager:
                       "channelSelector":{"background":(211, 75, 100),
                                          "selected":(200,150,100)},
                       "messageRender":{"background":(75, 35, 125),
-                                        "text":(255, 255, 255)}
+                                        "text":(255, 255, 255)},
+                      "toolbar":{"background":(140, 0, 140)}
                       }
         self.app = app
     
