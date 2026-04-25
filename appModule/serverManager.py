@@ -68,6 +68,8 @@ class serverSelector:
         self.selectorPos = 0
         self.serverListLen = 0
         self.channelSelector = None
+        self.renderFromServer = 0
+        self.renderOverflow = False
         self.app.themeable.append(self)
         self.bgCol = (234,123,40)
     
@@ -94,9 +96,18 @@ class serverSelector:
     
     def render(self, displaySize):
         self.renderedRect = p.draw.rect(self.window, self.bgCol, (0, 0, self.tileSize, self.app.modules["userCard"].renderRect[1]))
+        if self.app.mouseWheel != 0:
+            if self.renderedRect.collidepoint(self.app.mousePos):
+                pass
+        self.renderOverflow = False
         renderPos = 0
-        for icon in self.icons:
-            if self.window.blit(icon, (self.borderSize, renderPos * self.tileSize + self.borderSize)).collidepoint(self.app.mousePos) and self.app.mouseButtons[0]:
+        while (renderPos + self.renderFromServer) < len(self.icons):
+            surface = self.icons[renderPos + self.renderFromServer]
+            rect = self.window.blit(surface, (self.borderSize, renderPos * self.tileSize + self.borderSize))
+            if not self.renderedRect.collidepoint(rect.centerx, rect.bottom + self.tileSize):
+                self.renderOverflow = True
+                break
+            if rect.collidepoint(self.app.mousePos) and self.app.mouseButtons[0]:
                 self.selectorPos = renderPos
                 self.selectedServer = self.serverManager.servers[self.selectorPos]
                 self.channelSelector.update()
