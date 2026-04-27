@@ -117,7 +117,7 @@ class userAccount:
                 else:
                     packetFormated = {"type": ""}
                     data: list = json.loads(package[2:])
-                    if data.__contains__("message:created"):
+                    if "message:created" in data:
                         data = data[1]["message"]
                         packetFormated["type"] = "Message"
                         packetFormated["_id"] = data["id"]

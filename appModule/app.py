@@ -68,6 +68,7 @@ class App:
         self.modules["serverManager"].userManager = self.modules["userManager"]
         self.modules["serverManager"].userID = self.modules["account"].user_id
         self.modules["serverManager"].init()
+        self.modules["memberList"] = appModule.memberList.memebrList(self)
         packet = self.modules["platform"].getReadyPackage()
         if packet["type"] == "Ready":
             print(packet)

@@ -13,3 +13,4 @@ import appModule.RPCHandler
 import appModule.i18n
 import appModule.s24crypt
 import appModule.toolbar
+import appModule.memberList

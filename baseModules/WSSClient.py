@@ -54,5 +54,5 @@ class WSSClient:
         while time.time() - start < timeout:
             if self.is_ready():
                 return True
-            time.sleep(0.1)
+            time.sleep(0.5)
         return False
