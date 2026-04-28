@@ -52,7 +52,7 @@ class WSSClient:
     def wait_until_ready(self, timeout=10):
         start = time.time()
         while time.time() - start < timeout:
+            time.sleep(0.5)
             if self.is_ready():
                 return True
-            time.sleep(0.5)
         return False

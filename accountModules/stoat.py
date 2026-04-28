@@ -100,5 +100,11 @@ class userAccount:
     def fetchUser(self, userID: str):
         return requests.get(f"https://stoat.chat/api/users/{userID}", headers={"X-Session-Token": self.token}).json()
     
+    def fetchChannelMembers(self, server: str, channel: str):
+        return requests.get(f"https://stoat.chat/api/channels/{channel}/members", headers={"X-Session-Token": self.token}).json()
+    
+    def fetchServerMembers(self, server: str, channel: str):
+        return requests.get(f"https://stoat.chat/api/servers/{server}/members?exclude_offline=true", headers={"X-Session-Token": self.token, "content-type": "application/json"}).json()
+    
     def returnSaveInfo(self):
         return {"token": self.token, "service": self.platformName}
