@@ -17,12 +17,15 @@ class memebrList:
         self.serverSelector = app.modules["serverSelector"]
         self.renderedRect = p.rect.Rect()
         self.cache = self.app.modules["cache"]
+        self.font = self.app.modules['font']
+        self.userManager = self.app.modules["userManager"]
     
     def createUserCard(self, userID: str):
         background = p.surface.Surface((self.tileSize * 5, self.tileSize))
         background.fill((100,100,150))
         avatar = self.cache.getUserAvatar(userID)
         background.blit(p.transform.scale(avatar, (self.tileSize - self.octet * 2, self.tileSize - self.octet * 2)), (self.octet, self.octet))
+        background.blit(self.font.render(self.userManager.getUser(userID)["display_name"], antialias=True, color=(255,255,255)),(self.tileSize, self.octet))
         return background
         
     
