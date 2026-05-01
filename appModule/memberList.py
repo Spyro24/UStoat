@@ -6,6 +6,7 @@ class memebrList:
         self.app = app
         self.window = app.window
         self.tileSize = app.tileSize
+        self.octet = self.tileSize / 8
         self.appModules = app.modules
         self.app.renderQuee.append(self)
         self.toolBar = self.appModules["toolbar"]
@@ -15,10 +16,13 @@ class memebrList:
         self.platformHandler = app.modules["platform"]
         self.serverSelector = app.modules["serverSelector"]
         self.renderedRect = p.rect.Rect()
+        self.cache = self.app.modules["cache"]
     
     def createUserCard(self, userID: str):
         background = p.surface.Surface((self.tileSize * 5, self.tileSize))
         background.fill((100,100,150))
+        avatar = self.cache.getUserAvatar(userID)
+        background.blit(p.transform.scale(avatar, (self.tileSize - self.octet * 2, self.tileSize - self.octet * 2)), (self.octet, self.octet))
         return background
         
     
@@ -49,3 +53,4 @@ class memebrList:
                     userCard = self.createUserCard(memberList[indexPos])
                     self.renderedUserCards[memberList[indexPos]] = userCard
                 renderPos = self.window.blit(userCard, (self.renderedRect[0], renderPos)).bottom
+                indexPos += 1
