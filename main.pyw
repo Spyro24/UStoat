@@ -25,6 +25,6 @@ if __name__ == "__main__":
         try:
             app = appModule.app.App()
         except:
-            exit()
+            raise SystemExit
     else:
         app = appModule.app.App()

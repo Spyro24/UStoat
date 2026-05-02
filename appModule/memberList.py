@@ -3,6 +3,7 @@ import pygame as p
 
 class memebrList:
     def __init__(self, app: appModule.app.App):
+        self.moduleName = ""
         self.app = app
         self.window = app.window
         self.tileSize = app.tileSize
@@ -19,6 +20,17 @@ class memebrList:
         self.cache = self.app.modules["cache"]
         self.font = self.app.modules['font']
         self.userManager = self.app.modules["userManager"]
+        self.requestSystem = app.modules["requestHandler"]
+    
+    def insertRequestData(self, data: tuple):
+        package = data[2]
+        if data[1][0] == "getServerMembers":
+            if "members" in package:
+                memberList = package["members"]
+                server = data[1][1]
+                self.serverMembers[server] = []
+                for member in memberList:
+                    self.serverMembers[server].append(member["_id"]["user"])
     
     def createUserCard(self, userID: str):
         background = p.surface.Surface((self.tileSize * 5, self.tileSize))
@@ -36,13 +48,7 @@ class memebrList:
             if selectedServer != "":
                 self.initServer.append(selectedServer)
                 self.serverMembers[selectedServer] = []
-                package = self.platformHandler.fetchServerMembers(selectedServer, "")
-                if "members" in package:
-                    memberList = package["members"]
-                    self.serverMembers[selectedServer] = []
-                    for member in memberList:
-                        self.serverMembers[selectedServer].append(member["_id"]["user"])
-                print(self.serverMembers[selectedServer])
+                self.requestSystem.placeOnCallStack(self.moduleName, ["getServerMembers", selectedServer], lambda: self.platformHandler.fetchServerMembers(selectedServer, ""))
         if selectedServer != "0":
             indexPos = 0
             renderPos = self.renderedRect.top

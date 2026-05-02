@@ -37,7 +37,8 @@ class App:
                         "messageManager": appModule.messageHandler.messageManager(),
                         "i18n": appModule.i18n.i18n(),
                         "encryption": appModule.s24crypt.s24Encryption(),
-                        "platform": accountModules.stoat.userAccount()}
+                        "platform": accountModules.stoat.userAccount(),
+                        "requestHandler": appModule.requestHandler.requestHandler()}
         self.modules["userCard"] = appModule.userCard.userCard(self)
         self.modules["cache"] = appModule.cacheSystem.cache(self)
         self.modules["serverSelector"] = appModule.serverManager.serverSelector(self)
@@ -85,6 +86,10 @@ class App:
     def ready(self):
         self.RPC = appModule.RPCHandler.RPCHandler(self)
         self.modules["serverSelector"].update()
+        for moduleName in self.modules.keys():
+            try:
+                self.modules[moduleName].moduleName = moduleName
+            except AttributeError: pass
         self.appLoop()
         
     def appLoop(self):
@@ -117,6 +122,8 @@ class App:
                     except BaseException as e:
                         print(package)
                         print(e)
+            for request in self.modules["requestHandler"].getResponses():
+                self.modules[request[0]].insertRequestData(request)
             
             if not self.FROZEN: #RPC feature is deactivated in the EXECUTABLEs because its experimental
                 self.RPC.handleRequests()
@@ -145,6 +152,7 @@ class App:
             json.dump(self.config, configFile, indent=4)
             configFile.close()
             self.RPC.server.stop()
+            self.modules["requestHandler"].stop()
         except:
             pass
         p.quit()
