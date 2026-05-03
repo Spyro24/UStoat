@@ -5,11 +5,26 @@ import io
 
 class cache:
     def __init__(self, app: appModule.app.App):
+        self.moduleName = ""
         self.app = app
         self.modules = self.app.modules
         self.platform = self.modules["platform"]
+        self.requestSystem = app.modules["requestHandler"]
+        self.requested = {"avatars":set()}
         self.store = {"avatars":{},
                       "icons": {}}
+    
+    def insertRequestData(self, data: tuple):
+        package = data[2]
+        if data[1][0] == "avatars":
+            try:
+                avatar = p.image.load(package)
+            except:
+                avatar = p.image.load("./res/images/default_avatar.png")
+            avatar = self.make_square_and_scale(avatar)
+            self.store['avatars'][data[1][1]] = avatar
+            self.requested["avatars"].discard(data[1][1])
+            
     
     def getUserAvatar(self, userId: str):
         try:
@@ -17,8 +32,11 @@ class cache:
         except KeyError:
             userData = self.modules['userManager'].getUser(userId)
             avatarId = userData['avatarId']
-            if avatarId != "": 
-                avatar = io.BytesIO(self.platform.fetchUserPicture(avatarId).content)
+            if avatarId != "":
+                if userId in self.requested['avatars']:
+                    return 20
+                self.requested['avatars'].add(userId)
+                return self.requestSystem.placeOnCallStack(self.moduleName, ["avatars", userId], lambda: io.BytesIO(self.platform.fetchUserPicture(avatarId).content))
             else:
                 avatar = "./res/images/default_avatar.png"
             try:

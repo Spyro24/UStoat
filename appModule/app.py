@@ -77,19 +77,19 @@ class App:
                 self.modules['userManager'].addUser(user)
             self.modules["serverManager"].insertReadyPackage(packet)
         userInfo = self.modules['userManager'].userInfo[self.modules['platform'].userID]
-        self.modules["userCard"].createCard(userInfo)
         print(self.modules["serverManager"].serverStructure)
         self.modules['userManager'].userToken = self.modules['account'].sessionToken
         self.modules["notificatonSystem"] = appModule.notficationHandler.notificationManager(self)
+        for moduleName in self.modules.keys():
+            try:
+                self.modules[moduleName].moduleName = moduleName
+            except AttributeError: pass
+        self.modules["userCard"].createCard(userInfo)
         self.ready()
     
     def ready(self):
         self.RPC = appModule.RPCHandler.RPCHandler(self)
         self.modules["serverSelector"].update()
-        for moduleName in self.modules.keys():
-            try:
-                self.modules[moduleName].moduleName = moduleName
-            except AttributeError: pass
         self.appLoop()
         
     def appLoop(self):

@@ -88,7 +88,10 @@ class messageRender:
         renderSurface.fill(self.colors["bg"])
         renderSurface.blit(renderedName, (self.tileSize, borderSize))
         renderSurface.blit(renderedMessage, (self.tileSize, borderSize + renderedName.height))
-        renderSurface.blit(p.transform.scale(self.cache.getUserAvatar(message["author"]),(borderSize * 6, borderSize * 6)), (borderSize, borderSize))
+        avatar = self.cache.getUserAvatar(message["author"])
+        if avatar == 20:
+            avatar = p.Surface((self.tileSize, self.tileSize))
+        renderSurface.blit(p.transform.scale(avatar,(borderSize * 6, borderSize * 6)), (borderSize, borderSize))
         return(renderSurface)
     
     def render(self, displaySize: tuple[int, int]):

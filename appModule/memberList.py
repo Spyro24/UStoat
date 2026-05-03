@@ -36,6 +36,8 @@ class memebrList:
         background = p.surface.Surface((self.tileSize * 5, self.tileSize))
         background.fill((100,100,150))
         avatar = self.cache.getUserAvatar(userID)
+        if avatar == 20:
+            return 20
         background.blit(p.transform.scale(avatar, (self.tileSize - self.octet * 2, self.tileSize - self.octet * 2)), (self.octet, self.octet))
         background.blit(self.font.render(self.userManager.getUser(userID)["display_name"], antialias=True, color=(255,255,255)),(self.tileSize, self.octet))
         return background
@@ -51,15 +53,18 @@ class memebrList:
                 self.requestSystem.placeOnCallStack(self.moduleName, ["getServerMembers", selectedServer], lambda: self.platformHandler.fetchServerMembers(selectedServer, ""))
         if selectedServer != "0":
             indexPos = 0
+            oldIndexPos = 0
             renderPos = self.renderedRect.top
             memberList = self.serverMembers[selectedServer]
             while indexPos < len(memberList):
+                indexPos += 1
                 if not self.renderedRect.collidepoint((self.renderedRect.centerx, renderPos + self.tileSize)):
                     break
                 try:
-                    userCard = self.renderedUserCards[memberList[indexPos]]
+                    userCard = self.renderedUserCards[memberList[oldIndexPos]]
                 except KeyError:
-                    userCard = self.createUserCard(memberList[indexPos])
-                    self.renderedUserCards[memberList[indexPos]] = userCard
+                    userCard = self.createUserCard(memberList[oldIndexPos])
+                    if userCard == 20: continue
+                    self.renderedUserCards[memberList[oldIndexPos]] = userCard
                 renderPos = self.window.blit(userCard, (self.renderedRect[0], renderPos)).bottom
-                indexPos += 1
+                oldIndexPos = indexPos
