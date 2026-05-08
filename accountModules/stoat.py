@@ -21,7 +21,7 @@ class userAccount:
             if answerJson["result"] == "MFA":
                 self.mfaTicket = answerJson["ticket"]
                 return 2
-            elif answer["result"] == "Success":
+            elif answerJson["result"] == "Success":
                 self.token = answerJson["token"]
                 self.userID = answerJson["user_id"]
                 return 0
