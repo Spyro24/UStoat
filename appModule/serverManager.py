@@ -104,15 +104,15 @@ class serverSelector:
         while (renderPos + self.renderFromServer) < len(self.icons):
             surface = self.icons[renderPos + self.renderFromServer]
             rect = self.window.blit(surface, (self.borderSize, renderPos * self.tileSize + self.borderSize))
-            if not self.renderedRect.collidepoint(rect.centerx, rect.bottom + self.tileSize):
-                self.renderOverflow = True
-                break
             if rect.collidepoint(self.app.mousePos) and self.app.mouseButtons[0]:
                 self.selectorPos = renderPos
                 self.selectedServer = self.serverManager.servers[self.selectorPos]
                 self.channelSelector.update()
             if renderPos == self.selectorPos:
                 p.draw.rect(self.window, (255,255,255), (0,renderPos * self.tileSize + self.borderSize, self.borderSize / 2, self.iconSize))
+            if not self.renderedRect.collidepoint(rect.centerx, rect.bottom + self.tileSize):
+                self.renderOverflow = True
+                break
             renderPos += 1
 
 class channelSelector:
