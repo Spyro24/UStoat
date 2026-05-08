@@ -69,6 +69,8 @@ class loginHelper:
                     self.currentRun = self.askForPassword
                 elif event.key == p.K_BACKSPACE:
                     self.email = self.email[:-1]
+                elif event.key == p.K_v and event.mod & p.KMOD_CTRL:
+                    self.email = p.scrap.get_text()
                 else:
                     self.email += event.unicode
         self.window.fill((0, 0, 0))
