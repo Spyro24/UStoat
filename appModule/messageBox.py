@@ -62,6 +62,9 @@ class inputTextBox:
             if self.cursorPos > 0:
                 self.curentMessage = self.curentMessage[:self.cursorPos - 1] + self.curentMessage[self.cursorPos:]
                 self.cursorPos -= 1
+        elif event.key == p.K_DELETE:
+            if self.cursorPos < len(self.curentMessage):
+                self.curentMessage = self.curentMessage[:self.cursorPos] + self.curentMessage[self.cursorPos + 1:]
         elif event.key == p.K_RIGHT:
             if self.cursorPos < len(self.curentMessage):
                 self.cursorPos += 1
