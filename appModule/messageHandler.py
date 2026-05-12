@@ -43,6 +43,7 @@ class messageRender:
         self.selectedChannel = ""
         self.channelSelector = app.modules["channelSelector"]
         self.tileSize = self.app.tileSize
+        self.borderWidth = self.tileSize // 8
         self.app.renderQuee.append(self)
         self.font = self.app.modules["font"]
         self.cache = app.modules["cache"]
@@ -97,8 +98,7 @@ class messageRender:
     def render(self, displaySize: tuple[int, int]):
         renderYPos = displaySize[1] - self.app.modules["messageInput"].renderedRect[3]
         renderXPos = self.app.modules["messageInput"].renderedRect[0]
-        borderWidth = self.tileSize // 8
-        messageWith = self.app.modules["messageInput"].renderedRect[2] - (self.tileSize + borderWidth)
+        messageWith = self.app.modules["messageInput"].renderedRect[2] - (self.tileSize + self.borderWidth)
         self.renderedRect = p.rect.Rect(self.app.modules["channelSelector"].renderedRect.topright, (self.app.modules["messageInput"].renderedRect.width, displaySize[1] - self.app.modules["messageInput"].renderedRect.height))
         if self.app.mouseWheel != 0 and self.renderedRect.collidepoint(self.app.mousePos):
             messageCount = self.app.modules["messageManager"].getLenMessages(self.channelSelector.selectedChannel)
@@ -113,7 +113,7 @@ class messageRender:
         try:
             msgIndex = self.curMessageIndex
             while renderYPos > 0:
-                text = self.renderMessage(self.app.modules["messageManager"].getMessage(self.channelSelector.selectedChannel, msgIndex), messageWith, borderWidth)
+                text = self.renderMessage(self.app.modules["messageManager"].getMessage(self.channelSelector.selectedChannel, msgIndex), messageWith, self.borderWidth)
                 renderYPos -= text.height
                 self.window.blit(text, (renderXPos, renderYPos))[3]
                 msgIndex -= 1
