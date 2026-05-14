@@ -41,7 +41,7 @@ class userAccount:
         return self.startSession()
     
     def startSession(self):
-        self.websocket = baseModules.WSSClient.WSSClient(f"wss://events.stoat.chat/?version=1&format=json&token={self.token}")
+        self.websocket = baseModules.WSSClient.WSSClient(f"wss://stoat.chat/events?version=1&format=json&token={self.token}")
         if self.websocket.wait_until_ready(timeout=30):
             userInfo = requests.get("https://stoat.chat/api/users/@me", headers={"X-Session-Token": self.token}).json()
             self.userID = userInfo["_id"]
