@@ -110,3 +110,8 @@ class userAccount:
     
     def returnSaveInfo(self):
         return {"token": self.token, "service": self.platformName}
+    
+    def getBadgeData(self):
+        answer = requests.get("https://raw.githubusercontent.com/Spyro24/UStoatBadgeSystem/refs/heads/main/stoat.json")
+        if answer.ok:
+            return answer.json()
