@@ -15,3 +15,4 @@ import appModule.s24crypt
 import appModule.toolbar
 import appModule.memberList
 import appModule.requestHandler
+import appModule.badgeManager

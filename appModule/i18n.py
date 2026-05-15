@@ -5,4 +5,6 @@ class i18n:
         self.strings = {"theme_manager.settings.chose_theme_file":"Chose a theme file",
                         "ui.name.settings":"Settings",
                         "ui.name.timeout":"Timeout",
-                        "ui.name.message_empty":"Message..."}
+                        "ui.name.message_empty":"Message...",
+                        "badge.name.ustoat_developer":"Client Developer",
+                        "badge.name.ustoat_maintainer":"Client Maintainer"}
