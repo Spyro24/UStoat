@@ -19,7 +19,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install --upgrade nuitka
           pip install pyinstaller
           sudo apt-get update
           sudo apt-get install -y patchelf unzip
@@ -27,9 +26,8 @@ jobs:
 
       - name: Build Linux Executable
         run: |
-          nuitka --standalone --onefile --output-dir=build --include-data-dir=res=res main.pyw
           cp -r ./res ./build/res
-          pyinstaller --onefile --name UStoat --add-data "res:res" --distpath dist --workpath build --specpath build main.pyw
+          pyinstaller --onefile --icon ./res/icons/app_icon_x384.png --name UStoat --add-data "res:res" --distpath dist --workpath build --specpath build main.pyw
         shell: bash
 
       - name: Upload Linux Artifact
@@ -37,37 +35,6 @@ jobs:
         with:
           name: build-linux
           path: ./*
-  
-  build-linux-old:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        run: |
-          sudo apt install python3 python-is-python3
-        shell: bash
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install --upgrade nuitka
-          sudo apt-get update
-          sudo apt-get install -y patchelf unzip
-        shell: bash
-
-      - name: Build Linux Executable
-        run: |
-          nuitka --standalone --onefile --output-dir=build --include-data-dir=res=res main.pyw
-        shell: bash
-
-      - name: Upload Linux Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-linux-old
-          path: build/*
 
   build-windows:
     runs-on: windows-latest
@@ -90,25 +57,13 @@ jobs:
           python -m pip install --upgrade pip
           if (Test-Path requirements.txt) { pip install -r requirements.txt }
         shell: powershell
-
-      - name: Install latest Nuitka with onefile support
-        run: |
-          python -m pip install --upgrade "nuitka[onefile]"
-        shell: powershell
-
-      #- uses: Nuitka/Nuitka-Action@main
-      #  with:
-      #    nuitka-version: main
-      #    script-name: main.pyw
-      #    include-data-dir: |
-      #      res=res
       
       - name: PyInstaller Windows
         run: |
           pip install pyinstaller
           mkdir "D:\a\UStoat\UStoat\build\res" 2>nul
           xcopy /E /I /Y "res" "D:\a\UStoat\UStoat\build\res\"
-          pyinstaller --onefile --name UStoat --add-data "res;res" --distpath dist --workpath build --specpath build main.pyw
+          pyinstaller --onefile --icon ./res/icons/app_icon_x384.png --name UStoat --add-data "res;res" --distpath dist --workpath build --specpath build main.pyw
           
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
