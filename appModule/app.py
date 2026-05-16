@@ -16,7 +16,7 @@ class App:
         p.init()
         self.mouseWheel = 0
         self.FROZEN = getattr(sys, "frozen", False)
-        self.VERSION = "0.3.3"
+        self.VERSION = "0.3.4"
         self.window = p.display.set_mode((1080, 720), flags=p.RESIZABLE)
         self.configFilePath = p.system.get_pref_path("spyro24", "ustoat") + "config.json"
         try:
