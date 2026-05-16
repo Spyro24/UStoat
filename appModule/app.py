@@ -29,7 +29,6 @@ class App:
         self.themeable = []
         self.tileSize = 64
         self.modules = {"font": p.font.SysFont(p.font.match_font(p.font.get_default_font()), size=24, ),
-                        "account": stoat.user.Account(),
                         "userManager": stoat.user.users(),
                         "APISubscrption": None,
                         "serverManager": appModule.serverManager.serverManager(),
@@ -67,7 +66,7 @@ class App:
         self.modules["messageInput"].platform = self.modules["platform"]
         self.modules["messageRender"].platform = self.modules["platform"]
         self.modules["serverManager"].userManager = self.modules["userManager"]
-        self.modules["serverManager"].userID = self.modules["account"].user_id
+        self.modules["serverManager"].userID = self.modules["platform"].userID
         self.modules["serverManager"].init()
         self.modules["memberList"] = appModule.memberList.memebrList(self)
         packet = self.modules["platform"].getReadyPackage()
@@ -78,7 +77,7 @@ class App:
             self.modules["serverManager"].insertReadyPackage(packet)
         userInfo = self.modules['userManager'].userInfo[self.modules['platform'].userID]
         print(self.modules["serverManager"].serverStructure)
-        self.modules['userManager'].userToken = self.modules['account'].sessionToken
+        self.modules['userManager'].userToken = self.modules["platform"].token
         self.modules["notificatonSystem"] = appModule.notficationHandler.notificationManager(self)
         for moduleName in self.modules.keys():
             try:

@@ -33,11 +33,14 @@ class serverManager:
                 self.channelNameLookup[channel["_id"]] = channel["name"]
             elif channel["channel_type"] == "DirectMessage":
                 self.channelNameLookup[channel["_id"]] = channel["_id"]
-                #user = self.userManager.getUser(channel["_id"])
                 if len(channel["recipients"]) == 2:
+                    print(self.userID)
+                    print(channel["recipients"])
                     for user in channel["recipients"]:
-                        if user != self.userID:
-                            self.channelNameLookup[channel["_id"]] = self.userManager.getUser(user)["name"]
+                        if user == self.userID:
+                            continue 
+                        self.channelNameLookup[channel["_id"]] = self.userManager.getUser(user)["name"]
+                        break
                 self.serverStructure["0"]["channels"].append(channel["_id"])
     
     def createDefaultEntrys(self):

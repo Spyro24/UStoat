@@ -12,8 +12,6 @@ class userAccount:
         self.clientName = ""
         self.websocket = None
         self.readyPackage = {}
-        self.supportServer = "01KHYB286PVP3J1D2FCP87HMDR"
-        self.badgeSystemChannel = "01KRNJPSCG5758QY8PYN66VFMX"
     
     def login(self, username: str, password: str, clientName: str):
         self.clientName = clientName

@@ -28,7 +28,7 @@ class notificatonSystem:
 class notificationManager:
     def __init__(self, app: appModule.app.App):
         self.notify = notificatonSystem()
-        self.userId = app.modules['account'].user_id
+        self.userId = app.modules['platform'].userID
         self.cache = app.modules["cache"]
         self.userInMsg = "<@" + self.userId + ">"
         self.messageManager = app.modules['messageManager']
