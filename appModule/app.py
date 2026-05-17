@@ -48,6 +48,7 @@ class App:
         self.modules["settings"] = appModule.settingsManager.settingsManager(self)
         self.modules["toolbar"] = appModule.toolbar.toolbar(self)
         self.modules["masqTool"] = tools.masqurade.masquradeTool(self)
+        self.modules["badgeManager"] = appModule.badgeManager.badgeSystem(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
         self.isFocused = False
         #self.modules['account'].clientName = f"UStoat (v {self.VERSION})"
@@ -59,8 +60,6 @@ class App:
     
     def setup(self):
         appModule.loginHelper.loginHelper(self)
-        #self.modules['account'].subToAPI()
-        #self.modules['APISubscrption'] = self.modules['account'].apiSuscription
         self.modules["userManager"].platformHelper = self.modules["platform"]
         self.modules["cache"].platform = self.modules["platform"]
         self.modules["messageInput"].platform = self.modules["platform"]
@@ -89,6 +88,7 @@ class App:
     def ready(self):
         self.RPC = appModule.RPCHandler.RPCHandler(self)
         self.modules["serverSelector"].update()
+        self.modules["badgeManager"].makeReady()
         self.appLoop()
         
     def appLoop(self):

@@ -36,6 +36,7 @@ class loginHelper:
             self.serviceName = self.app.config["loginData"]["platform"]
             self.platformHelper = accountModules.platforms[self.serviceName]()
             validSession = self.platformHelper.resumeSession(token)
+            print("Now")
             print(self.platformHelper.returnSaveInfo())
             print(validSession)
             if validSession == 0:
