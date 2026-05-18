@@ -12,6 +12,8 @@ class userAccount:
         self.clientName = ""
         self.websocket = None
         self.readyPackage = {}
+        self.badgeIndexURL = "https://raw.githubusercontent.com/Spyro24/UStoatBadgeSystem/refs/heads/main/stoat.json"
+        self.badgeDataURL = "https://raw.githubusercontent.com/Spyro24/UStoatBadgeSystem/refs/heads/main/badges"
     
     def login(self, username: str, password: str, clientName: str):
         self.clientName = clientName
@@ -113,6 +115,11 @@ class userAccount:
         return {"token": self.token, "service": self.platformName}
     
     def getBadgeData(self):
-        answer = requests.get("https://raw.githubusercontent.com/Spyro24/UStoatBadgeSystem/refs/heads/main/stoat.json")
+        answer = requests.get(self.badgeIndexURL)
+        if answer.ok:
+            return answer.json()
+    
+    def getBadge(self, rgistrarID: str, badgeID: str):
+        answer = requests.get(f"{self.badgeDataURL}/{rgistrarID}/{badgeID}.png")
         if answer.ok:
             return answer.json()
