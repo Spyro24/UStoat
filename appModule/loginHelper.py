@@ -30,15 +30,11 @@ class loginHelper:
         self.window.fill((0, 0, 0))
         self.window.blit(self.font.render(f"Login in to {self.serviceName}...", antialias=True, color=(255,255,255)), (10,10))
         p.display.flip()
-        print("loging in")
         try:
             token = self.encryptModule.saveDecrypt(self.app.config["loginData"]["token"]).decode("UTF8")
             self.serviceName = self.app.config["loginData"]["platform"]
             self.platformHelper = accountModules.platforms[self.serviceName]()
             validSession = self.platformHelper.resumeSession(token)
-            print("Now")
-            print(self.platformHelper.returnSaveInfo())
-            print(validSession)
             if validSession == 0:
                 self.app.modules['platform'] = self.platformHelper
                 self.finished = True
