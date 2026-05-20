@@ -70,6 +70,7 @@ class serverSelector:
         self.renderOverflow = False
         self.app.themeable.append(self)
         self.bgCol = (234,123,40)
+        self.index = 0
     
     def reloadTheme(self):
         theme = self.app.modules["themeManager"].theme["serverSelector"]
@@ -96,17 +97,22 @@ class serverSelector:
         self.renderedRect = p.draw.rect(self.window, self.bgCol, (0, 0, self.tileSize, self.app.modules["userCard"].renderRect[1]))
         if self.app.mouseWheel != 0:
             if self.renderedRect.collidepoint(self.app.mousePos):
-                pass
+                if self.renderOverflow and self.app.mouseWheel == 1:
+                    self.renderFromServer += 1
+                elif self.app.mouseWheel == -1 and self.renderFromServer > 0:
+                    self.renderFromServer -= 1
+        if not self.renderOverflow:
+            self.renderFromServer -= 1
         self.renderOverflow = False
         renderPos = 0
         while (renderPos + self.renderFromServer) < len(self.icons):
             surface = self.icons[renderPos + self.renderFromServer]
             rect = self.window.blit(surface, (self.borderSize, renderPos * self.tileSize + self.borderSize))
             if rect.collidepoint(self.app.mousePos) and self.app.mouseButtons[0]:
-                self.selectorPos = renderPos
+                self.selectorPos = renderPos + self.renderFromServer
                 self.selectedServer = self.serverManager.servers[self.selectorPos]
                 self.channelSelector.update()
-            if renderPos == self.selectorPos:
+            if renderPos + self.renderFromServer == self.selectorPos:
                 p.draw.rect(self.window, (255,255,255), (0,renderPos * self.tileSize + self.borderSize, self.borderSize / 2, self.iconSize))
             if not self.renderedRect.collidepoint(rect.centerx, rect.bottom + self.tileSize):
                 self.renderOverflow = True
