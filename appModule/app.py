@@ -10,10 +10,12 @@ import threading
 import queue
 import sys
 import tools
+import platform
 
 class App:
     def __init__(self):
         p.init()
+        self.OS_TYPE = platform.system()
         self.mouseWheel = 0
         self.FROZEN = getattr(sys, "frozen", False)
         self.VERSION = "0.3.4"
@@ -158,6 +160,13 @@ class App:
         exit()
     
     #helper functions
+    
+    def keyboardInput(self, event: p.Event):
+        char = None
+        control = None
+        action = None
+        return (cgar, control, action)
+    
     def open_file_selector(self):
         def _worker(q):
             root = tk.Tk()
