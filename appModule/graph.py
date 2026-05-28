@@ -17,11 +17,14 @@ class graph:
     def addValue(self, value):
         value = min(self.maxVal, value)
         value = max(self.minVal, value)
-        point = (value / self.range) * self.collumHeight
+        point = int((value / self.range) * self.collumHeight)
         newSurf = p.Surface((self.collumWidth * self.collums, self.collumHeight))
-        newSurf.blit(self.graphSurface, (-self.collumWidth, 0))
-        p.draw.polygon(newSurf, self.fillColor, ((newSurf.width - (1 + self.collumWidth), self.collumHeight - (1 + self.lastValue)), (newSurf.width - 1, self.collumHeight - (1 + point)), (newSurf.width - 1, newSurf.height - 1), (newSurf.width - (1 + self.collumWidth), newSurf.height - 1)))
-        p.draw.line(newSurf, self.lineColor, (newSurf.width - (1 + self.collumWidth), self.collumHeight - (1 + self.lastValue)), (newSurf.width - 1, self.collumHeight - (1 + point)))
+        newSurf.blit(self.graphSurface, (-self.collumWidth + 1, 0))
+        if point > 0 or self.lastValue > 0:
+            polygon = p.draw.polygon(newSurf, self.fillColor, ((newSurf.width - (self.collumWidth-1), self.collumHeight - (self.lastValue)), (newSurf.width - 1, self.collumHeight - (point)), (newSurf.width - 1, newSurf.height- 1), (newSurf.width - (self.collumWidth - 1), newSurf.height - 1)), width=1)
+            if polygon.height > 3:
+                p.draw.flood_fill(newSurf, self.fillColor, (polygon.centerx, polygon.bottom - 2))
+        p.draw.line(newSurf, self.lineColor, (newSurf.width - (self.collumWidth-1), self.collumHeight - (self.lastValue)), (newSurf.width - 1, self.collumHeight - (point)))
         self.lastValue = point
         self.graphSurface = newSurf
 
@@ -30,11 +33,10 @@ if __name__ == "__main__":
     import random
     
     window = p.display.set_mode((800,600))
-    test = graph(window,0,200)
+    test = graph(window,0,200, collums=70, collumHeight=300)
     
     while True:
         window.fill((0,0,0))
-        test.addValue(random.randint(0,200))
+        test.addValue(random.randint(-50,200))
         window.blit(test.graphSurface, (10,10))
         p.display.flip()
-        time.sleep(0.5)
