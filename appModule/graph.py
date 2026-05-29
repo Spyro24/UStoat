@@ -33,10 +33,11 @@ if __name__ == "__main__":
     import random
     
     window = p.display.set_mode((800,600))
-    test = graph(window,0,200, collums=70, collumHeight=300)
+    test = graph(window,0,1, collums=70, collumHeight=300)
     
     while True:
         window.fill((0,0,0))
-        test.addValue(random.randint(-50,200))
+        test.addValue(random.random())
         window.blit(test.graphSurface, (10,10))
         p.display.flip()
+        time.sleep(0.2)

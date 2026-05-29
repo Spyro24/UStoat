@@ -11,7 +11,11 @@ import os
 import sys
 from pathlib import Path
 
+# Some shity vars
+DEBUG = True
+
 if getattr(sys, "frozen", False):
+    DEBUG = False
     os.chdir(Path(sys.executable).parent)
     meipass = getattr(sys, "_MEIPASS", None)
     if meipass:
@@ -27,4 +31,4 @@ if __name__ == "__main__":
         except:
             raise SystemExit
     else:
-        app = appModule.app.App()
+        app = appModule.app.App({"DEBUG"})

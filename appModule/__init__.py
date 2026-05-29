@@ -16,3 +16,4 @@ import appModule.toolbar
 import appModule.memberList
 import appModule.requestHandler
 import appModule.badgeManager
+import appModule.graph

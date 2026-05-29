@@ -13,9 +13,10 @@ import tools
 import platform
 
 class App:
-    def __init__(self):
+    def __init__(self, erxternalVars=set()):
         p.init()
         self.OS_TYPE = platform.system()
+        self.env = erxternalVars
         self.mouseWheel = 0
         self.FROZEN = getattr(sys, "frozen", False)
         self.VERSION = "0.3.4"
@@ -52,6 +53,9 @@ class App:
         self.modules["masqTool"] = tools.masqurade.masquradeTool(self)
         self.modules["badgeManager"] = appModule.badgeManager.badgeSystem(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
+        self.debugGraph = appModule.graph.graph(self.window, 0, 1/60 * 2)
+        self.frameCount = 0
+        self.avgFrameRate = 0
         self.isFocused = False
         #self.modules['account'].clientName = f"UStoat (v {self.VERSION})"
         p.display.set_caption(f"UStoat (v {self.VERSION})")
@@ -98,6 +102,7 @@ class App:
         FPS = 1 / 60
         run = True
         while run:
+            frameTime = time.time()
             for event in p.event.get():
                 if event.type == p.QUIT:
                     run = False
@@ -142,7 +147,15 @@ class App:
                         print(e)
                         run = False
                         break
+                if "DEBUG" in self.env:
+                    self.window.blit(self.debugGraph.graphSurface,(0,0))
                 p.display.flip()
+                self.frameCount += 1
+                self.avgFrameRate += time.time() - frameTime
+                if self.frameCount > 20:
+                    self.frameCount = 0
+                    self.debugGraph.addValue(self.avgFrameRate / 20)
+                    self.avgFrameRate = 0
                 self.mouseWheel = 0
         
         self.close()
