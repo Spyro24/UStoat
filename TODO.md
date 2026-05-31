@@ -13,7 +13,6 @@
 - [ ] Custom theme support
 - [ ] Message history in channels ans DMs
 - [ ] Corect webhook embeding
-- [ ] scroling
 - [ ] reaction support
 - [ ] Plugin support (source version only)
 - [ ] Inbox for important messages (replies, mentions etc)
@@ -21,10 +20,11 @@
 - [ ] performance issue fixing
 - [ ] clientside embeding perm fix (you chose if users can embed or not, only visible for you)
 - [ ] Federation support (you only need one client and it will switch automatical)
-- [ ] Unbound the client fom the main Stoat instance
 - [ ] RPC system
 - [ ] Message threads (using the reply chain)
 - [ ] Multiplatform support
+- [x] scroling
+- [x] Unbound the client fom the main Stoat instance
 - [x] server channel selector
 - [x] server selector
 - [x] message send box 
