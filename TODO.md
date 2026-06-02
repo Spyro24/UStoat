@@ -21,10 +21,10 @@
 - [ ] performance issue fixing
 - [ ] clientside embeding perm fix (you chose if users can embed or not, only visible for you)
 - [ ] Federation support (you only need one client and it will switch automatical)
-- [ ] Unbound the client fom the main Stoat instance
 - [ ] RPC system
 - [ ] Message threads (using the reply chain)
 - [ ] Multiplatform support
+- [X] Unbound the client fom the main Stoat instance
 - [x] server channel selector
 - [x] server selector
 - [x] message send box 
