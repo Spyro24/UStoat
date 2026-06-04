@@ -25,6 +25,7 @@
 - [ ] Multiplatform support
 - [x] scroling
 - [x] Unbound the client fom the main Stoat instance
+- [X] Unbound the client fom the main Stoat instance
 - [x] server channel selector
 - [x] server selector
 - [x] message send box 
