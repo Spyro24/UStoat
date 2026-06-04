@@ -159,7 +159,7 @@ class channelSelector:
             try:
                 text = self.font.render(self.serverManager.channelNameLookup[channel], True, (255,255,255))
             except KeyError:
-                text = self.font.render("NO_NAME", True, (255,255,255))
+                text = self.font.render("[NO ACCESS]", True, (255,255,255))
             surface = p.Surface((self.tileSize * 4, self.halfTile))
             surface.fill(self.bgCol)
             surface.blit(text, (surface.height, surface.height // 2 - text.height // 2))
