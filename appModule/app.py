@@ -11,6 +11,7 @@ import queue
 import sys
 import tools
 import platform
+import loginSystem
 
 class App:
     def __init__(self, erxternalVars=set()):
@@ -20,6 +21,7 @@ class App:
         self.mouseWheel = 0
         self.FROZEN = getattr(sys, "frozen", False)
         self.VERSION = "0.3.4"
+        self.exit = False # If this var is set to true the Exit will instantly be trigered (it is used by submodules, they arent allowed to raise the SystemExit)
         self.window = p.display.set_mode((1080, 720), flags=p.RESIZABLE)
         self.configFilePath = p.system.get_pref_path("spyro24", "ustoat") + "config.json"
         try:
@@ -65,7 +67,9 @@ class App:
         self.setup()
     
     def setup(self):
-        appModule.loginHelper.loginHelper(self)
+        loginSystem.main.loginSystem(self) #Call the Login system to make sure that the user will get logged in into the selected platform
+        if self.exit: #Check if the user exited from the login system
+            self.close() #And close UStoat if that is True
         self.modules["userManager"].platformHelper = self.modules["platform"]
         self.modules["cache"].platform = self.modules["platform"]
         self.modules["messageInput"].platform = self.modules["platform"]
@@ -170,7 +174,7 @@ class App:
         except:
             pass
         p.quit()
-        exit()
+        raise SystemExit
     
     #helper functions
     
