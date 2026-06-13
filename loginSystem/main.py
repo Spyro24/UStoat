@@ -7,6 +7,7 @@ class loginSystem:
         self.window = simpleApp.window
         self.appModules = simpleApp.modules # To acces the other modules that are loaded by the main app
         self.logedIn = False
+        self.monoSpaceFont = p.font.SysFont("Ubuntu-mono", self.app.fontSize)
         self.mainLoop() #Execute the main function (and make sure that the user can login)
         
     def mainLoop(self):

@@ -33,7 +33,8 @@ class App:
         self.renderQuee = []
         self.themeable = []
         self.tileSize = 64
-        self.modules = {"font": p.font.SysFont(p.font.match_font(p.font.get_default_font()), size=24, ),
+        self.fontSize = 24 #Global font size (changing this will change the fontsize of every font)
+        self.modules = {"font": p.font.SysFont(p.font.match_font(p.font.get_default_font()), size=self.fontSize),
                         "userManager": stoat.user.users(),
                         "APISubscrption": None,
                         "serverManager": appModule.serverManager.serverManager(),
