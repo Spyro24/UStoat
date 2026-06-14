@@ -6,5 +6,10 @@ class i18n:
                         "ui.name.settings":"Settings",
                         "ui.name.timeout":"Timeout",
                         "ui.name.message_empty":"Message...",
+                        "ui.login_system.login":"Login",
                         "badge.name.ustoat_developer":"Client Developer",
                         "badge.name.ustoat_maintainer":"Client Maintainer"}
+    
+    def loadI18N(self, i18nCode: str):
+        if i18nCode != "en_us":
+            pass

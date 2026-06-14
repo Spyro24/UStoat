@@ -29,7 +29,7 @@ class App:
             self.config = json.loads(confgFile.read())
             confgFile.close()
         except:
-            self.config = {}
+            self.config = {"locale":"en_us"}
         self.renderQuee = []
         self.themeable = []
         self.tileSize = 64
@@ -68,6 +68,7 @@ class App:
         self.setup()
     
     def setup(self):
+        self.modules['i18n'].loadI18N(self.config['locale']) #Load the language file
         loginSystem.main.loginSystem(self) #Call the Login system to make sure that the user will get logged in into the selected platform
         if self.exit: #Check if the user exited from the login system
             self.close() #And close UStoat if that is True
