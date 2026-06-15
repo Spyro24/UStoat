@@ -17,6 +17,8 @@ class loginSystem:
         self.renderQuee = [self.email]
         self.lastRender = 0
         self.FPS = 1 / 60
+        self.mousePos = p.mouse.get_pos()
+        self.mouseButtons = p.mouse.get_pressed() #Contains the button states of the mouse
         self.mainLoop() #Execute the main function (and make sure that the user can login)
         
     def mainLoop(self):
@@ -25,8 +27,12 @@ class loginSystem:
                 if event.type == p.QUIT:
                     self.app.exit = True
                     self.logedIn = True #We have to break the loop at this point
-            if self.lastRender + self.FPS > time.time():
+            if self.lastRender + self.FPS < time.time():
                 self.lastRender = time.time()
-                renderPos = (self.window.width / 2, 0)
+                self.mousePos = p.mouse.get_pos()
+                self.mouseButtons = p.mouse.get_pressed()
                 self.window.fill((0,0,0))
+                renderPos = (self.window.width / 2, self.window.height /4)
+                for element in self.renderQuee:
+                    element.render(renderPos)
                 p.display.flip()
