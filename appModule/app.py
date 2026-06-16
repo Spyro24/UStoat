@@ -68,6 +68,8 @@ class App:
         self.setup()
     
     def setup(self):
+        if not "locale" in self.config:
+            self.config["locale"] = "en_us"
         self.modules['i18n'].loadI18N(self.config['locale']) #Load the language file
         loginSystem.main.loginSystem(self) #Call the Login system to make sure that the user will get logged in into the selected platform
         if self.exit: #Check if the user exited from the login system

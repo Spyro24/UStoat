@@ -12,13 +12,23 @@ class textInput:
         self.parent = parent
         self.borderSize = borderSize
         self.rectSize = (self.borderSize * 2 + self.fontSize[0] * self.chars, self.borderSize * 2 + self.fontSize[1])
-        self.text = "Test"
+        self.text = ""
     
+    def text_input(self, event: p.Event):
+        if event.key == p.K_RETURN:
+            pass
+        elif event.key == p.K_BACKSPACE:
+            pass
+        else:
+            if event.unicode != "":
+                self.text += event.unicode
+        
     def render(self, pos: tuple[int, int]):
         rect = p.draw.rect(self.parent.window, self.rectColor, (pos[0] - self.rectSize[0] / 2, pos[1], self.rectSize[0], self.rectSize[1]))
         if self.parent.mouseButtons[0]:
             if rect.collidepoint(self.parent.mousePos):
                 self.isActive = True
+                self.parent.receiveTextInput = self
         self.parent.window.blit(self.font.render(self.text, True, (255,255,255)), (rect[0] + self.borderSize, rect[1] + self.borderSize))
         if self.isActive:
             p.draw.rect(self.parent.window, self.activeBorderColor, rect, width=self.borderSize)

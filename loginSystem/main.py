@@ -27,6 +27,9 @@ class loginSystem:
                 if event.type == p.QUIT:
                     self.app.exit = True
                     self.logedIn = True #We have to break the loop at this point
+                if event.type == p.KEYDOWN:
+                    if self.receiveTextInput:
+                        self.receiveTextInput.text_input(event)
             if self.lastRender + self.FPS < time.time():
                 self.lastRender = time.time()
                 self.mousePos = p.mouse.get_pos()
