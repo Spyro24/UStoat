@@ -6,6 +6,8 @@ class i18n:
                         "ui.name.settings":"Settings",
                         "ui.name.timeout":"Timeout",
                         "ui.name.message_empty":"Message...",
+                        "ui.login_system.username":"E-Mail/Username",
+                        "ui.login_system.password":"Password",
                         "ui.login_system.login":"Login",
                         "badge.name.ustoat_developer":"Client Developer",
                         "badge.name.ustoat_maintainer":"Client Maintainer"}

@@ -12,13 +12,16 @@ class textInput:
         self.parent = parent
         self.borderSize = borderSize
         self.rectSize = (self.borderSize * 2 + self.fontSize[0] * self.chars, self.borderSize * 2 + self.fontSize[1])
+        self.isPassword = False #If thats set to True the text will be replaced with "*" to hide it
+        self.label = "Test"
         self.text = ""
     
     def text_input(self, event: p.Event):
         if event.key == p.K_RETURN:
             pass
         elif event.key == p.K_BACKSPACE:
-            pass
+            if self.text != "":
+                self.text = self.text[:-1]
         else:
             if event.unicode != "":
                 self.text += event.unicode
@@ -29,7 +32,15 @@ class textInput:
             if rect.collidepoint(self.parent.mousePos):
                 self.isActive = True
                 self.parent.receiveTextInput = self
-        self.parent.window.blit(self.font.render(self.text, True, (255,255,255)), (rect[0] + self.borderSize, rect[1] + self.borderSize))
+            else:
+                self.isActive = False
+                if self.parent.receiveTextInput == self:
+                    self.parent.receiveTextInput = None
+        if self.isPassword:
+            self.parent.window.blit(self.font.render("*" * len(self.text), True, (255,255,255)), (rect[0] + self.borderSize, rect[1] + self.borderSize))
+        else:
+            self.parent.window.blit(self.font.render(self.text, True, (255,255,255)), (rect[0] + self.borderSize, rect[1] + self.borderSize))
+        self.parent.window.blit(self.font.render(self.label, True, (255,255,255)), (rect[0], rect[1] - self.fontSize[1]))
         if self.isActive:
             p.draw.rect(self.parent.window, self.activeBorderColor, rect, width=self.borderSize)
         else:

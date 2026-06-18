@@ -14,7 +14,11 @@ class loginSystem:
         self.borderSize = 4
         self.receiveTextInput = None
         self.email = ls.input.textInput(self, self.monoSpaceFont, borderSize=self.borderSize)
-        self.renderQuee = [self.email]
+        self.email.label = self.i18n["ui.login_system.username"]
+        self.password = ls.input.textInput(self, self.monoSpaceFont, borderSize=self.borderSize)
+        self.password.label = self.i18n["ui.login_system.password"]
+        self.password.isPassword = True
+        self.renderQuee = [self.email, self.password]
         self.lastRender = 0
         self.FPS = 1 / 60
         self.mousePos = p.mouse.get_pos()
@@ -35,7 +39,8 @@ class loginSystem:
                 self.mousePos = p.mouse.get_pos()
                 self.mouseButtons = p.mouse.get_pressed()
                 self.window.fill((0,0,0))
-                renderPos = (self.window.width / 2, self.window.height /4)
+                renderPos = [self.window.width / 2, self.window.height /4]
                 for element in self.renderQuee:
                     element.render(renderPos)
+                    renderPos[1] += self.tileSize * 1.5
                 p.display.flip()
