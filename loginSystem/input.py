@@ -46,3 +46,44 @@ class textInput:
         else:
             p.draw.rect(self.parent.window, self.notActiveBorderColor, rect, width=self.borderSize)
         return rect
+    
+class button:
+    def __init__(self, parent, font: p.Font, borderSize=4, chars=24, call=None):
+        '''you should use a lambda function for call because it will insert no args'''
+        self.fontSize = font.size(" ")
+        self.font = font
+        self.rectColor = (64, 128, 255)
+        self.border = (0, 64, 128)
+        self.chars = chars #The lenght in chars of this button (works only with a monospace font)
+        self.isActive = False
+        self.parent = parent
+        self.borderSize = borderSize
+        self.rectSize = (self.borderSize * 2 + self.fontSize[0] * self.chars, self.borderSize * 2 + self.fontSize[1])
+        self.label = "Test"
+    
+    def render(self, pos: tuple[int, int]):
+        rect = p.draw.rect(self.parent.window, self.rectColor, (pos[0] - self.rectSize[0] / 2, pos[1], self.rectSize[0], self.rectSize[1]))
+        text = self.font.render(self.label, True, (255,255,255))
+        self.parent.window.blit(text, (rect.centerx - text.width / 2, rect.centery - text.height / 2))
+        p.draw.rect(self.parent.window, self.border, rect, width=self.borderSize)
+        '''
+        if self.parent.mouseButtons[0]:
+            if rect.collidepoint(self.parent.mousePos):
+                self.isActive = True
+                self.parent.receiveTextInput = self
+            else:
+                self.isActive = False
+                if self.parent.receiveTextInput == self:
+                    self.parent.receiveTextInput = None
+        if self.isPassword:
+            self.parent.window.blit(self.font.render("*" * len(self.text), True, (255,255,255)), (rect[0] + self.borderSize, rect[1] + self.borderSize))
+        else:
+            self.parent.window.blit(self.font.render(self.text, True, (255,255,255)), (rect[0] + self.borderSize, rect[1] + self.borderSize))
+        self.parent.window.blit(self.font.render(self.label, True, (255,255,255)), (rect[0], rect[1] - self.fontSize[1]))
+        if self.isActive:
+            p.draw.rect(self.parent.window, self.activeBorderColor, rect, width=self.borderSize)
+        else:
+            p.draw.rect(self.parent.window, self.notActiveBorderColor, rect, width=self.borderSize)
+        '''
+        return rect
+        

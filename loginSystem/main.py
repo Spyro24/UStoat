@@ -18,7 +18,9 @@ class loginSystem:
         self.password = ls.input.textInput(self, self.monoSpaceFont, borderSize=self.borderSize)
         self.password.label = self.i18n["ui.login_system.password"]
         self.password.isPassword = True
-        self.renderQuee = [self.email, self.password]
+        self.loginButton = ls.input.button(self, self.monoSpaceFont, borderSize=self.borderSize)
+        self.loginButton.label = self.i18n["ui.login_system.login"]
+        self.renderQuee = [self.email, self.password, self.loginButton]
         self.lastRender = 0
         self.FPS = 1 / 60
         self.mousePos = p.mouse.get_pos()
