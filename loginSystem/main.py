@@ -1,6 +1,9 @@
 import pygame as p
 import time
-import loginSystem as ls 
+import loginSystem as ls
+import appModule
+import accountModules
+import threading
 
 class loginSystem:
     def __init__(self, simpleApp):
@@ -28,6 +31,7 @@ class loginSystem:
         self.mainLoop() #Execute the main function (and make sure that the user can login)
         
     def mainLoop(self):
+        self.loginWithToken()
         while not self.logedIn:
             for event in p.event.get():
                 if event.type == p.QUIT:
@@ -46,3 +50,20 @@ class loginSystem:
                     element.render(renderPos)
                     renderPos[1] += self.tileSize * 1.5
                 p.display.flip()
+    
+    def loginWithToken(self):
+        def worker(self, platform, token): #This is the function for the thread (we dont use async to make sure we always know the programm execution path before the programm runs
+            platformHelper = accountModules.platforms[platform]()
+            validSession = platformHelper.resumeSession(token) #It will return 0 if the resume works
+            if validSession == 0:
+                self.app.modules['platform'] = platformHelper
+                self.logedIn = True
+            else: #rebuilding the render quee to show the login thingy if the token is invalid (it can hapen)
+                self.renderQuee = [self.email, self.password, self.loginButton]
+        try:
+            self.renderQuee = [ls.design.simpleText(self, "Loging IN")]
+            token = self.app.modules["encryption"].saveDecrypt(self.app.config["loginData"]["token"]).decode("UTF8")
+            platform = self.app.config["loginData"]["platform"]
+            threading.Thread(target=lambda: worker(self, platform, token)).start()
+        except KeyError: #Rebuilding the login thingy if the config has missing things like token or platform
+            self.renderQuee = [self.email, self.password, self.loginButton]
