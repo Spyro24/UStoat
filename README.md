@@ -24,7 +24,8 @@ UStoat (UniversalStoat) is a minimalistic stoat client (with multi platform supp
 ## Other
 
 * We have a Stoat server for help, suggestions and the other UStoat stuff like themes etc https://stt.gg/MeM1tWFB
-* We have a Nerimity server for help, suggestions and the other UStoat stuff like themes etc https://nerimity.com/i/6rIJb (this is for the users that uses Nerimity with UStoat)
+* We have a Nerimity server for help, suggestions and the other UStoat stuff like themes etc(this is for the users that uses Nerimity with UStoat)
+<iframe src="https://nerimity.com/external-embed/server/?id=1762127824111714304&hide_header=true&hide_members=true&hide_activities=true" height="56px" style="border:none;border-radius:6px;" />
 
 ## Disclaimer
 
