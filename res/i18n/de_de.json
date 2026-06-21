@@ -1,1 +1,3 @@
-{"ui.login_system.login":"Einlogen"}
+{"ui.login_system.login":"Einlogen",
+ "ui.login_system.connection_failure":"Verbindungs fehler. Keine Netzwerkverbindung?",
+ "ui.login_system.get_token":"Abfragen deines Session tokens"}

@@ -1,6 +1,7 @@
 import requests
 import json
 import baseModules
+import socket
 
 class userAccount:
     def __init__(self):
@@ -43,7 +44,10 @@ class userAccount:
         return self.startSession()
     
     def startSession(self):
-        userInfo = requests.get("https://stoat.chat/api/users/@me", headers={"X-Session-Token": self.token})
+        try:
+            userInfo = requests.get("https://stoat.chat/api/users/@me", headers={"X-Session-Token": self.token})
+        except requests.exceptions.ConnectionError:
+            return 2
         if not userInfo.ok:
             return 1
         self.websocket = baseModules.WSSClient.WSSClient(f"wss://stoat.chat/events?version=1&format=json&token={self.token}")
