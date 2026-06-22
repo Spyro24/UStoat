@@ -23,7 +23,8 @@ class loginSystem:
         self.password.isPassword = True
         self.loginButton = ls.input.button(self, self.monoSpaceFont, borderSize=self.borderSize)
         self.loginButton.label = self.i18n["ui.login_system.login"]
-        self.renderQuee = [self.email, self.password, self.loginButton]
+        self.platformSelector = ls.input.textKeyDropdown(self, self.monoSpaceFont, accountModules.platforms.keys())
+        self.renderQuee = [self.platformSelector, self.email, self.password, self.loginButton]
         self.lastRender = 0
         self.FPS = 1 / 60
         self.mousePos = p.mouse.get_pos()
@@ -59,11 +60,16 @@ class loginSystem:
                 self.app.modules['platform'] = platformHelper
                 self.logedIn = True
             else: #rebuilding the render quee to show the login thingy if the token is invalid (it can hapen)
-                self.renderQuee = [self.email, self.password, self.loginButton]
+                self.renderQuee = [self.platformSelector, self.email, self.password, self.loginButton]
         try:
             self.renderQuee = [ls.design.simpleText(self, "Loging IN")]
             token = self.app.modules["encryption"].saveDecrypt(self.app.config["loginData"]["token"]).decode("UTF8")
             platform = self.app.config["loginData"]["platform"]
             threading.Thread(target=lambda: worker(self, platform, token)).start()
         except KeyError: #Rebuilding the login thingy if the config has missing things like token or platform
-            self.renderQuee = [self.email, self.password, self.loginButton]
+            self.renderQuee = [self.platformSelector, self.email, self.password, self.loginButton]
+    
+    def normalLogin(self):
+        def worker(self):
+            pass
+        
