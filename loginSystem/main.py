@@ -24,7 +24,12 @@ class loginSystem:
         self.loginButton = ls.input.button(self, self.monoSpaceFont, borderSize=self.borderSize)
         self.loginButton.label = self.i18n["ui.login_system.login"]
         self.platformSelector = ls.input.textKeyDropdown(self, self.monoSpaceFont, accountModules.platforms.keys())
-        self.renderQuee = [self.platformSelector, self.email, self.password, self.loginButton]
+        self.statusInfo = ls.design.simpleText(self, "")
+        #This contains every screen that will get used
+        self.screens = {"login":(self.platformSelector, self.email, self.password, self.loginButton, self.statusInfo),
+                        "mfa":[],
+                        "action":[self.statusInfo]}
+        self.renderQuee = self.screens["login"]
         self.lastRender = 0
         self.FPS = 1 / 60
         self.mousePos = p.mouse.get_pos()
@@ -60,14 +65,16 @@ class loginSystem:
                 self.app.modules['platform'] = platformHelper
                 self.logedIn = True
             else: #rebuilding the render quee to show the login thingy if the token is invalid (it can hapen)
-                self.renderQuee = [self.platformSelector, self.email, self.password, self.loginButton]
+                self.renderQuee = self.screens['login']
+                self.statusInfo.text = self.i18n['ui.login_system.invalid_token']
         try:
-            self.renderQuee = [ls.design.simpleText(self, "Loging IN")]
+            self.statusInfo.text = self.i18n['ui.login_system.login']
+            self.renderQuee = self.screens['action']
             token = self.app.modules["encryption"].saveDecrypt(self.app.config["loginData"]["token"]).decode("UTF8")
             platform = self.app.config["loginData"]["platform"]
             threading.Thread(target=lambda: worker(self, platform, token)).start()
         except KeyError: #Rebuilding the login thingy if the config has missing things like token or platform
-            self.renderQuee = [self.platformSelector, self.email, self.password, self.loginButton]
+            self.renderQuee = self.screens['login']
     
     def normalLogin(self):
         def worker(self):
