@@ -16,6 +16,7 @@ class loginSystem:
         self.tileSize = self.app.tileSize
         self.borderSize = 4
         self.receiveTextInput = None
+        self.mouseIsGrabed = False #This is True if a element is the only receiver for mouse inputs
         self.email = ls.input.textInput(self, self.monoSpaceFont, borderSize=self.borderSize)
         self.email.label = self.i18n["ui.login_system.username"]
         self.password = ls.input.textInput(self, self.monoSpaceFont, borderSize=self.borderSize)
@@ -26,7 +27,7 @@ class loginSystem:
         self.platformSelector = ls.input.textKeyDropdown(self, self.monoSpaceFont, accountModules.platforms.keys())
         self.statusInfo = ls.design.simpleText(self, "")
         #This contains every screen that will get used
-        self.screens = {"login":(self.platformSelector, self.email, self.password, self.loginButton, self.statusInfo),
+        self.screens = {"login":(self.platformSelector, self.email, self.password, self.loginButton, self.statusInfo, self.platformSelector),
                         "mfa":[],
                         "action":[self.statusInfo]}
         self.renderQuee = self.screens["login"]
@@ -52,6 +53,7 @@ class loginSystem:
                 self.mouseButtons = p.mouse.get_pressed()
                 self.window.fill((0,0,0))
                 renderPos = [self.window.width / 2, self.window.height /4]
+                self.platformSelector.secondPass = False
                 for element in self.renderQuee:
                     element.render(renderPos)
                     renderPos[1] += self.tileSize * 1.5
