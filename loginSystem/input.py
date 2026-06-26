@@ -50,6 +50,7 @@ class textInput:
 class button:
     def __init__(self, parent, font: p.Font, borderSize=4, chars=24, call=None):
         '''you should use a lambda function for 'call' because it will insert no args'''
+        self.call = call #contains the funtion that will be called
         self.fontSize = font.size(" ")
         self.font = font
         self.rectColor = (64, 128, 255)
@@ -66,6 +67,10 @@ class button:
         text = self.font.render(self.label, True, (255,255,255))
         self.parent.window.blit(text, (rect.centerx - text.width / 2, rect.centery - text.height / 2))
         p.draw.rect(self.parent.window, self.border, rect, width=self.borderSize)
+        if self.parent.mouseButtons[0]:
+            if rect.collidepoint(self.parent.mousePos):
+                if not self.parent.mouseIsGrabed and self.call != None:
+                    self.call()
         '''
         if self.parent.mouseButtons[0]:
             if rect.collidepoint(self.parent.mousePos):

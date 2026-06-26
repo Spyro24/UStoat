@@ -22,7 +22,7 @@ class loginSystem:
         self.password = ls.input.textInput(self, self.monoSpaceFont, borderSize=self.borderSize)
         self.password.label = self.i18n["ui.login_system.password"]
         self.password.isPassword = True
-        self.loginButton = ls.input.button(self, self.monoSpaceFont, borderSize=self.borderSize)
+        self.loginButton = ls.input.button(self, self.monoSpaceFont, borderSize=self.borderSize, call=self.normalLogin)
         self.loginButton.label = self.i18n["ui.login_system.login"]
         self.platformSelector = ls.input.textKeyDropdown(self, self.monoSpaceFont, accountModules.platforms.keys())
         self.statusInfo = ls.design.simpleText(self, "")
@@ -76,9 +76,15 @@ class loginSystem:
             platform = self.app.config["loginData"]["platform"]
             threading.Thread(target=lambda: worker(self, platform, token)).start()
         except KeyError: #Rebuilding the login thingy if the config has missing things like token or platform
+            self.statusInfo.text = ""
             self.renderQuee = self.screens['login']
     
     def normalLogin(self):
         def worker(self):
+            pass
+        try:
+            self.statusInfo.text = self.i18n['ui.login_system.get_token']
+            self.renderQuee = self.screens['action']
+        except:
             pass
         
