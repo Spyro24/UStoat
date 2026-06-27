@@ -26,9 +26,13 @@ class loginSystem:
         self.loginButton.label = self.i18n["ui.login_system.login"]
         self.platformSelector = ls.input.textKeyDropdown(self, self.monoSpaceFont, accountModules.platforms.keys())
         self.statusInfo = ls.design.simpleText(self, "")
+        self.mfaInput = ls.input.textInput(self, self.monoSpaceFont, borderSize=self.borderSize)
+        self.mfaInput.label = self.i18n['ui.login_system.mfa']
+        self.validateMfaButton = ls.input.button(self, self.monoSpaceFont, borderSize=self.borderSize, call=self.loginWithMfa)
+        self.validateMfaButton.label = self.i18n['ui.login_system.mfa_validate']
         #This contains every screen that will get used
         self.screens = {"login":(self.platformSelector, self.email, self.password, self.loginButton, self.statusInfo, self.platformSelector),
-                        "mfa":[],
+                        "mfa":[self.mfaInput, self.validateMfaButton],
                         "action":[self.statusInfo]}
         self.renderQuee = self.screens["login"]
         self.lastRender = 0
@@ -81,10 +85,42 @@ class loginSystem:
     
     def normalLogin(self):
         def worker(self):
-            pass
+            self.app.modules['platform'] = accountModules.platforms[self.platformSelector.selectedKey]()
+            status = self.app.modules['platform'].login(self.email.text, self.password.text, f"UStoat (v {self.app.VERSION})")
+            if status == 0: #It returns 0 if ewverything goes right and no MFA needed
+                export = self.app.modules['platform'].returnSaveInfo()
+                self.app.config["loginData"] = {}
+                self.app.config["loginData"]["token"] = self.app.modules["encryption"].saveEncrypt(export["token"].encode("UTF8")).decode("UTF8")
+                self.app.config["loginData"]["platform"] = export['service']
+                self.loginWithToken()
+            elif status == 1:
+                self.statusInfo.text = self.i18n["ui.login_system.invalid_credentials"]
+                self.renderQuee = self.screens['login']
+            elif status == 2:
+                self.renderQuee = self.screens['mfa']
+                
         try:
             self.statusInfo.text = self.i18n['ui.login_system.get_token']
             self.renderQuee = self.screens['action']
+            threading.Thread(target=lambda: worker(self)).start()
+        except:
+            pass
+    
+    def loginWithMfa(self):
+        def worker(self):
+            if self.app.modules['platform'].loginMFA(self.mfaInput.text) == 0:
+                export = self.app.modules['platform'].returnSaveInfo()
+                self.app.config["loginData"] = {}
+                self.app.config["loginData"]["token"] = self.app.modules["encryption"].saveEncrypt(export["token"].encode("UTF8")).decode("UTF8")
+                self.app.config["loginData"]["platform"] = export['service']
+                self.loginWithToken()
+            else:
+                self.statusInfo.text = self.i18n['ui.login_system.mfa_code_wrong']
+                self.renderQuee = self.screens['login']
+        try:
+            self.statusInfo.text = self.i18n['ui.login_system.mfa_code_validate']
+            self.renderQuee = self.screens['action']
+            threading.Thread(target=lambda: worker(self)).start()
         except:
             pass
         

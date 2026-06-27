@@ -120,8 +120,9 @@ class textKeyDropdown:
             p.draw.rect(self.parent.window, self.border, rect, width=self.borderSize)
             if self.parent.mouseButtons[0]:
                 if not self.isOpen:
-                    self.isOpen = rect.collidepoint(self.parent.mousePos) #Its a little faster btw to use this method because we only will set one var here
-                    self.parent.mouseIsGrabed = True
+                    if rect.collidepoint(self.parent.mousePos): #To avoid a stupid bug
+                        self.parent.mouseIsGrabed = True
+                        self.isOpen = True 
             if self.isOpen:
                 relaseInput = True
                 if rect.collidepoint(self.parent.mousePos):

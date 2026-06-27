@@ -56,7 +56,6 @@ class App:
         self.modules["masqTool"] = tools.masqurade.masquradeTool(self)
         self.modules["badgeManager"] = appModule.badgeManager.badgeSystem(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
-        self.modules["themeManager"].loadTheme("/home/spyro/Schreibtisch/reviteThemes/themes/amethyst.json")
         self.debugGraph = appModule.graph.graph(self.window, 0, 1/60 * 2)
         self.frameCount = 0
         self.avgFrameRate = 0
