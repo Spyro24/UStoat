@@ -23,6 +23,7 @@
 - [ ] RPC system
 - [ ] Message threads (using the reply chain)
 - [ ] Multiplatform support
+- [ ] DM channel wiping
 - [x] scroling
 - [x] Unbound the client fom the main Stoat instance
 - [X] Unbound the client fom the main Stoat instance

@@ -20,7 +20,7 @@ class App:
         self.env = erxternalVars
         self.mouseWheel = 0
         self.FROZEN = getattr(sys, "frozen", False)
-        self.VERSION = "0.4.0"
+        self.VERSION = "0.4.2"
         self.exit = False # If this var is set to true the Exit will instantly be trigered (it is used by submodules, they arent allowed to raise the SystemExit)
         self.window = p.display.set_mode((1080, 720), flags=p.RESIZABLE)
         self.configFilePath = p.system.get_pref_path("spyro24", "ustoat") + "config.json"
