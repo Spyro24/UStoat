@@ -12,7 +12,7 @@ class loginSystem:
         self.appModules = simpleApp.modules # To acces the other modules that are loaded by the main app
         self.i18n = self.appModules["i18n"].strings
         self.logedIn = False
-        self.monoSpaceFont = p.font.SysFont("Ubuntu-mono", self.app.fontSize)
+        self.monoSpaceFont = self.app.monoFont
         self.tileSize = self.app.tileSize
         self.borderSize = 4
         self.receiveTextInput = None

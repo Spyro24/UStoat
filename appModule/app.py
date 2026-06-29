@@ -56,6 +56,7 @@ class App:
         self.modules["masqTool"] = tools.masqurade.masquradeTool(self)
         self.modules["badgeManager"] = appModule.badgeManager.badgeSystem(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}
+        self.monoFont = p.font.Font("./res/fonts/ubuntu_mono/UbuntuMono-Regular.ttf", self.fontSize) #Cintains the Monospace font that we use
         self.debugGraph = appModule.graph.graph(self.window, 0, 1/60 * 2)
         self.frameCount = 0
         self.avgFrameRate = 0
