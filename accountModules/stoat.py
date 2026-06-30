@@ -127,3 +127,9 @@ class userAccount:
         answer = requests.get(f"{self.badgeDataURL}/{rgistrarID}/{badgeID}.png")
         if answer.ok:
             return answer.json()
+    
+    def deleteMessage(self, messageID):
+        pass
+    
+    def editMessage(self, channel: str, messageID: str, editedMessage: str):
+        requests.patch(f"https://stoat.chat/api/channels/{channel}/messages/{messageID}", headers={"X-Session-Token": self.token}, json={"content": editedMessage})

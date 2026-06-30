@@ -17,3 +17,4 @@ import appModule.memberList
 import appModule.requestHandler
 import appModule.badgeManager
 import appModule.graph
+import accountModules.messageManager
