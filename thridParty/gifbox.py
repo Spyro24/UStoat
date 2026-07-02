@@ -2,6 +2,7 @@ import requests
 import json
 
 class gifboxManager:
+    '''A simple module to use gifbox userfriendly without thinking about it'''
     def __init__(self):
         self.apiUrl = "https://api.gifbox.me"
         self.mediaUrl = "https://media.gifbox.me"
@@ -39,12 +40,19 @@ class gifboxManager:
         return results
     
     def loadGif(self, gifId: str):
+        '''Download the GIF by the gifId that you got with self.search(query)'''
         if self.stoatToken != "":
             pass
         else:
-            data = requests.get(f"https://proxy.stoatusercontent.com/proxy?url=https://gifbox.me/view/{gifId}") #We have to proxy it to get the gif
+            data = requests.get(f"https://proxy.stoatusercontent.com/proxy?url=https://gifbox.me/view/{gifId}") #We have to proxy it to get the gif (otherwise we get a mp4)
             if data.ok:
                 return data.content
+    
+    def uploadGif(self, name: str, tags: list[str], filePath: str):
+        pass
+    
+    def deleteGif(self): #We dont know the structure how to delete curenrently
+        pass
 
 if __name__ == "__main__":
     test = gifboxManager()
