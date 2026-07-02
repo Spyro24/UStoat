@@ -37,10 +37,19 @@ class gifboxManager:
                 resolve = lambda v: resolve(data[v]) if isinstance(v, int) and v < len(data) else v
                 results = [[resolve(i.get('title')), resolve(i.get('id'))] for i in data if isinstance(i, dict) and 'id' in i and 'title' in i]
         return results
-            
+    
+    def loadGif(self, gifId: str):
+        if self.stoatToken != "":
+            pass
+        else:
+            data = requests.get(f"https://proxy.stoatusercontent.com/proxy?url=https://gifbox.me/view/{gifId}") #We have to proxy it to get the gif
+            if data.ok:
+                return data.content
 
 if __name__ == "__main__":
     test = gifboxManager()
     test.getCategories()
     print(test.categories)
-    print(test.search("cat"))
+    search = test.search("protogen")
+    print(search)
+    print(test.loadGif(search[0][1]))
