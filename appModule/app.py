@@ -44,6 +44,7 @@ class App:
                         "encryption": appModule.s24crypt.s24Encryption(),
                         "platform": accountModules.stoat.userAccount(),
                         "requestHandler": appModule.requestHandler.requestHandler()}
+        self.modules["messageStorage"] = appModule.messageManager.messageManager(self)
         self.modules["userCard"] = appModule.userCard.userCard(self)
         self.modules["cache"] = appModule.cacheSystem.cache(self)
         self.modules["serverSelector"] = appModule.serverManager.serverSelector(self)
@@ -134,6 +135,7 @@ class App:
                     try:
                         self.modules["messageManager"].insertMessage(package)
                         self.modules["notificatonSystem"].scanMessage(package)
+                        self.modules["messageStorage"].insertMessagePackage(package)
                     except BaseException as e:
                         print(package)
                         print(e)

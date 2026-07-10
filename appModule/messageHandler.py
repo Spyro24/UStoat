@@ -120,10 +120,8 @@ class messageRender:
                 if msgIndex == -1:
                     break
         except BaseException as e:
-            print(e)
             self.curMessageIndex = -1
             try:
-                print(len(self.app.modules["messageManager"].messages[self.channelSelector.selectedChannel]))
                 if len(self.app.modules["messageManager"].messages[self.channelSelector.selectedChannel]) == 0:
                    raise BaseException
             except:

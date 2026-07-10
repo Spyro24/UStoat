@@ -30,4 +30,9 @@ UStoat (UniversalStoat) is a minimalistic stoat client (with multi platform supp
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=spyro24/ustoat&type=date&legend=bottom-right)](https://www.star-history.com/#spyro24/ustoat&type=date&legend=bottom-right)
+<div align="center">
+
+<a href="https://www.star-history.com" target="_blank" rel="noopener noreferrer">
+  <img src="https://github.com/Spyro24/ustoat-client/blob/main/res/star-history.svg"/>
+</a>
+</div>
