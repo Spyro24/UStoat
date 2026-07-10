@@ -32,7 +32,7 @@ UStoat (UniversalStoat) is a minimalistic stoat client (with multi platform supp
 
 <div align="center">
 
-<a href="https://www.star-history.com" target="_blank" rel="noopener noreferrer">
+<a href="https://www.star-history.com/blog/github-stargazer-api-restriction" target="_blank" rel="noopener noreferrer">
   <img src="https://github.com/Spyro24/ustoat-client/blob/main/res/star-history.svg"/>
 </a>
 </div>
