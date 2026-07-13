@@ -65,7 +65,7 @@ class loginSystem:
     
     def loginWithToken(self):
         def worker(self, platform, token): #This is the function for the thread (we dont use async to make sure we always know the programm execution path before the programm runs
-            platformHelper = accountModules.platforms[platform]()
+            platformHelper = accountModules.platforms[platform](self.appModules["log"])
             validSession = platformHelper.resumeSession(token) #It will return 0 if the resume works
             if validSession == 0:
                 self.app.modules['platform'] = platformHelper
@@ -85,7 +85,7 @@ class loginSystem:
     
     def normalLogin(self):
         def worker(self):
-            self.app.modules['platform'] = accountModules.platforms[self.platformSelector.selectedKey]()
+            self.app.modules['platform'] = accountModules.platforms[self.platformSelector.selectedKey](self.app.modules["log"])
             status = self.app.modules['platform'].login(self.email.text, self.password.text, f"UStoat (v {self.app.VERSION})")
             if status == 0: #It returns 0 if ewverything goes right and no MFA needed
                 export = self.app.modules['platform'].returnSaveInfo()

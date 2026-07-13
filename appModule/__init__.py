@@ -18,3 +18,4 @@ import appModule.requestHandler
 import appModule.badgeManager
 import appModule.graph
 import appModule.messageManager
+import appModule.log

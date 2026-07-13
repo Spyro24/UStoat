@@ -4,7 +4,8 @@ import json
 import time
 
 class WSSClient:
-    def __init__(self, url):
+    def __init__(self, url, logger=None):
+        self.logger = logger
         self.url = url
         self.messages = []
         self.lock = threading.Lock()
@@ -23,7 +24,12 @@ class WSSClient:
                 with self.lock:
                     self.connected = True
             
-            self.ws = websocket.WebSocketApp(self.url, on_message=on_message, on_open=on_open)
+            def on_error(ws, err):
+                with self.lock:
+                    if self.logger:
+                        self.loger.log("Websocket", f"{err}")
+            
+            self.ws = websocket.WebSocketApp(self.url, on_message=on_message, on_open=on_open, on_error=on_error())
             self.ws.run_forever()
         
         self.thread = threading.Thread(target=worker, daemon=True)
@@ -43,6 +49,8 @@ class WSSClient:
         if self.ws:
             self.ws.send(data)
         else:
+            if self.logger != None:
+                self.logger.log("Websockte", "connection not established")
             raise RuntimeError("WebSocket connection not established")
     
     def is_ready(self):

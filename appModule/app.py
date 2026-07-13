@@ -43,7 +43,8 @@ class App:
                         "i18n": appModule.i18n.i18n(),
                         "encryption": appModule.s24crypt.s24Encryption(),
                         "platform": accountModules.stoat.userAccount(),
-                        "requestHandler": appModule.requestHandler.requestHandler()}
+                        "requestHandler": appModule.requestHandler.requestHandler(),
+                        "log": appModule.log.logger(p.system.get_pref_path("spyro24", "ustoat"))}
         self.modules["messageStorage"] = appModule.messageManager.messageManager(self)
         self.modules["userCard"] = appModule.userCard.userCard(self)
         self.modules["cache"] = appModule.cacheSystem.cache(self)
@@ -180,6 +181,7 @@ class App:
             self.modules["requestHandler"].stop()
         except:
             pass
+        self.modules["log"].close()
         p.quit()
         raise SystemExit
     

@@ -4,7 +4,7 @@ import json
 import time
 
 class userAccount:
-    def __init__(self):
+    def __init__(self, logger=None):
         self.platformName = "nerimity"
         self.token = ""
         self.websocket = None

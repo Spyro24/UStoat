@@ -4,7 +4,8 @@ import baseModules
 import socket
 
 class userAccount:
-    def __init__(self):
+    def __init__(self, logger=None):
+        self.logger = logger
         self.platformName = "stoat"
         self.userID = ""
         self.token = ""
@@ -40,18 +41,28 @@ class userAccount:
         return 1
     
     def resumeSession(self, token: str):
+        if self.logger:
+            self.logger.log("Stoat", "Trying to resume session...")
         self.token = token
         return self.startSession()
     
     def startSession(self):
+        if self.logger:
+            self.logger.log("Stoat", "Trying to start session...")
         try:
             userInfo = requests.get("https://stoat.chat/api/users/@me", headers={"X-Session-Token": self.token})
         except requests.exceptions.ConnectionError:
+            if self.logger:
+                self.logger.log("Stoat", "Connection Error")
             return 2
         if not userInfo.ok:
+            if self.logger:
+                self.logger.log("Stoat", "Invalid Token or user endpoint not reachable")
             return 1
         self.websocket = baseModules.WSSClient.WSSClient(f"wss://stoat.chat/events?version=1&format=json&token={self.token}")
         if self.websocket.wait_until_ready(timeout=30):
+            if self.logger:
+                self.logger.log("Stoat", "Websocket connection succesfull")
             userInfo = userInfo.json()
             self.userID = userInfo["_id"]
             wait = True
@@ -60,6 +71,8 @@ class userAccount:
                     for packet in self.websocket.get_messages():
                         packet = json.loads(packet)
                         if packet["type"] == "Ready":
+                            if self.logger:
+                                self.logger.log("Stoat", "Ready package received")
                             self.readyPackage = packet
                             wait = False
                             break
