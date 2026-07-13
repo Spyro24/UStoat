@@ -29,7 +29,7 @@ class WSSClient:
                     if self.logger:
                         self.loger.log("Websocket", f"{err}")
             
-            self.ws = websocket.WebSocketApp(self.url, on_message=on_message, on_open=on_open, on_error=on_error())
+            self.ws = websocket.WebSocketApp(self.url, on_message=on_message, on_open=on_open, on_error=on_error)
             self.ws.run_forever()
         
         self.thread = threading.Thread(target=worker, daemon=True)
