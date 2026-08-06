@@ -21,6 +21,7 @@ class inputTextBox:
         self.i18n = self.app.modules["i18n"].strings
         self.platform = self.app.modules["platform"]
         self.serverSelector = self.app.modules["serverSelector"]
+        self.hasRendered = False
     
     def reloadTheme(self):
         theme = self.app.modules["themeManager"].theme["messageBox"]
@@ -78,31 +79,37 @@ class inputTextBox:
         
     def render(self, displaySize):
         textBox = None
+        self.hasRendered = False
         borderSize = self.tileSize // 8
         textBoxLenght = displaySize[0] - (self.app.modules["userCard"].renderRect.width + self.tileSize * 5)
-        if self.curentMessage != "":
-            showText = self.wrap_text_to_width(self.curentMessage[:self.cursorPos] + "|" + self.curentMessage[self.cursorPos:], self.font, textBoxLenght - (2 * borderSize))
-            renderedText = self.font.render(showText, antialias=True, color=self.textCol)
-            if renderedText.height > self.tileSize - borderSize / 2:
-                textBox = p.surface.Surface((textBoxLenght, renderedText.height + 2 * borderSize))
+        try:
+            if self.curentMessage != "":
+                showText = self.wrap_text_to_width(self.curentMessage[:self.cursorPos] + "|" + self.curentMessage[self.cursorPos:], self.font, textBoxLenght - (2 * borderSize))
+                renderedText = self.font.render(showText, antialias=True, color=self.textCol)
+                if renderedText.height > self.tileSize - borderSize / 2:
+                    textBox = p.surface.Surface((textBoxLenght, renderedText.height + 2 * borderSize))
+                else:
+                    textBox = p.surface.Surface((textBoxLenght, self.tileSize))
+                textBox.fill(self.bgCol)
+                textBox.blit(renderedText, (borderSize, borderSize))
+                
             else:
                 textBox = p.surface.Surface((textBoxLenght, self.tileSize))
-            textBox.fill(self.bgCol)
-            textBox.blit(renderedText, (borderSize, borderSize))
-            
-        else:
-            textBox = p.surface.Surface((textBoxLenght, self.tileSize))
-            textBox.fill(self.bgCol)
-            textBox.blit(self.font.render(self.i18n['ui.name.message_empty'], antialias=True, color=self.textNoneCol), (borderSize, borderSize))
-        if self.isActive:
-            p.draw.rect(textBox, (120, 120, 165), textBox.get_rect(), width=borderSize // 2)
-        else:
-            p.draw.rect(textBox, (20, 20, 65), textBox.get_rect(), width=borderSize // 2)
-        self.renderedRect = self.app.window.blit(textBox, (self.app.modules["userCard"].renderRect[2], displaySize[1] - textBox.height))
-        #Handle mouse input
-        if self.renderedRect.collidepoint(self.app.mousePos):
-            if self.app.mouseButtons[0]:
-                if self.app.textInput != None:
-                    self.app.textInput.isActive = False
-                self.app.textInput = self
-                self.isActive = True
+                textBox.fill(self.bgCol)
+                textBox.blit(self.font.render(self.i18n['ui.name.message_empty'], antialias=True, color=self.textNoneCol), (borderSize, borderSize))
+            self.hasRendered = True
+        except p.error as e:
+            print("[pygame-ce] Error: " + str(e))
+        if self.hasRendered: #Make sure that the programm dont crash
+            if self.isActive:
+                p.draw.rect(textBox, (120, 120, 165), textBox.get_rect(), width=borderSize // 2)
+            else:
+                p.draw.rect(textBox, (20, 20, 65), textBox.get_rect(), width=borderSize // 2)
+            self.renderedRect = self.app.window.blit(textBox, (self.app.modules["userCard"].renderRect[2], displaySize[1] - textBox.height))
+            #Handle mouse input
+            if self.renderedRect.collidepoint(self.app.mousePos):
+                if self.app.mouseButtons[0]:
+                    if self.app.textInput != None:
+                        self.app.textInput.isActive = False
+                    self.app.textInput = self
+                    self.isActive = True
