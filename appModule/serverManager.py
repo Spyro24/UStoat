@@ -138,9 +138,12 @@ class channelSelector:
         self.selectedChannel = ""
         self.bgCol = (211, 75, 100)
         self.selCol = (200,150,100)
+        self.textColor = (255,255,255)
         self.app.themeable.append(self)
         self.renderOverflow = False
         self.renderfromChannel = 0
+        self.channelHeader = None
+        self.headerText = p.Surface((0,0))
     
     def reloadTheme(self):
         theme = self.app.modules["themeManager"].theme["channelSelector"]
@@ -164,6 +167,7 @@ class channelSelector:
             surface.fill(self.bgCol)
             surface.blit(text, (surface.height, surface.height // 2 - text.height // 2))
             self.backedSurfaces.append(surface)
+        self.headerText = self.font.render(self.serverManager.channelNameLookup[self.selectedChannel], True, self.textColor)
     
     def render(self, displaySize):
         self.renderedRect = p.draw.rect(self.window, self.bgCol, (self.tileSize, 0, self.tileSize * 4, self.app.modules["userCard"].renderRect[1]))
@@ -189,7 +193,10 @@ class channelSelector:
                 self.selectedChannelIndex = renderPos + renderfromChannel
                 self.selectedChannel = self.curentServerChannels[self.selectedChannelIndex]
                 self.app.modules["messageRender"].curMessageIndex = -1
+                self.headerText = self.font.render(self.serverManager.channelNameLookup[self.selectedChannel], True, self.textColor)
             if rect.bottom > self.renderedRect.bottom - self.halfTile:
                 self.renderOverflow = True
                 break
             renderPos += 1
+        if self.channelHeader.hasRendered:
+            self.window.blit(self.headerText, (self.channelHeader.renderedRect.x + self.tileSize / 8, self.tileSize / 8))

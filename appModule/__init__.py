@@ -12,7 +12,7 @@ import appModule.httpRPCServer
 import appModule.RPCHandler
 import appModule.i18n
 import appModule.s24crypt
-import appModule.toolbar
+import appModule.spareUI
 import appModule.memberList
 import appModule.requestHandler
 import appModule.badgeManager

@@ -54,7 +54,8 @@ class App:
         self.modules["messageRender"] = appModule.messageHandler.messageRender(self)
         self.modules["themeManager"] = appModule.themeManager.themeManager(self)
         self.modules["settings"] = appModule.settingsManager.settingsManager(self)
-        self.modules["toolbar"] = appModule.toolbar.toolbar(self)
+        self.modules["toolbar"] = appModule.spareUI.toolbar(self)
+        self.modules["channelHeader"] = appModule.spareUI.channelHeader(self)
         self.modules["masqTool"] = tools.masqurade.masquradeTool(self)
         self.modules["badgeManager"] = appModule.badgeManager.badgeSystem(self)
         self.sounds = {"message": p.mixer.Sound("./res/sounds/stoat.ogg")}

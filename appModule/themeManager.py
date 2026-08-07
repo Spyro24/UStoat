@@ -11,7 +11,8 @@ class themeManager:
                                          "selected":(200,150,100)},
                       "messageRender":{"background":(75, 35, 125),
                                         "text":(255, 255, 255)},
-                      "toolbar":{"background":(140, 0, 140)}
+                      "toolbar":{"background":(140, 0, 140)},
+                      "channelHeader":{"background":(140, 0, 140)}
                       }
         self.app = app
     
