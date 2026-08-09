@@ -44,8 +44,8 @@ class App:
                         "encryption": appModule.s24crypt.s24Encryption(),
                         "platform": accountModules.stoat.userAccount(),
                         "requestHandler": appModule.requestHandler.requestHandler(),
-                        "log": appModule.log.logger(p.system.get_pref_path("spyro24", "ustoat"))}
-        self.modules["messageStorage"] = appModule.messageManager.messageManager(self)
+                        "log": appModule.log.logger(p.system.get_pref_path("spyro24", "ustoat")),
+                        "runtimeStore": appModule.runtimeStore.runtimeStore()}
         self.modules["userCard"] = appModule.userCard.userCard(self)
         self.modules["cache"] = appModule.cacheSystem.cache(self)
         self.modules["serverSelector"] = appModule.serverManager.serverSelector(self)
@@ -137,7 +137,7 @@ class App:
                     try:
                         self.modules["messageManager"].insertMessage(package)
                         self.modules["notificatonSystem"].scanMessage(package)
-                        self.modules["messageStorage"].insertMessagePackage(package)
+                        self.modules["runtimeStore"].parseStoatMessage(package)
                     except BaseException as e:
                         print(package)
                         print(e)

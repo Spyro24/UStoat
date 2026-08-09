@@ -19,3 +19,4 @@ import appModule.badgeManager
 import appModule.graph
 import appModule.messageManager
 import appModule.log
+import appModule.runtimeStore
