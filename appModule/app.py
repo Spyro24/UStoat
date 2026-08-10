@@ -155,12 +155,12 @@ class App:
                 displaySize = self.window.get_size()
                 self.window.fill((0,0,0))
                 for obj in self.renderQuee:
-                    try:
+                    #try:
                         obj.render(displaySize)
-                    except AttributeError as e:
-                        print(e)
-                        run = False
-                        break
+                    #except AttributeError as e:
+                    #    print(e)
+                    #    run = False
+                    #    break
                 if "DEBUG" in self.env:
                     self.window.blit(self.debugGraph.graphSurface,(0,0))
                 p.display.flip()

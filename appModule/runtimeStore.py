@@ -9,7 +9,18 @@ class runtimeStore:
         self.messages[messageId] = {"content": content, "author": author, "deleted": deleted, "edited": edited}
     
     def parseStoatMessage(self, package): #I dont want to add hundreds of lines to the main app
-        print(package)
+        message = {}
+        message["author"] = package["author"]
+        message["channel"] = package["channel"]
+        if "content" in package:
+            message["content"] = package["content"]
+        self.messages[package["_id"]] = message
+        try:
+            self.channels[message["channel"]]["messages"].append(package["_id"])
+        except: #creating a dummy channel
+            self.channels[message["channel"]] = {}
+            self.channels[message["channel"]]["messages"] = []
+            self.channels[message["channel"]]["messages"].append(package["_id"])
     
     def insertChannel(self):
         pass

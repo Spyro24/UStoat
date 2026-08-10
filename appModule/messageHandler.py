@@ -23,9 +23,6 @@ class messageManager:
     def getMessage(self, channel: str, index: int):
         return self.messages[channel][index]
     
-    def getLenMessages(self, channel: str):
-        return len(self.messages[channel])
-    
     def formatMessage(self, message: dict):
         msg = {}
         msg["author"] = message['author']
@@ -81,6 +78,7 @@ class messageRender:
         return "\n".join(lines)
     
     def renderMessage(self, message: dict, width: int, borderSize):
+        message = self.runtimeStore.messages[message]
         surfaceSizeX = width + borderSize + self.tileSize
         renderedMessage = self.app.modules["font"].render(self.wrap_text_to_width(message["content"], self.app.modules["font"], width), antialias=True, color=self.colors["text"])
         messageUserName = self.runtimeStore.users[message["author"]]["username"]
@@ -101,12 +99,13 @@ class messageRender:
         return(renderSurface)
     
     def render(self, displaySize: tuple[int, int]):
+        selectedChannel = self.channelSelector.selectedChannel
         renderYPos = displaySize[1] - self.app.modules["messageInput"].renderedRect[3]
         renderXPos = self.app.modules["messageInput"].renderedRect[0]
         messageWith = self.app.modules["messageInput"].renderedRect[2] - (self.tileSize + self.borderWidth)
         self.renderedRect = p.rect.Rect(self.app.modules["channelSelector"].renderedRect.topright, (self.app.modules["messageInput"].renderedRect.width, displaySize[1] - self.app.modules["messageInput"].renderedRect.height))
         if self.app.mouseWheel != 0 and self.renderedRect.collidepoint(self.app.mousePos):
-            messageCount = self.app.modules["messageManager"].getLenMessages(self.channelSelector.selectedChannel)
+            messageCount = len(self.runtimeStore.channels[selectedChannel]["messages"])
             if self.app.mouseWheel == -1 and self.curMessageIndex == -1:
                 self.curMessageIndex = messageCount - 1
             elif self.curMessageIndex != -1:
@@ -118,13 +117,14 @@ class messageRender:
         try:
             msgIndex = self.curMessageIndex
             while renderYPos > 0:
-                text = self.renderMessage(self.app.modules["messageManager"].getMessage(self.channelSelector.selectedChannel, msgIndex), messageWith, self.borderWidth)
-                renderYPos -= text.height
-                self.window.blit(text, (renderXPos, renderYPos))[3]
+                message = self.renderMessage(self.runtimeStore.channels[self.channelSelector.selectedChannel]["messages"][msgIndex], messageWith, self.borderWidth)
+                renderYPos -= message.height
+                self.window.blit(message, (renderXPos, renderYPos))[3]
                 msgIndex -= 1
                 if msgIndex == -1:
                     break
         except BaseException as e:
+            #print(e)
             self.curMessageIndex = -1
             try:
                 if len(self.app.modules["messageManager"].messages[self.channelSelector.selectedChannel]) == 0:
@@ -134,5 +134,5 @@ class messageRender:
                 try:
                     messages.reverse()
                     for message in messages:
-                        self.app.modules["messageManager"].insertMessage(message)
+                        self.runtimeStore.parseStoatMessage(message)
                 except: pass
