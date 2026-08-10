@@ -51,6 +51,8 @@ class messageRender:
         self.curMessageIndex = -1
         self.renderedRect = p.rect.Rect()
         self.platform = self.app.modules["platform"]
+        self.runtimeStore = self.app.modules["runtimeStore"]
+        self.fetchingMessages = False
     
     def reloadTheme(self):
         theme = self.app.modules["themeManager"].theme["messageRender"]
@@ -81,7 +83,10 @@ class messageRender:
     def renderMessage(self, message: dict, width: int, borderSize):
         surfaceSizeX = width + borderSize + self.tileSize
         renderedMessage = self.app.modules["font"].render(self.wrap_text_to_width(message["content"], self.app.modules["font"], width), antialias=True, color=self.colors["text"])
-        renderedName = self.font.render(self.app.modules['userManager'].getUser(message["author"])["display_name"], antialias=False, color=self.colors["userName"])
+        messageUserName = self.runtimeStore.users[message["author"]]["username"]
+        if "display_name" in self.runtimeStore.users[message["author"]]: # checking if the user has a display name
+            messageUserName = self.runtimeStore.users[message["author"]]["display_name"] # setting the render name to the dispaly name if the user has one
+        renderedName = self.font.render(messageUserName, antialias=False, color=self.colors["userName"])
         textBoxHeight = borderSize * 2 + renderedName.height + renderedMessage.height
         if textBoxHeight < self.tileSize:
             textBoxHeight = self.tileSize
