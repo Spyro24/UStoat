@@ -1,9 +1,10 @@
 class runtimeStore:
     def __init__(self):
+        self.userID = None #We need it only for user ID stuff like resolving the names of DM channels
         self.messages = {}
         self.channels = {}
         self.users = {}
-        self.servers = {}
+        self.servers = {"0":{"name": "Direct Messages", "owner": None, "channels": []}}
     
     def insertMessage(self, messageId: str, content: str, author: str, deleted=False, edited=False):
         self.messages[messageId] = {"content": content, "author": author, "deleted": deleted, "edited": edited}
@@ -29,6 +30,17 @@ class runtimeStore:
     
     def parseStoatChannel(self, package):
         print(package)
+        channel = {}
+        if package["channel_type"] == "DirectMessage":
+            package["recipients"].remove(self.userID)
+            if "display_name" in self.users[package["recipients"][0]]:
+                channel["name"] = self.users[package["recipients"][0]]["display_name"]
+            else:
+                channel["name"] = self.users[package["recipients"][0]]["username"]
+        elif package["channel_type"] == "TextChannel":
+            channel["name"] = package["name"]
+        channel["messages"] = []
+        self.channels[package["_id"]] = channel
     
     def parseStoatUser(self, package):
         user = {}
@@ -39,7 +51,7 @@ class runtimeStore:
         self.users[package["_id"]] = user
     
     def parseStoatServer(self, package):
-        print(package)
+        #print(package)
         server = {}
         server["name"] = package["name"]
         server["owner"] = package["owner"]

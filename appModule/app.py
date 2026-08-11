@@ -85,6 +85,7 @@ class App:
         self.modules["serverManager"].userManager = self.modules["userManager"]
         self.modules["serverManager"].userID = self.modules["platform"].userID
         self.modules["serverManager"].init()
+        self.modules["runtimeStore"].userID = self.modules["platform"].userID
         self.modules["memberList"] = appModule.memberList.memebrList(self)
         packet = self.modules["platform"].getReadyPackage()
         if packet["type"] == "Ready":
@@ -94,6 +95,8 @@ class App:
                 self.modules["runtimeStore"].parseStoatUser(user)
             for server in packet["servers"]:
                 self.modules["runtimeStore"].parseStoatServer(server)
+            for channel in packet["channels"]:
+                self.modules["runtimeStore"].parseStoatChannel(channel)
             self.modules["serverManager"].insertReadyPackage(packet)
         userInfo = self.modules['userManager'].userInfo[self.modules['platform'].userID]
         print(self.modules["serverManager"].serverStructure)

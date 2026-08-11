@@ -4,7 +4,6 @@ import appModule
 class serverManager:
     def __init__(self):
         self.serverStructure = {}  # contains the config for the servers
-        self.channelNameLookup = {}
         self.channelServerLookup = {}
         self.userServerConfig = {}
         self.servers = [] # contains the ids of the servers
@@ -29,13 +28,7 @@ class serverManager:
                 self.channelServerLookup[channel] = server["_id"]
         
         for channel in package["channels"]:
-            if channel["channel_type"] == "TextChannel":
-                self.channelNameLookup[channel["_id"]] = channel["name"]
-            elif channel["channel_type"] == "DirectMessage":
-                self.channelNameLookup[channel["_id"]] = channel["_id"]
-                if len(channel["recipients"]) == 2:
-                    channel["recipients"].remove(self.userID)
-                    self.channelNameLookup[channel["_id"]] = self.userManager.getUser(channel["recipients"][0])["name"]
+            if channel["channel_type"] == "DirectMessage":
                 self.serverStructure["0"]["channels"].append(channel["_id"])
     
     def createDefaultEntrys(self):
@@ -144,6 +137,7 @@ class channelSelector:
         self.renderfromChannel = 0
         self.channelHeader = None
         self.headerText = p.Surface((0,0))
+        self.runtimeStore = self.app.modules["runtimeStore"]
     
     def reloadTheme(self):
         theme = self.app.modules["themeManager"].theme["channelSelector"]
@@ -160,14 +154,14 @@ class channelSelector:
         self.renderfromChannel = 0
         for channel in self.curentServerChannels:
             try:
-                text = self.font.render(self.serverManager.channelNameLookup[channel], True, (255,255,255))
+                text = self.font.render(self.runtimeStore.channels[channel]["name"], True, (255,255,255))
             except KeyError:
                 text = self.font.render("[NO ACCESS]", True, (255,255,255))
             surface = p.Surface((self.tileSize * 4, self.halfTile))
             surface.fill(self.bgCol)
             surface.blit(text, (surface.height, surface.height // 2 - text.height // 2))
             self.backedSurfaces.append(surface)
-        self.headerText = self.font.render(self.serverManager.channelNameLookup[self.selectedChannel], True, self.textColor)
+        self.headerText = self.font.render(self.runtimeStore.channels[self.selectedChannel]["name"], True, self.textColor)
     
     def render(self, displaySize):
         self.renderedRect = p.draw.rect(self.window, self.bgCol, (self.tileSize, 0, self.tileSize * 4, self.app.modules["userCard"].renderRect[1]))
@@ -193,7 +187,7 @@ class channelSelector:
                 self.selectedChannelIndex = renderPos + renderfromChannel
                 self.selectedChannel = self.curentServerChannels[self.selectedChannelIndex]
                 self.app.modules["messageRender"].curMessageIndex = -1
-                self.headerText = self.font.render(self.serverManager.channelNameLookup[self.selectedChannel], True, self.textColor)
+                self.headerText = self.font.render(self.runtimeStore.channels[self.selectedChannel]["name"], True, self.textColor)
             if rect.bottom > self.renderedRect.bottom - self.halfTile:
                 self.renderOverflow = True
                 break
