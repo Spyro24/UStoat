@@ -14,6 +14,8 @@ class runtimeStore:
         message["channel"] = package["channel"]
         if "content" in package:
             message["content"] = package["content"]
+        if "replies" in package:
+            message["replies"] = package["replies"]
         self.messages[package["_id"]] = message
         try:
             self.channels[message["channel"]]["messages"].append(package["_id"])
@@ -35,3 +37,12 @@ class runtimeStore:
         if "display_name" in package:
             user["display_name"] = package["display_name"]
         self.users[package["_id"]] = user
+    
+    def parseStoatServer(self, package):
+        print(package)
+        server = {}
+        server["name"] = package["name"]
+        server["owner"] = package["owner"]
+        server["channels"] = package["channels"]
+        self.servers[package["_id"]] = server
+        

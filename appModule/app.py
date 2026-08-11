@@ -92,6 +92,8 @@ class App:
             for user in packet["users"]:
                 self.modules['userManager'].addUser(user)
                 self.modules["runtimeStore"].parseStoatUser(user)
+            for server in packet["servers"]:
+                self.modules["runtimeStore"].parseStoatServer(server)
             self.modules["serverManager"].insertReadyPackage(packet)
         userInfo = self.modules['userManager'].userInfo[self.modules['platform'].userID]
         print(self.modules["serverManager"].serverStructure)
