@@ -137,6 +137,8 @@ class channelSelector:
         self.renderfromChannel = 0
         self.channelHeader = None
         self.headerText = p.Surface((0,0))
+        self.headerDesc = p.Surface((0,0))
+        self.headerDescLenght = 26
         self.runtimeStore = self.app.modules["runtimeStore"]
     
     def reloadTheme(self):
@@ -145,6 +147,12 @@ class channelSelector:
             self.bgCol = theme["background"]
             self.selCol = theme["selected"]
         except KeyError: pass
+    
+    def shortenTextToLenght(self, text: str, lenght: int):
+        if lenght <= 0 or len(text) <= lenght:
+            return text
+        elif len(text) > lenght:
+            return text[0:lenght - 3] + "..."
     
     def update(self):
         self.backedSurfaces = []
@@ -162,6 +170,10 @@ class channelSelector:
             surface.blit(text, (surface.height, surface.height // 2 - text.height // 2))
             self.backedSurfaces.append(surface)
         self.headerText = self.font.render(self.runtimeStore.channels[self.selectedChannel]["name"], True, self.textColor)
+        if "description" in self.runtimeStore.channels[self.selectedChannel]:
+            self.headerDesc = self.font.render(self.runtimeStore.channels[self.selectedChannel]["description"], True, self.textColor)
+        else:
+            self.headerDesc = p.Surface((0,0))
     
     def render(self, displaySize):
         self.renderedRect = p.draw.rect(self.window, self.bgCol, (self.tileSize, 0, self.tileSize * 4, self.app.modules["userCard"].renderRect[1]))
@@ -188,9 +200,14 @@ class channelSelector:
                 self.selectedChannel = self.curentServerChannels[self.selectedChannelIndex]
                 self.app.modules["messageRender"].curMessageIndex = -1
                 self.headerText = self.font.render(self.runtimeStore.channels[self.selectedChannel]["name"], True, self.textColor)
+                if "description" in self.runtimeStore.channels[self.selectedChannel]:
+                    self.headerDesc = self.font.render(self.shortenTextToLenght(self.runtimeStore.channels[self.selectedChannel]["description"], self.headerDescLenght), True, self.textColor)
+                else:
+                    self.headerDesc = p.Surface((0,0))
             if rect.bottom > self.renderedRect.bottom - self.halfTile:
                 self.renderOverflow = True
                 break
             renderPos += 1
         if self.channelHeader.hasRendered:
             self.window.blit(self.headerText, (self.channelHeader.renderedRect.x + self.tileSize / 8, self.tileSize / 8))
+            self.window.blit(self.headerDesc, (self.channelHeader.renderedRect.x + self.tileSize / 8, self.tileSize / 8 * 7 - self.headerDesc.height))

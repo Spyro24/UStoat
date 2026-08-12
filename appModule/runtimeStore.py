@@ -39,6 +39,8 @@ class runtimeStore:
                 channel["name"] = self.users[package["recipients"][0]]["username"]
         elif package["channel_type"] == "TextChannel":
             channel["name"] = package["name"]
+            if "description" in package:
+                channel["description"] = package["description"]
         channel["messages"] = []
         self.channels[package["_id"]] = channel
     
