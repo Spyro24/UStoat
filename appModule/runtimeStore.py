@@ -1,3 +1,5 @@
+import pygame as p
+
 class runtimeStore:
     def __init__(self):
         self.userID = None #We need it only for user ID stuff like resolving the names of DM channels
@@ -5,14 +7,19 @@ class runtimeStore:
         self.channels = {}
         self.users = {}
         self.servers = {"0":{"name": "Direct Messages", "owner": None, "channels": []}}
+        self.images = {"avatars":{}}
     
     def insertMessage(self, messageId: str, content: str, author: str, deleted=False, edited=False):
         self.messages[messageId] = {"content": content, "author": author, "deleted": deleted, "edited": edited}
     
     def parseStoatMessage(self, package): #I dont want to add hundreds of lines to the main app
+        if "system" in package: return #we cannot parse system messages curently
+        if not package["author"] in self.users: self.createDummyUser(package["author"])
         message = {}
         message["author"] = package["author"]
         message["channel"] = package["channel"]
+        if "user" in package:
+            self.parseStoatUser(package["user"])
         if "content" in package:
             message["content"] = package["content"]
         if "replies" in package:
@@ -59,4 +66,36 @@ class runtimeStore:
         server["owner"] = package["owner"]
         server["channels"] = package["channels"]
         self.servers[package["_id"]] = server
+    
+    def createDummyUser(self, userId):
+        user = {}
+        user["username"] = userId
+        user["discriminator"] = "0000"
+        user["dummy"] = None # Only a Dummy user has this
+        self.users[userId] = user
         
+class runtimeStoreManager:
+    def __init__(self, app):
+        self.app = app
+        self.runtimeStore = self.app.modules["runtimeStore"]
+        self.requetHandler = self.app.modules["requestHandler"]
+    
+    def insertRequestData(self, data: tuple):
+        package = data[2]
+        if data[1][0] == "avatars":
+            try:
+                avatar = p.image.load(package)
+            except:
+                avatar = p.image.load("./res/images/default_avatar.png")
+            avatar = self.make_square_and_scale(avatar)
+            self.store['avatars'][data[1][1]] = avatar
+            self.requested["avatars"].discard(data[1][1])
+    
+    def getUserAvatar(self, userId):
+        try:
+            return self.runtimeStore.images['avatars'][userId]
+        except KeyError:
+            avatar = p.Surface((1,1)) #yes we use a one pixel size surface as a decoy
+            self.runtimeStore.images['avatars'][userId] = avatar
+            return avatar
+            

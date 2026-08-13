@@ -46,6 +46,8 @@ class App:
                         "requestHandler": appModule.requestHandler.requestHandler(),
                         "log": appModule.log.logger(p.system.get_pref_path("spyro24", "ustoat")),
                         "runtimeStore": appModule.runtimeStore.runtimeStore()}
+        self.modules["runtimeStoreManager"] = appModule.runtimeStore.runtimeStoreManager(self)
+        self.modules["pluginManager"] = appModule.pluginManager.pluginManager(self)
         self.modules["userCard"] = appModule.userCard.userCard(self)
         self.modules["cache"] = appModule.cacheSystem.cache(self)
         self.modules["serverSelector"] = appModule.serverManager.serverSelector(self)

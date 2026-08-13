@@ -17,9 +17,6 @@ class messageManager:
             if msg["author"] == self.userId:
                 self.userMessages.append(msg["id"])
     
-    def populateChannl(self, channel: str):
-        pass
-    
     def getMessage(self, channel: str, index: int):
         return self.messages[channel][index]
     
@@ -49,6 +46,7 @@ class messageRender:
         self.renderedRect = p.rect.Rect()
         self.platform = self.app.modules["platform"]
         self.runtimeStore = self.app.modules["runtimeStore"]
+        self.runtimeStoreManager = self.app.modules["runtimeStoreManager"]
         self.fetchingMessages = False
     
     def reloadTheme(self):
@@ -80,7 +78,10 @@ class messageRender:
     def renderMessage(self, message: dict, width: int, borderSize):
         message = self.runtimeStore.messages[message]
         surfaceSizeX = width + borderSize + self.tileSize
-        renderedMessage = self.app.modules["font"].render(self.wrap_text_to_width(message["content"], self.app.modules["font"], width), antialias=True, color=self.colors["text"])
+        if "content" in message: #avoid a crash if the user sended atachments
+            renderedMessage = self.app.modules["font"].render(self.wrap_text_to_width(message["content"], self.app.modules["font"], width), antialias=True, color=self.colors["text"])
+        else:
+            renderedMessage = p.Surface((0,0))
         messageUserName = self.runtimeStore.users[message["author"]]["username"]
         if "display_name" in self.runtimeStore.users[message["author"]]: # checking if the user has a display name
             messageUserName = self.runtimeStore.users[message["author"]]["display_name"] # setting the render name to the dispaly name if the user has one
@@ -92,10 +93,7 @@ class messageRender:
         renderSurface.fill(self.colors["bg"])
         renderSurface.blit(renderedName, (self.tileSize, borderSize))
         renderSurface.blit(renderedMessage, (self.tileSize, borderSize + renderedName.height))
-        avatar = self.cache.getUserAvatar(message["author"])
-        if avatar == 20:
-            avatar = p.Surface((self.tileSize, self.tileSize))
-        renderSurface.blit(p.transform.scale(avatar,(borderSize * 6, borderSize * 6)), (borderSize, borderSize))
+        renderSurface.blit(p.transform.scale(self.runtimeStoreManager.getUserAvatar(message["author"]),(borderSize * 6, borderSize * 6)), (borderSize, borderSize))
         return(renderSurface)
     
     def render(self, displaySize: tuple[int, int]):
@@ -123,16 +121,14 @@ class messageRender:
                 msgIndex -= 1
                 if msgIndex == -1:
                     break
-        except BaseException as e:
-            #print(e)
+        except IndexError:
             self.curMessageIndex = -1
             try:
                 if len(self.app.modules["messageManager"].messages[self.channelSelector.selectedChannel]) == 0:
                    raise BaseException
             except:
                 messages = self.platform.fetchMessages(self.channelSelector.selectedChannel, "")["messages"]
-                try:
-                    messages.reverse()
-                    for message in messages:
-                        self.runtimeStore.parseStoatMessage(message)
-                except: pass
+                messages.reverse()
+                for message in messages:
+                    print(message)
+                    self.runtimeStore.parseStoatMessage(message)
