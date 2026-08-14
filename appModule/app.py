@@ -93,6 +93,7 @@ class App:
         if packet["type"] == "Ready":
             print(packet)
             for user in packet["users"]:
+                print(user)
                 self.modules['userManager'].addUser(user)
                 self.modules["runtimeStore"].parseStoatUser(user)
             for server in packet["servers"]:

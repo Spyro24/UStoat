@@ -106,7 +106,7 @@ class userAccount:
     
     def fetchMessages(self, channel: str, server: str, count=50):
         try:
-            messages = requests.get(f"https://stoat.chat/api/channels/{channel}/messages", headers={"X-Session-Token": self.token})
+            messages = requests.get(f"https://stoat.chat/api/channels/{channel}/messages?include_users=true", headers={"X-Session-Token": self.token})
             if not messages.ok: raise BaseException
             messages = messages.json()
             if type(messages) == list:

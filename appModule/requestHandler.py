@@ -20,7 +20,8 @@ class requestHandler:
                         request = self.requestQuee.pop(0)
                         answer = request[2]()
                         self.responses.append((request[0], request[1], answer))
-                    except:
+                    except BaseException as e :
+                        print(e)
                         self.responses.append((request[0], request[1], None))
                     
             print("request handler stoped")
