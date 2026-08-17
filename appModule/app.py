@@ -23,7 +23,8 @@ class App:
         self.VERSION = "0.5.0"
         self.exit = False # If this var is set to true the Exit will instantly be trigered (it is used by submodules, they arent allowed to raise the SystemExit)
         self.window = p.display.set_mode((1080, 720), flags=p.RESIZABLE)
-        self.configFilePath = p.system.get_pref_path("spyro24", "ustoat") + "config.json"
+        self.configFolderPath = p.system.get_pref_path("spyro24", "ustoat")
+        self.configFilePath = self.configFolderPath + "config.json"
         try:
             confgFile = open(self.configFilePath, "r")
             self.config = json.loads(confgFile.read())
@@ -46,7 +47,10 @@ class App:
                         "requestHandler": appModule.requestHandler.requestHandler(),
                         "log": appModule.log.logger(p.system.get_pref_path("spyro24", "ustoat")),
                         "runtimeStore": appModule.runtimeStore.runtimeStore()}
+        if "DEBUG" in self.env:
+            self.modules["log"].debug = True
         self.modules["runtimeStoreManager"] = appModule.runtimeStore.runtimeStoreManager(self)
+        self.modules["messageEncryption"] = appModule.messageEncryption.messageEncryption(self)
         self.modules["pluginManager"] = appModule.pluginManager.pluginManager(self)
         self.modules["userCard"] = appModule.userCard.userCard(self)
         self.modules["cache"] = appModule.cacheSystem.cache(self)

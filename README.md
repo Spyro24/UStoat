@@ -26,6 +26,14 @@ UStoat (UniversalStoat) is a minimalistic stoat client (with multi platform supp
 * We have a Stoat server for help, suggestions and the other UStoat stuff like themes etc https://stt.gg/MeM1tWFB
 * We have a Nerimity server for help, suggestions and the other UStoat stuff like themes etc(this is for the users that uses Nerimity with UStoat) https://nerimity.com/i/6rIJb
 
+## Message Encryption
+
+UStoat supports message encryption for server zero channels
+* A encrypted can only contains 300 characters
+* We are using a RSA 4096bit key
+* Its safe as long your PC is safe (Services can only read the b64 text with makers but cant decipher the contents of the b64 string)
+* It only is curently UStoat compatible, other clients will simply show you the b64 maker string
+
 ## Disclaimer
 
 ## Star History

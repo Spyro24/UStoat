@@ -28,4 +28,4 @@ if __name__ == "__main__":
         except:
             raise SystemExit
     else:
-        app = appModule.app.App()
+        app = appModule.app.App({"DEBUG"})
