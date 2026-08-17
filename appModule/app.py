@@ -105,6 +105,8 @@ class App:
             for channel in packet["channels"]:
                 self.modules["runtimeStore"].parseStoatChannel(channel)
             self.modules["serverManager"].insertReadyPackage(packet)
+        if len(self.modules["runtimeStore"].servers["0"]['channels']) == 0:
+            self.modules["runtimeStore"].servers["0"]['channels'].append("00")
         userInfo = self.modules['userManager'].userInfo[self.modules['platform'].userID]
         print(self.modules["serverManager"].serverStructure)
         self.modules['userManager'].userToken = self.modules["platform"].token

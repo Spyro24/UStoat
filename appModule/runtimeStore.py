@@ -4,11 +4,12 @@ import io
 class runtimeStore:
     def __init__(self):
         self.userID = None #We need it only for user ID stuff like resolving the names of DM channels
-        self.messages = {}
-        self.channels = {}
+        self.messages = {"000":{"content": "This is a Dummy channel", "author": "0000", "deleted": False, "edited": False}}
+        self.channels = {"00":{"messages":["000"], "name":"<Dummy>", }}
         self.users = {}
         self.servers = {"0":{"name": "Direct Messages", "owner": None, "channels": []}}
         self.images = {"avatars":{}}
+        self.createDummyUser("0000")
     
     def insertMessage(self, messageId: str, content: str, author: str, deleted=False, edited=False):
         self.messages[messageId] = {"content": content, "author": author, "deleted": deleted, "edited": edited}
@@ -75,6 +76,7 @@ class runtimeStore:
         user["discriminator"] = "0000"
         user["dummy"] = None # Only a Dummy user has this
         self.users[userId] = user
+        
         
 class runtimeStoreManager:
     def __init__(self, app):

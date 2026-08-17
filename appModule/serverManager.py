@@ -62,6 +62,7 @@ class serverSelector:
         self.renderFromServer = 0
         self.renderOverflow = False
         self.app.themeable.append(self)
+        self.runtimeStore = self.app.modules["runtimeStore"]
         self.bgCol = (234,123,40)
         self.index = 0
     
@@ -84,7 +85,7 @@ class serverSelector:
         self.channelSelector.update()
     
     def returnChannels(self) -> list[str]:
-        return self.serverManager.serverStructure[self.selectedServer]["channels"]
+        return self.runtimeStore.servers[self.selectedServer]["channels"]
     
     def render(self, displaySize):
         self.renderedRect = p.draw.rect(self.window, self.bgCol, (0, 0, self.tileSize, self.app.modules["userCard"].renderRect[1]))
