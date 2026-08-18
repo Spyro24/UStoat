@@ -4,6 +4,8 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.exceptions import InvalidSignature
 
+import pygame as p
+
 import appModule
 
 class messageEncryption:
@@ -29,3 +31,18 @@ class messageEncryption:
             keyFile.write(self.userKey.private_bytes(encoding=serialization.Encoding.PEM, format=serialization.PrivateFormat.PKCS8, encryption_algorithm=serialization.NoEncryption()))
             keyFile.close()
             self.log(self.moduleName, "user key saved")
+
+class encryptionHelper():
+    def __init__(self, app: appModule.app.App):
+        self.app = app
+        self.moduleName = "encryptionHelper<"
+        self.log = self.app.modules["log"].log
+        self.encryption: messageEncryption = self.app.modules["messageEncryption"]
+        self.icons = {"locked": p.image.load("./res/icons/locked.png"),
+                      "unlocked": p.image.load("./res/icons/unlocked.png")}
+        
+    
+    def scanMessage(self, message: str):
+        if message.startswith("e2ee") and message.endswith("e2eeend"):
+            pass
+        return None

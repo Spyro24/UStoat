@@ -21,6 +21,7 @@ class memebrList:
         self.font = self.app.modules['font']
         self.userManager = self.app.modules["userManager"]
         self.requestSystem = app.modules["requestHandler"]
+        self.runtimeStoreManager = app.modules["runtimeStoreManager"]
     
     def insertRequestData(self, data: tuple):
         package = data[2]
@@ -35,9 +36,7 @@ class memebrList:
     def createUserCard(self, userID: str):
         background = p.surface.Surface((self.tileSize * 5, self.tileSize))
         background.fill((100,100,150))
-        avatar = self.cache.getUserAvatar(userID)
-        if avatar == 20:
-            return 20
+        avatar = self.runtimeStoreManager.getUserAvatar(userID)
         background.blit(p.transform.scale(avatar, (self.tileSize - self.octet * 2, self.tileSize - self.octet * 2)), (self.octet, self.octet))
         background.blit(self.font.render(self.userManager.getUser(userID)["display_name"], antialias=True, color=(255,255,255)),(self.tileSize, self.octet))
         return background
