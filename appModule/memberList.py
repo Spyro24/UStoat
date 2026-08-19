@@ -19,7 +19,6 @@ class memebrList:
         self.renderedRect = p.rect.Rect()
         self.cache = self.app.modules["cache"]
         self.font = self.app.modules['font']
-        self.userManager = self.app.modules["userManager"]
         self.requestSystem = app.modules["requestHandler"]
         self.runtimeStoreManager = app.modules["runtimeStoreManager"]
     
@@ -38,23 +37,21 @@ class memebrList:
         background.fill((100,100,150))
         avatar = self.runtimeStoreManager.getUserAvatar(userID)
         background.blit(p.transform.scale(avatar, (self.tileSize - self.octet * 2, self.tileSize - self.octet * 2)), (self.octet, self.octet))
-        background.blit(self.font.render(self.userManager.getUser(userID)["display_name"], antialias=True, color=(255,255,255)),(self.tileSize, self.octet))
+        if "display_name" in self.runtimeStoreManager.runtimeStore.users[userID]:
+            background.blit(self.font.render(self.runtimeStoreManager.runtimeStore.users[userID]["display_name"], antialias=True, color=(255,255,255)),(self.tileSize, self.octet))
+        else:
+            background.blit(self.font.render(self.runtimeStoreManager.runtimeStore.users[userID]["username"], antialias=True, color=(255,255,255)),(self.tileSize, self.octet))
         return background
         
     
     def render(self, displaySize: tuple[int, int]):
         self.renderedRect = p.draw.rect(self.window, (50,50,50), (displaySize[0] - self.tileSize * 5, 0, displaySize[1], self.toolBar.renderedRect.top))
         selectedServer = self.serverSelector.selectedServer
-        if selectedServer not in self.initServer:
-            if selectedServer != "":
-                self.initServer.append(selectedServer)
-                self.serverMembers[selectedServer] = []
-                self.requestSystem.placeOnCallStack(self.moduleName, ["getServerMembers", selectedServer], lambda: self.platformHandler.fetchServerMembers(selectedServer, ""))
         if selectedServer != "0":
             indexPos = 0
             oldIndexPos = 0
             renderPos = self.renderedRect.top
-            memberList = self.serverMembers[selectedServer]
+            memberList = self.runtimeStoreManager.getMemberList(selectedServer)
             while indexPos < len(memberList):
                 indexPos += 1
                 if not self.renderedRect.collidepoint((self.renderedRect.centerx, renderPos + self.tileSize)):

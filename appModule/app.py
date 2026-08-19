@@ -36,7 +36,6 @@ class App:
         self.tileSize = 64
         self.fontSize = 24 #Global font size (changing this will change the fontsize of every font)
         self.modules = {"font": p.font.SysFont(p.font.match_font(p.font.get_default_font()), size=self.fontSize),
-                        "userManager": stoat.user.users(),
                         "APISubscrption": None,
                         "serverManager": appModule.serverManager.serverManager(),
                         "notify": appModule.notficationHandler.notificatonSystem(),
@@ -84,21 +83,18 @@ class App:
         loginSystem.main.loginSystem(self) #Call the Login system to make sure that the user will get logged in into the selected platform
         if self.exit: #Check if the user exited from the login system
             self.close() #And close UStoat if that is True
-        self.modules["userManager"].platformHelper = self.modules["platform"]
         self.modules["cache"].platform = self.modules["platform"]
         self.modules["messageInput"].platform = self.modules["platform"]
         self.modules["messageRender"].platform = self.modules["platform"]
-        self.modules["serverManager"].userManager = self.modules["userManager"]
         self.modules["serverManager"].userID = self.modules["platform"].userID
         self.modules["serverManager"].init()
         self.modules["runtimeStore"].userID = self.modules["platform"].userID
         self.modules["memberList"] = appModule.memberList.memebrList(self)
         packet = self.modules["platform"].getReadyPackage()
+        self.modules["runtimeStoreManager"].platform = self.modules["platform"] #fix for a anouing bug
         if packet["type"] == "Ready":
             print(packet)
             for user in packet["users"]:
-                print(user)
-                self.modules['userManager'].addUser(user)
                 self.modules["runtimeStore"].parseStoatUser(user)
             for server in packet["servers"]:
                 self.modules["runtimeStore"].parseStoatServer(server)
@@ -107,14 +103,14 @@ class App:
             self.modules["serverManager"].insertReadyPackage(packet)
         if len(self.modules["runtimeStore"].servers["0"]['channels']) == 0:
             self.modules["runtimeStore"].servers["0"]['channels'].append("00")
-        userInfo = self.modules['userManager'].userInfo[self.modules['platform'].userID]
+        userInfo = self.modules["runtimeStore"].users[self.modules['platform'].userID]
         print(self.modules["serverManager"].serverStructure)
-        self.modules['userManager'].userToken = self.modules["platform"].token
         self.modules["notificatonSystem"] = appModule.notficationHandler.notificationManager(self)
         for moduleName in self.modules.keys():
             try:
                 self.modules[moduleName].moduleName = moduleName
             except AttributeError: pass
+        print(userInfo)
         self.modules["userCard"].createCard(userInfo)
         self.ready()
     

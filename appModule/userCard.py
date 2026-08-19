@@ -20,17 +20,17 @@ class userCard:
         
     def createCard(self, userData: dict):
         canvas = p.Surface((self.sizeY * self.tilesX, self.sizeY))
-        avatar = self.app.modules["cache"].getUserAvatar(self.app.modules["platform"].userID)
+        avatar = self.app.modules["runtimeStoreManager"].getUserAvatar(self.app.modules["platform"].userID)
         spacing = self.sizeY // 8
         canvas.fill((50,50,50))
-        if avatar == 20:
+        if avatar.height == 1:
             self.reRenderCard = True
             self.userData = userData
             self.card = canvas.convert()
             return
         canvas.blit(p.transform.scale(avatar, (spacing * 6, spacing * 6)), (spacing, spacing))
         canvas.blit(self.font.render(userData["display_name"], color=(255, 255, 255), antialias=False), (self.sizeY, spacing))
-        name = self.font.render(userData["name"], color=(200, 200, 200), antialias=False)
+        name = self.font.render(userData["username"], color=(200, 200, 200), antialias=False)
         number = self.font.render("#" + userData["discriminator"], color=(150, 150, 150), antialias=False)
         canvas.blit(name, (self.sizeY, spacing * 5))
         canvas.blit(number, (self.sizeY + name.size[0], spacing * 5))

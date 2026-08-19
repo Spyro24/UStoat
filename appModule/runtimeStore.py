@@ -53,6 +53,9 @@ class runtimeStore:
         self.channels[package["_id"]] = channel
     
     def parseStoatUser(self, package):
+        if package["_id"] in self.users:
+            if not "dummy" in self.users[package["_id"]]:
+                return
         user = {}
         user["username"] = package["username"]
         user["discriminator"] = package["discriminator"]
@@ -68,6 +71,7 @@ class runtimeStore:
         server["name"] = package["name"]
         server["owner"] = package["owner"]
         server["channels"] = package["channels"]
+        server["members"] = []
         self.servers[package["_id"]] = server
     
     def createDummyUser(self, userId):
@@ -85,6 +89,7 @@ class runtimeStoreManager:
         self.requetHandler = self.app.modules["requestHandler"]
         self.platform = self.app.modules["platform"]
         self.defaultAvatar = p.image.load("./res/images/default_avatar.png")
+        self.fetchingMembers = False
     
     def insertRequestData(self, data: tuple):
         pass
@@ -109,6 +114,8 @@ class runtimeStoreManager:
     
     def getUserAvatar(self, userId):
         try:
+            if "dummy" in self.runtimeStore.users[userId]:
+                raise KeyError
             return self.runtimeStore.images['avatars'][userId]
         except KeyError:
             avatar = p.Surface((1,1)) #yes we use a one pixel size surface as a decoy
@@ -119,4 +126,21 @@ class runtimeStoreManager:
                 avatar = self.defaultAvatar
                 self.runtimeStore.images['avatars'][userId] = avatar
             return avatar
+    
+    def fetchServerMembers(self, serverId: str):
+        members = self.platform.fetchServerMembers(serverId, None)
+        for user in members["users"]:
+            self.runtimeStore.parseStoatUser(user)
+        for member in members["members"]:
+            self.runtimeStore.servers[member["_id"]["server"]]["members"].append(member["_id"]["user"])
+        self.fetchingMembers = False
+        
+    def getMemberList(self, serverId: str):
+        if serverId != "0": #make sure that this isnt the server zero
+            if len(self.runtimeStore.servers[serverId]["members"]) == 0:
+                if not self.fetchingMembers:
+                    self.fetchingMembers = True
+                    self.requetHandler.placeOnCallStack("runtimeStoreManager", "avatar", lambda: self.fetchServerMembers(serverId))
+            return self.runtimeStore.servers[serverId]["members"]
+        return []
             
