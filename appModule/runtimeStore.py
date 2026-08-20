@@ -106,13 +106,9 @@ class runtimeStoreManager:
         """
             
     def fetchAvatar(self, userId: str):
-        print(self.runtimeStore.users[userId])
-        print(self.runtimeStore.users[userId]["avatarId"])
         image = self.platform.fetchUserPicture(self.runtimeStore.users[userId]["avatarId"])
-        print(image.status_code)
         if image.ok:
             self.runtimeStore.images["avatars"][userId] = p.image.load(io.BytesIO(image.content))
-            print("loaded image")
     
     def getUserAvatar(self, userId):
         try:

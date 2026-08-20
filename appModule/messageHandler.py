@@ -22,7 +22,8 @@ class messageRender:
         self.platform = self.app.modules["platform"]
         self.runtimeStore = self.app.modules["runtimeStore"]
         self.runtimeStoreManager = self.app.modules["runtimeStoreManager"]
-        self.fetchingMessages = False
+        self.requestHandler = self.app.modules["requestHandler"]
+        self.fetchingMessages = set()
     
     def reloadTheme(self):
         theme = self.app.modules["themeManager"].theme["messageRender"]
@@ -31,8 +32,17 @@ class messageRender:
             self.colors["text"] = theme["text"]
         except KeyError: pass
     
-    def setChannel(self, channelId: str):
-        pass
+    def fetchChannelMessages(self, channelId):
+        reqData = self.platform.fetchMessages(channelId, "")
+        messages = reqData["messages"]
+        messages.reverse()
+        for message in messages:
+            print(message)
+            self.runtimeStore.parseStoatMessage(message)
+        for user in reqData["users"]:
+            self.runtimeStore.parseStoatUser(user)
+        self.fetchingMessages.remove(channelId)
+    
     
     def wrap_text_to_width(self, text: str, font: p.font.Font, max_width: int) -> str:
         lines: list[str] = []
@@ -102,8 +112,6 @@ class messageRender:
                 if len(self.app.modules["messageManager"].messages[self.channelSelector.selectedChannel]) == 0:
                    raise BaseException
             except:
-                messages = self.platform.fetchMessages(self.channelSelector.selectedChannel, "")["messages"]
-                messages.reverse()
-                for message in messages:
-                    print(message)
-                    self.runtimeStore.parseStoatMessage(message)
+                if not self.channelSelector.selectedChannel in self.fetchingMessages:
+                    self.fetchingMessages.add(self.channelSelector.selectedChannel)
+                    self.requestHandler.placeOnCallStack(None, None, lambda: self.fetchChannelMessages(self.channelSelector.selectedChannel))

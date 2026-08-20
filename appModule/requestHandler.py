@@ -19,7 +19,8 @@ class requestHandler:
                     #try:
                         request = self.requestQuee.pop(0)
                         answer = request[2]()
-                        self.responses.append((request[0], request[1], answer))
+                        if request[0] != None: #check if we want a response
+                            self.responses.append((request[0], request[1], answer))
                     #except BaseException as e :
                        # print(e)
                        # self.responses.append((request[0], request[1], None))
