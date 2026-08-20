@@ -1,5 +1,4 @@
 import pygame as p
-import stoat_pylib as stoat
 import accountModules
 import time
 import json
@@ -69,7 +68,6 @@ class App:
         self.frameCount = 0
         self.avgFrameRate = 0
         self.isFocused = False
-        #self.modules['account'].clientName = f"UStoat (v {self.VERSION})"
         p.display.set_caption(f"UStoat (v {self.VERSION})")
         self.textInput = None
         self.mousePos = p.mouse.get_pos()

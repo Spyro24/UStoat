@@ -116,8 +116,6 @@ class runtimeStoreManager:
     
     def getUserAvatar(self, userId):
         try:
-            if "dummy" in self.runtimeStore.users[userId]:
-                raise KeyError
             return self.runtimeStore.images['avatars'][userId]
         except KeyError:
             avatar = p.Surface((1,1)) #yes we use a one pixel size surface as a decoy
