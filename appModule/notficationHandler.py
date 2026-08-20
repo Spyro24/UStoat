@@ -32,8 +32,6 @@ class notificationManager:
         self.userId = self.runtimeStore.userID
         self.cache = app.modules["cache"]
         self.userInMsg = "<@" + self.userId + ">"
-        self.messageManager = app.modules['messageManager']
-        self.messageManager.userId = self.userId
     
     def scanMessage(self, msg: dict):
         print(msg)

@@ -2,31 +2,6 @@ import appModule
 import requests
 import pygame as p
 
-class messageManager:
-    def __init__(self):
-        self.messages = {}
-        self.userMessages = []
-        self.userId = ""
-    
-    def insertMessage(self, message: dict):
-        if "content" in message:
-            msg = self.formatMessage(message)
-            if not message['channel'] in self.messages:
-                self.messages[message['channel']] = []
-            self.messages[message['channel']].append(msg)
-            if msg["author"] == self.userId:
-                self.userMessages.append(msg["id"])
-    
-    def getMessage(self, channel: str, index: int):
-        return self.messages[channel][index]
-    
-    def formatMessage(self, message: dict):
-        msg = {}
-        msg["author"] = message['author']
-        msg["id"] = message["_id"]
-        msg["content"] = message["content"]
-        return msg
-    
 class messageRender:
     def __init__(self, app: appModule.app.App):
         self.app = app

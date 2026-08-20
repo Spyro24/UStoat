@@ -4,11 +4,19 @@ import pygame as p
 import appModule
 import baseModules
 import json
+import sys
 
 # Nuitka compilation support
 import os
 import sys
 from pathlib import Path
+
+args = set()
+
+#---parsing args to make it easier for us---
+if "--debug" in sys.argv:
+    args.add("DEBUG")
+#---
 
 if getattr(sys, "frozen", False):
     DEBUG = False
@@ -27,4 +35,4 @@ if __name__ == "__main__":
         except:
             raise SystemExit
     else:
-        app = appModule.app.App({"DEBUG"})
+        app = appModule.app.App(args)
