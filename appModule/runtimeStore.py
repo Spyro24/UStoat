@@ -40,6 +40,7 @@ class runtimeStore:
     def parseStoatChannel(self, package):
         channel = {}
         if package["channel_type"] == "DirectMessage":
+            self.servers['0']['channels'].append(package["_id"]) #Add the channel to the DM server
             package["recipients"].remove(self.userID)
             if "display_name" in self.users[package["recipients"][0]]:
                 channel["name"] = self.users[package["recipients"][0]]["display_name"]
@@ -79,7 +80,8 @@ class runtimeStore:
         user["username"] = userId
         user["discriminator"] = "0000"
         user["dummy"] = None # Only a Dummy user has this
-        self.users[userId] = user
+        if not userId in self.users: #makes sure that we dont overwrite a user in the user database 
+            self.users[userId] = user
         
         
 class runtimeStoreManager:

@@ -83,6 +83,7 @@ class App:
         loginSystem.main.loginSystem(self) #Call the Login system to make sure that the user will get logged in into the selected platform
         if self.exit: #Check if the user exited from the login system
             self.close() #And close UStoat if that is True
+        self.modules["runtimeStoreManager"].platform = self.modules["platform"] #fix for a anouing bug
         self.modules["cache"].platform = self.modules["platform"]
         self.modules["messageInput"].platform = self.modules["platform"]
         self.modules["messageRender"].platform = self.modules["platform"]
@@ -91,7 +92,6 @@ class App:
         self.modules["runtimeStore"].userID = self.modules["platform"].userID
         self.modules["memberList"] = appModule.memberList.memebrList(self)
         packet = self.modules["platform"].getReadyPackage()
-        self.modules["runtimeStoreManager"].platform = self.modules["platform"] #fix for a anouing bug
         if packet["type"] == "Ready":
             print(packet)
             for user in packet["users"]:

@@ -21,6 +21,7 @@ class memebrList:
         self.font = self.app.modules['font']
         self.requestSystem = app.modules["requestHandler"]
         self.runtimeStoreManager = app.modules["runtimeStoreManager"]
+        self.rerenderUsers = set()
     
     def insertRequestData(self, data: tuple):
         package = data[2]
@@ -36,6 +37,8 @@ class memebrList:
         background = p.surface.Surface((self.tileSize * 5, self.tileSize))
         background.fill((100,100,150))
         avatar = self.runtimeStoreManager.getUserAvatar(userID)
+        if avatar.height == 1 and avatar.width == 1:
+            self.rerenderUsers.add(userID)
         background.blit(p.transform.scale(avatar, (self.tileSize - self.octet * 2, self.tileSize - self.octet * 2)), (self.octet, self.octet))
         if "display_name" in self.runtimeStoreManager.runtimeStore.users[userID]:
             background.blit(self.font.render(self.runtimeStoreManager.runtimeStore.users[userID]["display_name"], antialias=True, color=(255,255,255)),(self.tileSize, self.octet))
@@ -58,6 +61,9 @@ class memebrList:
                     break
                 try:
                     userCard = self.renderedUserCards[memberList[oldIndexPos]]
+                    if memberList[oldIndexPos] in self.rerenderUsers:
+                        self.rerenderUsers.remove(memberList[oldIndexPos])
+                        raise KeyError #as always we use this as a shortcut
                 except KeyError:
                     userCard = self.createUserCard(memberList[oldIndexPos])
                     if userCard == 20: continue
