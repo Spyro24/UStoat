@@ -18,7 +18,8 @@ class i18n:
                         "ui.login_system.mfa_code_wrong":"Invalid MFA Code",
                         "ui.login_system.invalid_token":"Invalid Token. Please login again",
                         "badge.name.ustoat_developer":"Client Developer",
-                        "badge.name.ustoat_maintainer":"Client Maintainer"}
+                        "badge.name.ustoat_maintainer":"Client Maintainer",
+                        "settings.about.name":"About UStoat"}
     
     def loadI18N(self, i18nCode: str):
         if i18nCode != "en_us":
