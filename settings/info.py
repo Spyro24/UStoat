@@ -1,6 +1,5 @@
 import pygame as p
 import settings
-import gc
 
 class info(settings.base.skeleton):
     def __init__(self, config):

@@ -29,7 +29,10 @@ class userCard:
             self.card = canvas.convert()
             return
         canvas.blit(p.transform.scale(avatar, (spacing * 6, spacing * 6)), (spacing, spacing))
-        canvas.blit(self.font.render(userData["display_name"], color=(255, 255, 255), antialias=False), (self.sizeY, spacing))
+        if "display_name" in userData:
+            canvas.blit(self.font.render(userData["display_name"], color=(255, 255, 255), antialias=False), (self.sizeY, spacing))
+        else:
+            canvas.blit(self.font.render(userData["username"], color=(255, 255, 255), antialias=False), (self.sizeY, spacing))
         name = self.font.render(userData["username"], color=(200, 200, 200), antialias=False)
         number = self.font.render("#" + userData["discriminator"], color=(150, 150, 150), antialias=False)
         canvas.blit(name, (self.sizeY, spacing * 5))
