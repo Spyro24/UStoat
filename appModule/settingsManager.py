@@ -38,6 +38,8 @@ class settingsManager:
                     self.minimized = False
                     if self.app.textInput != None:
                         self.app.textInput.releaseTextInput()
+                    self.selectedEntry = 0
+                    self.entrys[self.selectedEntry].reset()
         else:
             pos = (displaySize[0] - self.tileSize + self.quarter, self.quarter)
             button = self.window.blit(self.closeButton, pos)

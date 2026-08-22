@@ -7,6 +7,9 @@ class skeleton:
         self.app = config["app"] #i dont want this ...
         self.settingName = "<skeleton>"
     
+    def reset(self): #gets called every time the option is openend
+        pass
+    
     def createSettingsEntry(self, surface: p.Surface):
         pass
     
