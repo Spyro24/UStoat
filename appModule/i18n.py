@@ -19,7 +19,8 @@ class i18n:
                         "ui.login_system.invalid_token":"Invalid Token. Please login again",
                         "badge.name.ustoat_developer":"Client Developer",
                         "badge.name.ustoat_maintainer":"Client Maintainer",
-                        "settings.about.name":"About UStoat"}
+                        "settings.about.name":"About UStoat",
+                        "setting.logout.warning": "This will detsroy the current session.\nUse this to escape the Matrix\nUStoat will be closed btw"}
     
     def loadI18N(self, i18nCode: str):
         if i18nCode != "en_us":

@@ -21,9 +21,6 @@ class info(settings.base.skeleton):
         except FileNotFoundError:
             self.ramUsageInfo = self.font.render(f"RAM Usage: NOT SUPPORTED", True, (255,255,255))
     
-    def createSettingsEntry(self, surface):
-        surface.blit(self.font.render(self.settingName, False, (255,255,255)), (self.tileSize / 4, self.tileSize / 4))
-    
     def render(self, surface: p.Surface):
         pos = (surface.width - self.poweredByPygameCeBanner.width - self.tileSize / 4, surface.height - self.poweredByPygameCeBanner.height - self.tileSize / 4)
         surface.blit(self.ramUsageInfo, surface.blit(self.infoText, (self.tileSize, self.tileSize)).bottomleft) #yes we are using a nested call

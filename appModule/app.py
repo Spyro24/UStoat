@@ -35,6 +35,7 @@ class App:
         self.tileSize = 64
         self.fontSize = 24 #Global font size (changing this will change the fontsize of every font)
         self.modules = {"font": p.font.SysFont(p.font.match_font(p.font.get_default_font()), size=self.fontSize),
+                        "themeManager": appModule.themeManager.themeManager(),
                         "APISubscrption": None,
                         "serverManager": appModule.serverManager.serverManager(),
                         "notify": appModule.notficationHandler.notificatonSystem(),
@@ -55,7 +56,6 @@ class App:
         self.modules["channelSelector"] = appModule.serverManager.channelSelector(self)
         self.modules["messageInput"] = appModule.messageBox.inputTextBox(self)
         self.modules["messageRender"] = appModule.messageHandler.messageRender(self)
-        self.modules["themeManager"] = appModule.themeManager.themeManager(self)
         self.modules["settings"] = appModule.settingsManager.settingsManager(self)
         self.modules["toolbar"] = appModule.spareUI.toolbar(self)
         self.modules["channelHeader"] = appModule.spareUI.channelHeader(self)

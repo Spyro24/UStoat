@@ -1,7 +1,7 @@
 import json
 
 class themeManager:
-    def __init__(self, app):
+    def __init__(self):
         self.theme = {"status":{"online":(0, 255, 0)},
                       "messageBox":{"background":(35, 35, 75),
                                     "text":(255, 255, 255),
@@ -12,9 +12,11 @@ class themeManager:
                       "messageRender":{"background":(75, 35, 125),
                                         "text":(255, 255, 255)},
                       "toolbar":{"background":(140, 0, 140)},
-                      "channelHeader":{"background":(140, 0, 140)}
+                      "channelHeader":{"background":(140, 0, 140)},
+                      "settings": {"buttonBackground": (0,0,255),
+                                   "background":(0, 70, 255),
+                                   "selected":(0, 70, 255)},
                       }
-        self.app = app
     
     def loadTheme(self, path: str):
         try:

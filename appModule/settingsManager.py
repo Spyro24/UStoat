@@ -17,11 +17,13 @@ class settingsManager:
         self.selectedEntry = 0
         self.entrys = [] #contains the settings entrys
         self.selectorEntrys = []
-        self.config = {"tileSize": self.app.tileSize, "font": self.app.modules["font"], "app": self.app}
+        self.colors = self.app.modules["themeManager"].theme["settings"]
+        self.config = {"tileSize": self.app.tileSize, "font": self.app.modules["font"], "app": self.app, "i18n": self.app.modules["i18n"]}
         for setting in settings.entrys:
             entry = setting(self.config)
             self.entrys.append(entry)
-            surf = p.Surface((self.tileSize * 5, self.tileSize * 2))
+            surf = p.Surface((self.tileSize * 5, self.tileSize))
+            surf.fill(self.colors['buttonBackground'])
             entry.createSettingsEntry(surf)
             self.selectorEntrys.append(surf)
             
@@ -39,7 +41,8 @@ class settingsManager:
                     if self.app.textInput != None:
                         self.app.textInput.releaseTextInput()
                     self.selectedEntry = 0
-                    self.entrys[self.selectedEntry].reset()
+                    for entry in self.entrys:
+                        entry.reset()
         else:
             pos = (displaySize[0] - self.tileSize + self.quarter, self.quarter)
             button = self.window.blit(self.closeButton, pos)
@@ -50,7 +53,13 @@ class settingsManager:
             pos = 0
             settingsEntrys = len(self.entrys)
             for n in range(settingsEntrys):
-                self.window.blit(self.selectorEntrys[n], (0, pos * self.tileSize * 2))
+                test = self.window.blit(self.selectorEntrys[n], (0, pos * self.tileSize + self.tileSize))
+                if test.collidepoint(self.app.mousePos) and self.app.mouseButtons[0]:
+                    self.selectedEntry = n
+                if n == self.selectedEntry:
+                    p.draw.rect(self.window, self.colors["selected"], test, width= self.tileSize // 8)
+                pos += 1
             surf = p.Surface((self.window.width - self.tileSize * 5, self.window.height - self.tileSize))
+            surf.fill(self.colors["background"])
             self.entrys[self.selectedEntry].render(surf)
             self.window.blit(surf, (self.tileSize * 5, self.tileSize))
