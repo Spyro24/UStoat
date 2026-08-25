@@ -148,6 +148,8 @@ class App:
                     except BaseException as e:
                         print(package)
                         print(e)
+                elif package["type"] == "ChannelStartTyping" or package["type"] == "ChannelStopTyping":
+                    self.modules["runtimeStore"].setTypingStatus(package)
                 else:
                     print(package)
             for request in self.modules["requestHandler"].getResponses(): #collecting request data and put them into the coresponding modules
@@ -174,6 +176,10 @@ class App:
                     self.debugGraph.addValue(self.avgFrameRate / 20)
                     self.avgFrameRate = 0
                 self.mouseWheel = 0
+                if self.modules["requestHandler"].crashed:
+                    self.modules["log"].log("requestHandler", "Crashed ... closing UStoat")
+                    print("request Handler crashed")
+                    self.close()
         
         self.close()
     

@@ -65,7 +65,14 @@ class runtimeStore:
             if "description" in package:
                 channel["description"] = package["description"]
         channel["messages"] = []
+        channel["typing"] = set()
         self.channels[package["_id"]] = channel
+    
+    def setTypingStatus(self, packet):
+        if packet["type"] == "ChannelStartTyping":
+            self.channels[packet["id"]]["typing"].add(packet["user"])
+        elif packet["type"] == "ChannelStopTyping":
+            self.channels[packet["id"]]["typing"].discard(packet["user"])
     
     def parseStoatUser(self, package):
         if package["_id"] in self.users:
@@ -164,8 +171,9 @@ class runtimeStoreManager:
     
     def fetchServerMembers(self, serverId: str):
         members = self.platform.fetchServerMembers(serverId, None)
-        for user in members["users"]:
-            self.runtimeStore.parseStoatUser(user)
+        if "users" in members:
+            for user in members["users"]:
+                self.runtimeStore.parseStoatUser(user)
         for member in members["members"]:
             self.runtimeStore.servers[member["_id"]["server"]]["members"].append(member["_id"]["user"])
         self.fetchingMembers = False

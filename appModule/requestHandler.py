@@ -8,6 +8,7 @@ class requestHandler:
         self.lock = threading.Lock()
         self.thread = None
         self.running = True
+        self.crashed = False
         self.start()
     
     def start(self):
@@ -16,14 +17,10 @@ class requestHandler:
                 if len(self.requestQuee) == 0:
                     time.sleep(0.05)
                 else:
-                    #try:
-                        request = self.requestQuee.pop(0)
-                        answer = request[2]()
-                        if request[0] != None: #check if we want a response
-                            self.responses.append((request[0], request[1], answer))
-                    #except BaseException as e :
-                       # print(e)
-                       # self.responses.append((request[0], request[1], None))
+                    request = self.requestQuee.pop(0)
+                    answer = request[2]()
+                    if request[0] != None: #check if we want a response
+                        self.responses.append((request[0], request[1], answer))
                     
             print("request handler stoped")
         

@@ -22,6 +22,7 @@ class memebrList:
         self.requestSystem = app.modules["requestHandler"]
         self.runtimeStoreManager = app.modules["runtimeStoreManager"]
         self.rerenderUsers = set()
+        self.statusColors = app.modules["themeManager"].theme['status']
     
     def insertRequestData(self, data: tuple):
         package = data[2]
@@ -44,6 +45,12 @@ class memebrList:
             background.blit(self.font.render(self.runtimeStoreManager.runtimeStore.users[userID]["display_name"], antialias=True, color=(255,255,255)),(self.tileSize, self.octet))
         else:
             background.blit(self.font.render(self.runtimeStoreManager.runtimeStore.users[userID]["username"], antialias=True, color=(255,255,255)),(self.tileSize, self.octet))
+        statusColor = self.statusColors['offline']
+        if self.runtimeStoreManager.runtimeStore.users[userID]["online"]:
+            statusColor = self.statusColors['online']
+        statusIndicator = p.Surface((self.tileSize / 4, self.tileSize /4))
+        statusIndicator.fill(statusColor)
+        background.blit(statusIndicator, (self.tileSize, self.tileSize / 8 * 5))
         return background
         
     
