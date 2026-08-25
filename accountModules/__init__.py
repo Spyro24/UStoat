@@ -6,6 +6,6 @@ import accountModules.sloga
 
 platforms = {"stoat": accountModules.stoat.userAccount,
              "nerimity": accountModules.nerimity.userAccount,
-             "sloga": accountModules.sloga.userAccount,}
+             "sloga": accountModules.sloga.userAccount,
              #"uvolt": accountModules.uvolt.userAccount,
-             #"stoatbot": accountModules.stoatbot.userAccount}
+             "stoatbot": accountModules.stoatbot.userAccount}

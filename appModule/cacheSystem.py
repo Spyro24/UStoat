@@ -61,7 +61,7 @@ class cache:
             icon = self.create_circular_surface(icon)
             self.store['icons'][iconPath] = icon
             return icon
-    
+
     def make_square_and_scale(self, surface: p.Surface):
         orig_width, orig_height = surface.get_size()
         square_size = min(orig_width, orig_height)
@@ -77,4 +77,3 @@ class cache:
         p.draw.ellipse(circleSurface, (0,0,0,0), circleSurface.get_rect())
         surface.blit(circleSurface, (0,0), special_flags=p.BLEND_RGBA_SUB)
         return surface
-    

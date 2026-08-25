@@ -4,7 +4,7 @@ import baseModules
 import time
 
 class userAccount:
-    def __init__(self):
+    def __init__(self, log):
         self.platformName = "stoatbot"
         self.userID = ""
         self.token = ""
@@ -91,3 +91,6 @@ class userAccount:
     
     def returnSaveInfo(self):
         return {"token": self.token, "service": self.platformName}
+    
+    def getBadgeData(self):
+        pass

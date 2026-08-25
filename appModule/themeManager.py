@@ -2,7 +2,8 @@ import json
 
 class themeManager:
     def __init__(self):
-        self.theme = {"status":{"online":(0, 255, 0)},
+        self.theme = {"status":{"online":(0, 255, 0),
+                                "offline":(64,64,64)},
                       "messageBox":{"background":(35, 35, 75),
                                     "text":(255, 255, 255),
                                     "textNone":(0, 0, 0)},

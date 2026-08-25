@@ -10,12 +10,26 @@ class runtimeStore:
         self.servers = {"0":{"name": "Direct Messages", "owner": None, "channels": []}}
         self.images = {"avatars":{}}
         self.createDummyUser("0000")
+        #making the dummy user to the ustoat user
+        self.images['avatars']["0000"] = p.image.load("./res/icons/app_icon_x384.png") #set the PFP
+        self.users["0000"].pop("dummy")
+        self.users["0000"]["username"] = "<UStoat> System"
+        
     
     def insertMessage(self, messageId: str, content: str, author: str, deleted=False, edited=False):
         self.messages[messageId] = {"content": content, "author": author, "deleted": deleted, "edited": edited}
     
     def parseStoatMessage(self, package): #I dont want to add hundreds of lines to the main app
-        if "system" in package: return #we cannot parse system messages curently
+        if "system" in package:
+            print(package)
+            message = {}
+            message["author"] = "0000" #set the author to the system user
+            string = ""
+            string += package["system"]["id"]
+            message["content"] = string
+            self.messages[package["_id"]] = message
+            self.channels[package["channel"]]['messages'].append(package["_id"])
+            return #we cannot parse system messages curently
         if not package["author"] in self.users: self.createDummyUser(package["author"])
         message = {}
         message["author"] = package["author"]
@@ -64,6 +78,7 @@ class runtimeStore:
             user["display_name"] = package["display_name"]
         if "avatar" in package:
             user["avatarId"] = package["avatar"]["_id"]
+        user["online"] = package["online"]
         self.users[package["_id"]] = user
     
     def parseStoatServer(self, package):
@@ -80,9 +95,25 @@ class runtimeStore:
         user["username"] = userId
         user["discriminator"] = "0000"
         user["dummy"] = None # Only a Dummy user has this
+        user["online"] = False
         if not userId in self.users: #makes sure that we dont overwrite a user in the user database 
             self.users[userId] = user
-        
+    
+    def make_square_and_scale(self, surface: p.Surface):
+        orig_width, orig_height = surface.get_size()
+        square_size = min(orig_width, orig_height)
+        square_surface = p.Surface((square_size, square_size), p.SRCALPHA)
+        x = (square_size - orig_width) // 2
+        y = (square_size - orig_height) // 2
+        square_surface.blit(surface, (x, y))
+        return square_surface
+
+    def create_circular_surface(self, surface):
+        circleSurface = p.Surface(surface.get_size(), flags=p.SRCALPHA)
+        circleSurface.fill((0,0,0,255))
+        p.draw.ellipse(circleSurface, (0,0,0,0), circleSurface.get_rect())
+        surface.blit(circleSurface, (0,0), special_flags=p.BLEND_RGBA_SUB)
+        return surface
         
 class runtimeStoreManager:
     def __init__(self, app):
@@ -109,6 +140,12 @@ class runtimeStoreManager:
         image = self.platform.fetchUserPicture(self.runtimeStore.users[userId]["avatarId"])
         if image.ok:
             self.runtimeStore.images["avatars"][userId] = p.image.load(io.BytesIO(image.content))
+    
+    def fetchServerIcon(self, serverId: str):
+        pass
+    
+    def getServerIcon(self, serverId: str):
+        pass
     
     def getUserAvatar(self, userId):
         try:

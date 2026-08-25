@@ -143,13 +143,14 @@ class App:
             for package in self.modules["platform"].returnSocketData():
                 if package["type"] == "Message":
                     try:
-                        self.modules["messageManager"].insertMessage(package)
-                        self.modules["notificatonSystem"].scanMessage(package)
                         self.modules["runtimeStore"].parseStoatMessage(package)
+                        self.modules["notificatonSystem"].scanMessage(package) #Make sure that the messages gets scanned by notification system
                     except BaseException as e:
                         print(package)
                         print(e)
-            for request in self.modules["requestHandler"].getResponses():
+                else:
+                    print(package)
+            for request in self.modules["requestHandler"].getResponses(): #collecting request data and put them into the coresponding modules
                 self.modules[request[0]].insertRequestData(request)
             
             if not self.FROZEN: #RPC feature is deactivated in the EXECUTABLEs because its experimental
@@ -162,12 +163,7 @@ class App:
                 displaySize = self.window.get_size()
                 self.window.fill((0,0,0))
                 for obj in self.renderQuee:
-                    #try:
                         obj.render(displaySize)
-                    #except AttributeError as e:
-                    #    print(e)
-                    #    run = False
-                    #    break
                 if "DEBUG" in self.env:
                     self.window.blit(self.debugGraph.graphSurface,(0,0))
                 p.display.flip()
