@@ -126,15 +126,15 @@ class App:
             for event in p.event.get():
                 if event.type == p.QUIT:
                     run = False
+                elif event.type == p.KEYDOWN:
+                    if self.textInput != None:
+                        self.textInput.text_input(event)
                 elif event.type == p.WINDOWFOCUSGAINED:
                     print("Focused")
                     self.isFocused = True
                 elif event.type == p.WINDOWFOCUSLOST:
                     print("Focus lost")
                     self.isFocused = False
-                elif event.type == p.KEYDOWN:
-                    if self.textInput != None:
-                        self.textInput.text_input(event)
                 elif event.type == p.MOUSEWHEEL:
                     if self.mouseWheel == 0:
                         self.mouseWheel = -event.y
