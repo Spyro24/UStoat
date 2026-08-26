@@ -66,7 +66,7 @@ class App:
         self.debugGraph = appModule.graph.graph(self.window, 0, 1/60 * 2)
         self.frameCount = 0
         self.avgFrameRate = 0
-        self.isFocused = False
+        self.isFocused = True
         p.display.set_caption(f"UStoat (v {self.VERSION})")
         self.textInput = None
         self.mousePos = p.mouse.get_pos()
@@ -158,28 +158,31 @@ class App:
             if not self.FROZEN: #RPC feature is deactivated in the EXECUTABLEs because its experimental
                 self.RPC.handleRequests()
             
-            if lastRender + FPS < time.time():
-                lastRender = time.time()
-                self.mousePos = p.mouse.get_pos()
-                self.mouseButtons = p.mouse.get_pressed()
-                displaySize = self.window.get_size()
-                self.window.fill((0,0,0))
-                for obj in self.renderQuee:
-                        obj.render(displaySize)
-                if "DEBUG" in self.env:
-                    self.window.blit(self.debugGraph.graphSurface,(0,0))
-                p.display.flip()
-                self.frameCount += 1
-                self.avgFrameRate += time.time() - frameTime
-                if self.frameCount > 20:
-                    self.frameCount = 0
-                    self.debugGraph.addValue(self.avgFrameRate / 20)
-                    self.avgFrameRate = 0
-                self.mouseWheel = 0
-                if self.modules["requestHandler"].crashed:
-                    self.modules["log"].log("requestHandler", "Crashed ... closing UStoat")
-                    print("request Handler crashed")
-                    self.close()
+            if self.isFocused:
+                if lastRender + FPS < time.time():
+                    lastRender = time.time()
+                    self.mousePos = p.mouse.get_pos()
+                    self.mouseButtons = p.mouse.get_pressed()
+                    displaySize = self.window.get_size()
+                    self.window.fill((0,0,0))
+                    for obj in self.renderQuee:
+                            obj.render(displaySize)
+                    if "DEBUG" in self.env:
+                        self.window.blit(self.debugGraph.graphSurface,(0,0))
+                    p.display.flip()
+                    self.frameCount += 1
+                    self.avgFrameRate += time.time() - frameTime
+                    if self.frameCount > 20:
+                        self.frameCount = 0
+                        self.debugGraph.addValue(self.avgFrameRate / 20)
+                        self.avgFrameRate = 0
+                    self.mouseWheel = 0
+                    if self.modules["requestHandler"].crashed:
+                        self.modules["log"].log("requestHandler", "Crashed ... closing UStoat")
+                        print("request Handler crashed")
+                        self.close()
+            else:
+                time.sleep(0.1)
         
         self.close()
     
