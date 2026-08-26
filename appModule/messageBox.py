@@ -4,13 +4,13 @@ import appModule
 class inputTextBox:
     def __init__(self, app: appModule.app.App):
         self.app = app
-        self.curentMessage = "" #"Dies ist ein Teststring der automatisch umgebrochen werden soll wenn er eine bestimmte Breite überschreitet. Hier kommt eine neue Zeile die bereits manuell eingefügt wurde.\nDiese Zeile soll ebenfalls korrekt behandelt werden und weiterhin automatisch umbrechen falls sie zu lang ist. Zum Schluss noch ein sehrsehrsehrlangeswortohneleerzeichen um zu sehen wie sich die Funktion verhält."
+        self.curentMessage = ""
         self.app.renderQuee.append(self)
         self.font = self.app.modules["font"]
         self.renderedRect = p.rect.Rect()
         self.isActive = False
         self.tileSize = self.app.tileSize
-        self.sendInChannel = "01F92C5ZXBQWQ8KY7J8KY917NM"
+        self.sendInChannel = ""
         self.channelSelector = app.modules["channelSelector"]
         self.cursorPos = 0
         self.app.themeable.append(self)
@@ -20,6 +20,7 @@ class inputTextBox:
         self.i18n = self.app.modules["i18n"].strings
         self.platform = self.app.modules["platform"]
         self.serverSelector = self.app.modules["serverSelector"]
+        self.runtimeStore = self.app.modules["runtimeStore"]
         self.hasRendered = False
     
     def reloadTheme(self):
@@ -81,6 +82,7 @@ class inputTextBox:
         self.hasRendered = False
         borderSize = self.tileSize // 8
         textBoxLenght = displaySize[0] - (self.app.modules["userCard"].renderRect.width + self.tileSize * 5)
+        usersWriting = len(self.runtimeStore.channels[self.channelSelector.selectedChannel]["typing"]) > 0
         try:
             if self.curentMessage != "":
                 showText = self.wrap_text_to_width(self.curentMessage[:self.cursorPos] + "|" + self.curentMessage[self.cursorPos:], self.font, textBoxLenght - (2 * borderSize))
@@ -100,10 +102,18 @@ class inputTextBox:
         except p.error as e:
             print("[pygame-ce] Error: " + str(e))
         if self.hasRendered: #Make sure that the programm dont crash
+            rectCol = (20, 20, 65)
             if self.isActive:
-                p.draw.rect(textBox, (120, 120, 165), textBox.get_rect(), width=borderSize // 2)
-            else:
-                p.draw.rect(textBox, (20, 20, 65), textBox.get_rect(), width=borderSize // 2)
+                rectCol = (120, 120, 165)
+            p.draw.rect(textBox, rectCol, textBox.get_rect(), width=borderSize // 2)
+            if usersWriting:
+                textBoxSize = textBox.get_size()
+                infoSurf = p.Surface((textBoxSize[0], self.tileSize // 2))
+                infoSurf.fill(self.bgCol)
+                newSurf = p.Surface((textBoxSize[0], textBoxSize[1] + infoSurf.height)) #we dont have a name for that
+                newSurf.blit(textBox, (0, infoSurf.height))
+                newSurf.blit(infoSurf, (0, 0))
+                textBox = newSurf
             self.renderedRect = self.app.window.blit(textBox, (self.app.modules["userCard"].renderRect[2], displaySize[1] - textBox.height))
             #Handle mouse input
             if self.renderedRect.collidepoint(self.app.mousePos):
