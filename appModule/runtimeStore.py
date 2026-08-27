@@ -86,6 +86,13 @@ class runtimeStore:
         if "avatar" in package:
             user["avatarId"] = package["avatar"]["_id"]
         user["online"] = package["online"]
+        user["status"] = None
+        user["presence"] = None
+        if "status" in package:
+            if "text" in package["status"]:
+                user["status"] = package["status"]["text"]
+            if "presence" in package["status"]:
+                user["presence"] = package["status"]["presence"].lower()
         self.users[package["_id"]] = user
     
     def parseStoatServer(self, package):

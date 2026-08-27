@@ -111,6 +111,21 @@ class inputTextBox:
                 infoSurf = p.Surface((textBoxSize[0], self.tileSize // 2))
                 infoSurf.fill(self.bgCol)
                 newSurf = p.Surface((textBoxSize[0], textBoxSize[1] + infoSurf.height)) #we dont have a name for that
+                p.draw.rect(infoSurf, rectCol, infoSurf.get_rect(), width=borderSize // 2)
+                if usersWriting:
+                    string = ""
+                    n = 0
+                    try:
+                        for user in self.runtimeStore.channels[self.channelSelector.selectedChannel]["typing"]:
+                            string += self.runtimeStore.users[user]["username"] + ", "
+                            n += 1
+                        if n > 1:
+                            string = string[:-2] + " are typing"
+                        else:
+                            string = string[:-2] + " is typing"
+                        string = self.font.render(string, True, (255,255,255))
+                        infoSurf.blit(string, (borderSize, borderSize))
+                    except KeyError: pass #yea that can hapen if the userbase is mising the user
                 newSurf.blit(textBox, (0, infoSurf.height))
                 newSurf.blit(infoSurf, (0, 0))
                 textBox = newSurf

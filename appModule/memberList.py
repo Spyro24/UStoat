@@ -24,6 +24,12 @@ class memebrList:
         self.rerenderUsers = set()
         self.statusColors = app.modules["themeManager"].theme['status']
     
+    def shortenTextToLenght(self, text: str, lenght: int):
+        if lenght <= 0 or len(text) <= lenght:
+            return text
+        elif len(text) > lenght:
+            return text[0:lenght - 3] + "..."
+    
     def insertRequestData(self, data: tuple):
         package = data[2]
         if data[1][0] == "getServerMembers":
@@ -36,7 +42,7 @@ class memebrList:
     
     def createUserCard(self, userID: str):
         background = p.surface.Surface((self.tileSize * 5, self.tileSize))
-        background.fill((100,100,150))
+        background.fill((50,50,100))
         avatar = self.runtimeStoreManager.getUserAvatar(userID)
         if avatar.height == 1 and avatar.width == 1:
             self.rerenderUsers.add(userID)
@@ -47,7 +53,13 @@ class memebrList:
             background.blit(self.font.render(self.runtimeStoreManager.runtimeStore.users[userID]["username"], antialias=True, color=(255,255,255)),(self.tileSize, self.octet))
         statusColor = self.statusColors['offline']
         if self.runtimeStoreManager.runtimeStore.users[userID]["online"]:
-            statusColor = self.statusColors['online']
+            if self.runtimeStoreManager.runtimeStore.users[userID]["presence"]:
+                statusColor = self.statusColors[self.runtimeStoreManager.runtimeStore.users[userID]["presence"]]
+            else:
+                statusColor = self.statusColors['online']
+        if self.runtimeStoreManager.runtimeStore.users[userID]["status"]:
+            text = self.font.render(self.shortenTextToLenght(self.runtimeStoreManager.runtimeStore.users[userID]["status"], 26), True, (200,200,200))
+            background.blit(text, (self.tileSize + self.tileSize / 8 * 3, self.tileSize / 16 * 15 - text.height))
         statusIndicator = p.Surface((self.tileSize / 4, self.tileSize /4))
         statusIndicator.fill(statusColor)
         background.blit(statusIndicator, (self.tileSize, self.tileSize / 8 * 5))
