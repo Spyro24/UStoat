@@ -1,8 +1,3 @@
-import requests
-import json
-import baseModules
-import socket
-
 class userAccount:
     def __init__(self, logger=None):
         self.logger = logger
@@ -149,4 +144,5 @@ class userAccount:
         requests.patch(f"https://stoat.chat/api/channels/{channel}/messages/{messageID}", headers={"X-Session-Token": self.token}, json={"content": editedMessage})
     
     def invalidateCurrentToken(self):
-        requests.post(f"https://stoat.chat/api/auth/session/logout", headers={"X-Session-Token": self.token})
+        """Invalidates the current session token in self.token"""
+        pass

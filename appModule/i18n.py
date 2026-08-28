@@ -20,7 +20,8 @@ class i18n:
                         "badge.name.ustoat_developer":"Client Developer",
                         "badge.name.ustoat_maintainer":"Client Maintainer",
                         "settings.about.name":"About UStoat",
-                        "setting.logout.warning": "This will detsroy the current session.\nUse this to escape the Matrix\nUStoat will be closed btw"}
+                        "setting.logout.warning": "This will detsroy the current session.\nUse this to escape the Matrix\nUStoat will be closed btw\nSettings dosnt get reseted",
+                        "settings.logout.logout":"Logout"}
     
     def loadI18N(self, i18nCode: str):
         if i18nCode != "en_us":

@@ -61,5 +61,6 @@ class settingsManager:
                 pos += 1
             surf = p.Surface((self.window.width - self.tileSize * 5, self.window.height - self.tileSize))
             surf.fill(self.colors["background"])
-            self.entrys[self.selectedEntry].render(surf)
-            self.window.blit(surf, (self.tileSize * 5, self.tileSize))
+            offset = (self.tileSize * 5, self.tileSize)
+            self.entrys[self.selectedEntry].render(surf, (self.app.mousePos[0] - offset[0], self.app.mousePos[1] - offset[1]))
+            self.window.blit(surf, offset)

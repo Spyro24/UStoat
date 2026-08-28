@@ -21,7 +21,7 @@ class info(settings.base.skeleton):
         except FileNotFoundError:
             self.ramUsageInfo = self.font.render(f"RAM Usage: NOT SUPPORTED", True, (255,255,255))
     
-    def render(self, surface: p.Surface):
+    def render(self, surface: p.Surface, mousePos):
         pos = (surface.width - self.poweredByPygameCeBanner.width - self.tileSize / 4, surface.height - self.poweredByPygameCeBanner.height - self.tileSize / 4)
         surface.blit(self.ramUsageInfo, surface.blit(self.infoText, (self.tileSize, self.tileSize)).bottomleft) #yes we are using a nested call
         surface.blit(self.poweredByPygameCeBanner, pos)

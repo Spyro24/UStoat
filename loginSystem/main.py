@@ -39,10 +39,12 @@ class loginSystem:
         self.FPS = 1 / 60
         self.mousePos = p.mouse.get_pos()
         self.mouseButtons = p.mouse.get_pressed() #Contains the button states of the mouse
+        self.checkConfig() #Make sure that the config is complete
         self.mainLoop() #Execute the main function (and make sure that the user can login)
         
     def mainLoop(self):
-        self.loginWithToken()
+        if not self.app.config["loginData"]["logedOut"]:
+            self.loginWithToken()
         while not self.logedIn:
             for event in p.event.get():
                 if event.type == p.QUIT:
@@ -62,6 +64,8 @@ class loginSystem:
                     element.render(renderPos)
                     renderPos[1] += self.tileSize * 1.5
                 p.display.flip()
+        if not self.app.exit and self.logedIn:
+            self.app.config["loginData"]["logedOut"] = False
     
     def loginWithToken(self):
         def worker(self, platform, token): #This is the function for the thread (we dont use async to make sure we always know the programm execution path before the programm runs
@@ -123,4 +127,14 @@ class loginSystem:
             threading.Thread(target=lambda: worker(self)).start()
         except:
             pass
-        
+    
+    def checkConfig(self):
+        if "loginData" in self.app.config:
+            if not "platform" in self.app.config["loginData"]:
+                self.app.config["loginData"]["platform"] = ""
+            if not "token" in self.app.config["loginData"]:
+                self.app.config["loginData"]["token"] = ""
+            if not "logedOut" in self.app.config["loginData"]:
+                self.app.config["loginData"]["logedOut"] = True
+        else:
+            self.app.config["loginData"] = {"platform": "", "token":"", "logedOut":True}

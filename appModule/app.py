@@ -201,6 +201,11 @@ class App:
     
     #helper functions
     
+    def logout(self): #this will logout the account and closes UStoat
+        self.modules["platform"].invalidateCurrentToken()
+        self.config["loginData"]["logedOut"] = True
+        self.close()
+    
     def keyboardInput(self, event: p.Event):
         char = None
         control = None

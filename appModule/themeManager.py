@@ -2,8 +2,8 @@ import json
 
 class themeManager:
     def __init__(self):
-        self.theme = {"status":{"online":(100, 100, 100),
-                                "offline":(64,64,64),
+        self.theme = {"status":{"online":(0, 255, 0),
+                                "offline":(100, 100, 100),
                                 "focus":(70, 150, 240),
                                 "idle":(250, 160, 0),
                                 "bussy":(250, 70, 70),
@@ -18,9 +18,12 @@ class themeManager:
                                         "text":(255, 255, 255)},
                       "toolbar":{"background":(140, 0, 140)},
                       "channelHeader":{"background":(140, 0, 140)},
-                      "settings": {"buttonBackground": (50,50,60),
+                      "settings": {"buttonBackground": (50,50,60), #We have stolen this values from stoat's settings pages (because my color scheme is bad)
                                    "background":(30,30,30),
-                                   "selected":(30,30,30)},
+                                   "selected":(30,30,30),
+                                   "button":(70,70,90),
+                                   "buttonHiglight": (90,90,110),
+                                   "text":(220,230,250)},
                       }
     
     def loadTheme(self, path: str):
