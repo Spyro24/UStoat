@@ -18,9 +18,9 @@ class themeManager:
                                         "text":(255, 255, 255)},
                       "toolbar":{"background":(140, 0, 140)},
                       "channelHeader":{"background":(140, 0, 140)},
-                      "settings": {"buttonBackground": (0,0,255),
-                                   "background":(0, 70, 255),
-                                   "selected":(0, 70, 255)},
+                      "settings": {"buttonBackground": (50,50,60),
+                                   "background":(30,30,30),
+                                   "selected":(30,30,30)},
                       }
     
     def loadTheme(self, path: str):
