@@ -4,3 +4,4 @@ websocket-client
 notify-py
 urllib3
 cryptography
+certifi

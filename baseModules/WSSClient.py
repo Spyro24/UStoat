@@ -2,6 +2,8 @@ import websocket
 import threading
 import json
 import time
+import ssl
+import certifi
 
 class WSSClient:
     def __init__(self, url, logger=None):
@@ -12,6 +14,7 @@ class WSSClient:
         self.thread = None
         self.ws = None
         self.connected = False
+        self.connection_error = None
         self.start()
     
     def start(self):
@@ -23,14 +26,40 @@ class WSSClient:
             def on_open(ws):
                 with self.lock:
                     self.connected = True
+                    self.connection_error = None
+                    if self.logger:
+                        self.logger.log("Websocket", "Connected")
+            
+            def on_close(ws, close_status_code, close_msg):
+                with self.lock:
+                    self.connected = False
+                    if self.logger:
+                        self.logger.log("Websocket", f"Closed: {close_status_code} - {close_msg}")
             
             def on_error(ws, err):
                 with self.lock:
+                    self.connection_error = str(err)
                     if self.logger:
-                        self.logger.log("Websocket", f"{err}")
+                        self.logger.log("Websocket", f"Error: {err}")
             
-            self.ws = websocket.WebSocketApp(self.url, on_message=on_message, on_open=on_open, on_error=on_error)
-            self.ws.run_forever()
+            # SSL context configuration
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = True
+            ssl_context.verify_mode = ssl.CERT_REQUIRED
+            try:
+                ssl_context.load_verify_locations(certifi.where())
+            except Exception as e:
+                if self.logger:
+                    self.logger.log("Websocket", f"Failed to load CA bundle: {e}, using default")
+            
+            self.ws = websocket.WebSocketApp(
+                self.url,
+                on_message=on_message,
+                on_open=on_open,
+                on_close=on_close,
+                on_error=on_error,
+            )
+            self.ws.run_forever(sslopt={"cert_reqs": ssl.CERT_REQUIRED, "ca_certs": certifi.where()})
         
         self.thread = threading.Thread(target=worker, daemon=True)
         self.thread.start()
