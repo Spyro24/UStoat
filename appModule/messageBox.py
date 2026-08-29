@@ -82,7 +82,9 @@ class inputTextBox:
         self.hasRendered = False
         borderSize = self.tileSize // 8
         textBoxLenght = displaySize[0] - (self.app.modules["userCard"].renderRect.width + self.tileSize * 5)
-        usersWriting = len(self.runtimeStore.channels[self.channelSelector.selectedChannel]["typing"]) > 0
+        usersWriting = False
+        if self.channelSelector.selectedChannel in self.runtimeStore.channels:
+            usersWriting = len(self.runtimeStore.channels[self.channelSelector.selectedChannel]["typing"]) > 0
         try:
             if self.curentMessage != "":
                 showText = self.wrap_text_to_width(self.curentMessage[:self.cursorPos] + "|" + self.curentMessage[self.cursorPos:], self.font, textBoxLenght - (2 * borderSize))

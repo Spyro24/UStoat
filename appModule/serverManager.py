@@ -196,7 +196,7 @@ class channelSelector:
             surface = self.backedSurfaces[renderfromChannel + renderPos]
             rect = self.window.blit(surface, (self.renderedRect[0], renderPos * self.halfTile))
             if (renderPos + renderfromChannel) == self.selectedChannelIndex: p.draw.rect(self.window, self.selCol, rect, width=4)
-            if self.app.mouseButtons[0] and rect.collidepoint(self.app.mousePos):
+            if self.app.mouseButtons[0] and rect.collidepoint(self.app.mousePos) and self.curentServerChannels[renderPos + renderfromChannel] in self.runtimeStore.channels:
                 self.selectedChannelIndex = renderPos + renderfromChannel
                 self.selectedChannel = self.curentServerChannels[self.selectedChannelIndex]
                 self.app.modules["messageRender"].curMessageIndex = -1
