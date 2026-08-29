@@ -93,7 +93,6 @@ class loginSystem:
             status = self.app.modules['platform'].login(self.email.text, self.password.text, f"UStoat (v {self.app.VERSION})")
             if status == 0: #It returns 0 if ewverything goes right and no MFA needed
                 export = self.app.modules['platform'].returnSaveInfo()
-                self.app.config["loginData"] = {}
                 self.app.config["loginData"]["token"] = self.app.modules["encryption"].saveEncrypt(export["token"].encode("UTF8")).decode("UTF8")
                 self.app.config["loginData"]["platform"] = export['service']
                 self.loginWithToken()
@@ -114,7 +113,6 @@ class loginSystem:
         def worker(self):
             if self.app.modules['platform'].loginMFA(self.mfaInput.text) == 0:
                 export = self.app.modules['platform'].returnSaveInfo()
-                self.app.config["loginData"] = {}
                 self.app.config["loginData"]["token"] = self.app.modules["encryption"].saveEncrypt(export["token"].encode("UTF8")).decode("UTF8")
                 self.app.config["loginData"]["platform"] = export['service']
                 self.loginWithToken()
