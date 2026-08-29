@@ -59,7 +59,7 @@ class userAccount:
             if self.logger:
                 self.logger.log("Stoat", "Invalid Token or user endpoint not reachable")
             return 1
-        self.websocket = baseModules.WSSClient.WSSClient(f"wss://stoat.chat/events?version=1&format=json&token={self.token}")
+        self.websocket = baseModules.WSSClient.WSSClient(f"wss://stoat.chat/events?version=1&format=json&token={self.token}", logger=self.logger)
         if self.websocket.wait_until_ready(timeout=30):
             if self.logger:
                 self.logger.log("Stoat", "Websocket connection succesfull")
