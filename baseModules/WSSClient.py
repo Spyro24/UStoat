@@ -27,7 +27,7 @@ class WSSClient:
             def on_error(ws, err):
                 with self.lock:
                     if self.logger:
-                        self.loger.log("Websocket", f"{err}")
+                        self.logger.log("Websocket", f"{err}")
             
             self.ws = websocket.WebSocketApp(self.url, on_message=on_message, on_open=on_open, on_error=on_error)
             self.ws.run_forever()
