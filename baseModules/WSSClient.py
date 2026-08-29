@@ -60,7 +60,7 @@ class WSSClient:
                 on_close=on_close,
                 on_error=on_error,
             )
-            self.ws.run_forever(sslopt={"cert_reqs": ssl.CERT_REQUIRED, "ca_certs": certifi.where()})
+            self.ws.run_forever(http_proxy_host=None, http_proxy_port=None, proxy_type=None, sslopt={"cert_reqs": ssl.CERT_REQUIRED, "ca_certs": certifi.where()})
         
         self.thread = threading.Thread(target=worker, daemon=True)
         self.thread.start()
