@@ -37,7 +37,6 @@ class messageRender:
         messages = reqData["messages"]
         messages.reverse()
         for message in messages:
-            print(message)
             self.runtimeStore.parseStoatMessage(message)
         for user in reqData["users"]:
             self.runtimeStore.parseStoatUser(user)

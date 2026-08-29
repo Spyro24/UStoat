@@ -142,12 +142,8 @@ class App:
             self.modules["platform"].pumpSocket()
             for package in self.modules["platform"].returnSocketData():
                 if package["type"] == "Message":
-                    try:
-                        self.modules["runtimeStore"].parseStoatMessage(package)
-                        self.modules["notificatonSystem"].scanMessage(package) #Make sure that the messages gets scanned by notification system
-                    except BaseException as e:
-                        print(package)
-                        print(e)
+                    self.modules["runtimeStore"].parseStoatMessage(package)
+                    self.modules["notificatonSystem"].scanMessage(package) #Make sure that the messages gets scanned by notification system
                 elif package["type"] == "ChannelStartTyping" or package["type"] == "ChannelStopTyping":
                     self.modules["runtimeStore"].setTypingStatus(package)
                 else:

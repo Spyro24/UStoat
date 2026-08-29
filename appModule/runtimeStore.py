@@ -21,7 +21,6 @@ class runtimeStore:
     
     def parseStoatMessage(self, package): #I dont want to add hundreds of lines to the main app
         if "system" in package:
-            print(package)
             message = {}
             message["author"] = "0000" #set the author to the system user
             string = ""
@@ -96,7 +95,6 @@ class runtimeStore:
         self.users[package["_id"]] = user
     
     def parseStoatServer(self, package):
-        #print(package)
         server = {}
         server["name"] = package["name"]
         server["owner"] = package["owner"]

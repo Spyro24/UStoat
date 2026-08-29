@@ -34,7 +34,6 @@ class notificationManager:
         self.userInMsg = "<@" + self.userId + ">"
     
     def scanMessage(self, msg: dict):
-        print(msg)
         if "mentions" in msg and self.userId in msg["mentions"]:
             msgType = "[mention]"
             content = ""
