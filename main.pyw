@@ -5,6 +5,10 @@ import appModule
 import baseModules
 import json
 import sys
+import websocket
+import requests
+import notifypy
+
 
 # Nuitka compilation support
 import os
