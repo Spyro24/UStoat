@@ -28,7 +28,7 @@ jobs:
         run: |
           mkdir build
           cp -r ./res ./build/res
-          pyinstaller --onefile --collect-all websocket-client --icon ./res/icons/app_icon_x384.png --name UStoat --add-data "res:res" --distpath dist --workpath build --specpath build main.pyw
+          pyinstaller --onefile --collect-all websocket --icon ./res/icons/app_icon_x384.png --name UStoat --add-data "res:res" --distpath dist --workpath build --specpath build main.pyw
         shell: bash
 
       - name: Upload Linux Artifact
@@ -60,7 +60,7 @@ jobs:
           pip install pillow
           mkdir "D:\a\UStoat\UStoat\build\res" 2>nul
           xcopy /E /I /Y "res" "D:\a\UStoat\UStoat\build\res\"
-          pyinstaller --onefile --collect-all websocket-client --icon ./res/icons/app_icon_x384.png --name UStoat --add-data "res;res" --distpath dist --workpath build --specpath build main.pyw
+          pyinstaller --onefile --collect-all websocket --icon ./res/icons/app_icon_x384.png --name UStoat --add-data "res;res" --distpath dist --workpath build --specpath build main.pyw
           
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
