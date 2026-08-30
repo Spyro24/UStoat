@@ -13,37 +13,22 @@ class userAccount:
         self.badgeDataURL = "https://raw.githubusercontent.com/Spyro24/UStoatBadgeSystem/refs/heads/main/badges"
     
     def login(self, username: str, password: str, clientName: str):
-        self.clientName = clientName
-        answer = requests.post("https://stoat.chat/api/auth/session/login?", json={"email": username, "password": password, "friendly_name": clientName})
-        if answer.ok:
-            answerJson = answer.json()
-            if answerJson["result"] == "MFA":
-                self.mfaTicket = answerJson["ticket"]
-                return 2
-            elif answerJson["result"] == "Success":
-                self.token = answerJson["token"]
-                self.userID = answerJson["user_id"]
-                return 0
-        return 1
+        """login with ausername and password, returns 0 on succes, 1 on failure and 2 if MFA is needed"""
+        pass
     
     def loginMFA(self, mfaCode: str):
-        answer = requests.post("https://stoat.chat/api/auth/session/login?", json={"mfa_response":{"totp_code":mfaCode},"mfa_ticket": self.mfaTicket,"friendly_name": self.clientName})
-        if answer.ok:
-            answerJson = answer.json()
-            self.userID = answerJson["user_id"]
-            self.token = answerJson["token"]
-            return 0
-        return 1
+        """uses a MFA code to authetificate (if login returned 2), returns 0 on succes"""
+        pass
     
     def resumeSession(self, token: str):
         if self.logger:
-            self.logger.log("Stoat", "Trying to resume session...")
+            self.logger.log(self.platformName, "Trying to resume session...")
         self.token = token
         return self.startSession()
     
     def startSession(self):
         if self.logger:
-            self.logger.log("Stoat", "Trying to start session...")
+            self.logger.log(self.platformName, "Trying to start session...")
         try:
             userInfo = requests.get("https://stoat.chat/api/users/@me", headers={"X-Session-Token": self.token})
         except requests.exceptions.ConnectionError:
@@ -145,4 +130,12 @@ class userAccount:
     
     def invalidateCurrentToken(self):
         """Invalidates the current session token in self.token"""
+        pass
+    
+    def setTypingStatus(self, channel: str):
+        """setts the typing sgtatus of that channel"""
+        pass
+    
+    def removeTypingStatus(self, channel: str):
+        """removes the typing status of that channel"""
         pass
