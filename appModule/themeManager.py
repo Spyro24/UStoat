@@ -6,7 +6,7 @@ class themeManager:
                                 "offline":(100, 100, 100),
                                 "focus":(70, 150, 240),
                                 "idle":(250, 160, 0),
-                                "bussy":(250, 70, 70),
+                                "busy":(250, 70, 70),
                                 "invisible":(100, 100, 100)},
                       "messageBox":{"background":(35, 35, 75),
                                     "text":(255, 255, 255),

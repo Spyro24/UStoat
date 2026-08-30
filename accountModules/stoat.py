@@ -2,8 +2,9 @@ import requests
 import json
 import baseModules
 import socket
+import accountModules
 
-class userAccount:
+class userAccount(accountModules.baseClass.userAccount):
     def __init__(self, logger=None):
         self.logger = logger
         self.platformName = "stoat"
@@ -16,6 +17,7 @@ class userAccount:
         self.readyPackage = {}
         self.badgeIndexURL = "https://raw.githubusercontent.com/Spyro24/UStoatBadgeSystem/refs/heads/main/stoat.json"
         self.badgeDataURL = "https://raw.githubusercontent.com/Spyro24/UStoatBadgeSystem/refs/heads/main/badges"
+        self.states = {"typing": False}
     
     def login(self, username: str, password: str, clientName: str):
         self.clientName = clientName
@@ -150,3 +152,13 @@ class userAccount:
     
     def invalidateCurrentToken(self):
         requests.post(f"https://stoat.chat/api/auth/session/logout", headers={"X-Session-Token": self.token})
+    
+    def setTypingStatus(self, channel: str):
+        if not self.states['typing']:
+            self.websocket.send_data('{"type":"BeginTyping","channel":"' + channel + '"}')
+            self.states['typing'] = True
+        
+    def removeTypingStatus(self, channel: str):
+        if self.states["typing"]:
+            self.websocket.send_data('{"type":"EndTyping","channel":"' + channel + '"}')
+            self.states['typing'] = False

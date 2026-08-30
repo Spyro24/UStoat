@@ -78,6 +78,12 @@ class inputTextBox:
                 self.cursorPos += 1
         
     def render(self, displaySize):
+        #---typing stuff---
+        if len(self.curentMessage):
+            self.platform.setTypingStatus(self.channelSelector.selectedChannel)
+        else:
+            self.platform.removeTypingStatus(self.channelSelector.selectedChannel)
+        #------
         textBox = None
         self.hasRendered = False
         borderSize = self.tileSize // 8

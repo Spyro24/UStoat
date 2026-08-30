@@ -1,3 +1,4 @@
+import accountModules.baseClass
 import accountModules.stoat
 import accountModules.nerimity
 import accountModules.uvolt
