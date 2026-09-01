@@ -23,6 +23,8 @@ class memebrList:
         self.runtimeStoreManager = app.modules["runtimeStoreManager"]
         self.rerenderUsers = set()
         self.statusColors = app.modules["themeManager"].theme['status']
+        self.lastSeletedServer = ""
+        self.renderFromPos = 0
     
     def shortenTextToLenght(self, text: str, lenght: int):
         if lenght <= 0 or len(text) <= lenght:
@@ -67,25 +69,40 @@ class memebrList:
         
     
     def render(self, displaySize: tuple[int, int]):
-        self.renderedRect = p.draw.rect(self.window, (50,50,50), (displaySize[0] - self.tileSize * 5, 0, displaySize[1], self.toolBar.renderedRect.top))
+        self.renderedRect = p.draw.rect(self.window, (50,50,50), (displaySize[0] - self.tileSize * 5, 0, displaySize[0], self.toolBar.renderedRect.top))
         selectedServer = self.serverSelector.selectedServer
-        if selectedServer != "0":
-            indexPos = 0
-            oldIndexPos = 0
+        if self.lastSeletedServer != selectedServer:
+            self.renderFromPos = 0
+            self.lastSeletedServer = selectedServer
+        if selectedServer == "0":
+            #Here will be the code for rendering a small user card
+            pass
+        else:
             renderPos = self.renderedRect.top
             memberList = self.runtimeStoreManager.getMemberList(selectedServer)
-            while indexPos < len(memberList):
-                indexPos += 1
-                if not self.renderedRect.collidepoint((self.renderedRect.centerx, renderPos + self.tileSize)):
-                    break
-                try:
-                    userCard = self.renderedUserCards[memberList[oldIndexPos]]
-                    if memberList[oldIndexPos] in self.rerenderUsers:
-                        self.rerenderUsers.remove(memberList[oldIndexPos])
-                        raise KeyError #as always we use this as a shortcut
-                except KeyError:
-                    userCard = self.createUserCard(memberList[oldIndexPos])
-                    if userCard == 20: continue
-                    self.renderedUserCards[memberList[oldIndexPos]] = userCard
-                renderPos = self.window.blit(userCard, (self.renderedRect[0], renderPos)).bottom
-                oldIndexPos = indexPos
+            membercount = len(memberList)
+            maxEntrysOnScreen = self.renderedRect.height // self.tileSize
+            if self.renderedRect.collidepoint(self.app.mousePos):
+                self.renderFromPos += self.app.mouseWheel
+                if self.renderFromPos < 0:
+                    self.renderFromPos = 0
+            if self.renderFromPos > 0:
+                if self.renderFromPos + maxEntrysOnScreen > membercount:
+                    self.renderFromPos -= 1
+            indexPos = self.renderFromPos
+            oldIndexPos = indexPos
+            try:
+                oldIndexPos = self.renderFromPos
+                for n in range(maxEntrysOnScreen):
+                    indexPos = self.renderFromPos + n
+                    try:
+                        userCard = self.renderedUserCards[memberList[indexPos]]
+                        if memberList[indexPos] in self.rerenderUsers:
+                            self.rerenderUsers.remove(memberList[indexPos])
+                            raise KeyError #as always we use this as a shortcut
+                    except KeyError:
+                        userCard = self.createUserCard(memberList[indexPos])
+                        if userCard == 20: continue
+                        self.renderedUserCards[memberList[indexPos]] = userCard
+                    renderPos = self.window.blit(userCard, (self.renderedRect[0], renderPos)).bottom
+            except IndexError: pass

@@ -1,7 +1,7 @@
 class userAccount:
     def __init__(self, logger=None):
         self.logger = logger
-        self.platformName = "stoat"
+        self.platformName = "<basePlatform>"
         self.userID = ""
         self.token = ""
         self.mfaTicket = ""

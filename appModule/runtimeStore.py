@@ -84,7 +84,9 @@ class runtimeStore:
             user["display_name"] = package["display_name"]
         if "avatar" in package:
             user["avatarId"] = package["avatar"]["_id"]
-        user["online"] = package["online"]
+        user["online"] = False
+        if "online" in package:
+            user["online"] = package["online"]
         user["status"] = None
         user["presence"] = None
         if "status" in package:

@@ -46,7 +46,8 @@ class WSSClient:
             ssl_context = ssl.create_default_context()
             ssl_context.check_hostname = True
             ssl_context.verify_mode = ssl.CERT_REQUIRED
-            self.logger.log("Websocket", "Starting Connection ...")
+            if self.logger:
+                self.logger.log("Websocket", "Starting Connection ...")
             try:
                 ssl_context.load_verify_locations(certifi.where())
             except Exception as e:

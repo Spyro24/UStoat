@@ -1,9 +1,10 @@
 import requests
 import baseModules
+import accountModules
 import json
 import time
 
-class userAccount:
+class userAccount(accountModules.baseClass.userAccount):
     def __init__(self, logger=None):
         self.platformName = "nerimity"
         self.token = ""

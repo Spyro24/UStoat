@@ -135,6 +135,8 @@ class App:
                 elif event.type == p.WINDOWFOCUSLOST:
                     print("Focus lost")
                     self.isFocused = False
+                elif event.type == p.WINDOWRESIZED:
+                    self.isFocused = True
                 elif event.type == p.MOUSEWHEEL:
                     if self.mouseWheel == 0:
                         self.mouseWheel = -event.y
