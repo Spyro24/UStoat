@@ -19,6 +19,7 @@ class App:
         self.env = erxternalVars
         self.mouseWheel = 0
         self.FROZEN = getattr(sys, "frozen", False)
+        if "release" in self.env: self.FROZEN = True
         self.VERSION = "0.5.0"
         self.exit = False # If this var is set to true the Exit will instantly be trigered (it is used by submodules, they arent allowed to raise the SystemExit)
         self.window = p.display.set_mode((1080, 720), flags=p.RESIZABLE)

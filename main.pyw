@@ -20,6 +20,9 @@ args = set()
 #---parsing args to make it easier for us---
 if "--debug" in sys.argv:
     args.add("DEBUG")
+
+if "--release" in sys.argv:
+    args.add("release")
 #---
 
 if getattr(sys, "frozen", False):
